@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sensor de Monitoramento RefrifastGO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --azul-principal: #0047BB;
+      --azul-claro:     #41B6E6;
+      --azul-escuro:    #003087;
+      --verde:          #2CC84D;
+      --vermelho:       #ef4444;
+      --amarelo:        #f59e0b;
+      --branco:         #FFFFFF;
+      --fundo-escuro:   #020617;
+      --fundo-card:     #0a1628;
+      --fundo-mid:      #0d1f3c;
+      --texto:          #e5e7eb;
+      --muted:          #9ca3af;
+      --border:         rgba(65,182,230,0.2);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", system-ui, sans-serif; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--fundo-escuro); color: var(--texto); min-height: 100vh; }
+
+    /* ===== LOGIN ===== */
+    #login-screen {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      background:
+        radial-gradient(ellipse at 30% 50%, rgba(0,71,187,0.3) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(65,182,230,0.15) 0%, transparent 50%),
+        #020617;
+    }
+    .login-card {
+      background: var(--fundo-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px 36px;
+      width: 100%; max-width: 400px;
+      text-align: center;
+    }
+    .login-logo { margin-bottom: 28px; }
+    .login-logo svg { height: 52px; width: auto; }
+    .login-card h2 {
+      font-size: 1.2rem; font-weight: 700;
+      color: var(--azul-claro); margin-bottom: 6px;
+    }
+    .login-card p {
+      font-size: 0.8rem; color: var(--muted); margin-bottom: 28px;
+    }
+    .login-group { margin-bottom: 16px; text-align: left; }
+    .login-group label {
+      display: block; font-size: 0.75rem; color: var(--muted);
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px;
+    }
+    .login-group input {
+      width: 100%; padding: 11px 14px;
+      background: var(--fundo-mid); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--texto); font-size: 0.9rem;
+      outline: none; transition: border 0.2s;
+    }
+    .login-group input:focus { border-color: var(--azul-claro); }
+    .btn-login {
+      width: 100%; padding: 13px;
+      background: linear-gradient(90deg, var(--azul-principal), var(--azul-claro));
+      border: none; border-radius: 999px;
+      color: #fff; font-weight: 700; font-size: 0.9rem;
+      cursor: pointer; margin-top: 8px; transition: opacity 0.2s;
+    }
+    .btn-login:hover { opacity: 0.85; }
+    .login-error {
+      margin-top: 12px; font-size: 0.8rem;
+      color: var(--vermelho); min-height: 20px;
+    }
+
+    /* ===== PAINEL ===== */
+    #painel { display: none; }
+
+    header {
+      background: rgba(2,6,23,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 5%; height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo-wrap { display: flex; align-items: center; gap: 0; text-decoration: none; }
+    .logo-svg { height: 44px; width: auto; }
+
+    .header-right { display: flex; align-items: center; gap: 16px; }
+    .header-user {
+      font-size: 0.78rem; color: var(--muted);
+    }
+    .header-user span { color: var(--azul-claro); font-weight: 600; }
+    .btn-logout {
+      padding: 7px 16px; border-radius: 999px;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--muted); font-size: 0.75rem; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover { border-color: var(--vermelho); color: var(--vermelho); }
+
+    main { padding: 32px 5%; max-width: 1300px; margin: 0 auto; }
+
+    .painel-title {
+      font-size: 1.4rem; font-weight: 900; color: var(--branco);
+      margin-bottom: 4px;
+    }
+    .painel-sub {
+      font-size: 0.82rem; color: var(--muted); margin-bottom: 28px;
+    }
+    .painel-sub span {
+      color: var(--azul-claro); font-weight: 600;
+    }
+
+    /* cards de status */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px; margin-bottom: 28px;
+    }
+    .status-card {
+      background: var(--fundo-card);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px 22px;
+    }
+    .status-card-label {
+      font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--muted); margin-bottom: 10px;
+    }
+    .status-card-value {
+      font-size: 2rem; font-weight: 900; line-height: 1;
+      color: var(--azul-claro);
+    }
+    .status-card-value.ok { color: var(--verde); }
+    .status-card-value.alerta { color: var(--amarelo); }
+    .status-card-value.critico { color: var(--vermelho); }
+    .status-card-unit {
+      font-size: 0.85rem; color: var(--muted); margin-top: 4px;
+    }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 999px;
+      font-size: 0.72rem; font-weight: 600; margin-top: 8px;
+    }
+    .status-badge.ok { background: rgba(44,200,77,0.15); color: var(--verde); }
+    .status-badge.alerta { background: rgba(245,158,11,0.15); color: var(--amarelo); }
+    .status-badge.critico { background: rgba(239,68,68,0.15); color: var(--vermelho); }
+    .status-badge::before { content: "●"; font-size: 0.5rem; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* gráfico */
+    .chart-card {
+      background: var(--fundo-card);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px;
+      margin-bottom: 24px;
+    }
+    .chart-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+    }
+    .chart-title {
+      font-size: 0.9rem; font-weight: 700; color: var(--texto);
+    }
+    .chart-filters { display: flex; gap: 8px; }
+    .filter-btn {
+      padding: 5px 14px; border-radius: 999px;
+      background: var(--fundo-mid); border: 1px solid var(--border);
+      color: var(--muted); font-size: 0.72rem; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--azul-principal); color: #fff; border-color: var(--azul-principal);
+    }
+
+    /* tabela */
+    .table-card {
+      background: var(--fundo-card);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px;
+      margin-bottom: 40px; overflow-x: auto;
+    }
+    .table-title {
+      font-size: 0.9rem; font-weight: 700; color: var(--texto);
+      margin-bottom: 16px;
+    }
+    table {
+      width: 100%; border-collapse: collapse; font-size: 0.82rem;
+    }
+    thead tr th {
+      text-align: left; padding: 10px 14px;
+      color: var(--muted); font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      border-bottom: 1px solid var(--border);
+    }
+    tbody tr td {
+      padding: 11px 14px; border-bottom: 1px solid rgba(65,182,230,0.07);
+      color: var(--texto);
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: rgba(65,182,230,0.04); }
+    .td-status {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: 999px;
+      font-size: 0.7rem; font-weight: 600;
+    }
+    .td-status.ok { background: rgba(44,200,77,0.12); color: var(--verde); }
+    .td-status.alerta { background: rgba(245,158,11,0.12); color: var(--amarelo); }
+    .td-status.critico { background: rgba(239,68,68,0.12); color: var(--vermelho); }
+
+    /* link voltar */
+    .btn-voltar {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 9px 20px; border-radius: 999px;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--muted); font-size: 0.78rem; text-decoration: none;
+      transition: all 0.2s; margin-bottom: 28px;
+    }
+    .btn-voltar:hover { border-color: var(--azul-claro); color: var(--azul-claro); }
+
+    @media(max-width:600px) {
+      .cards-grid { grid-template-columns: 1fr 1fr; }
+      .status-card-value { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== TELA DE LOGIN ===== -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg viewBox="0 0 260 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="30" cy="34" rx="16" ry="18" fill="#0047BB"/>
+        <ellipse cx="20" cy="16" rx="6" ry="6.5" fill="#0047BB"/>
+        <ellipse cx="12" cy="38" rx="7" ry="6.5" fill="#0047BB"/>
+        <ellipse cx="48" cy="38" rx="7" ry="6.5" fill="#003087"/>
+        <path d="M30 14 Q46 20 44 38 Q42 50 30 54 Q40 48 41 36 Q43 20 30 14Z" fill="#003087"/>
+        <path d="M28 13 Q42 21 40 38 Q38 50 28 54" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+        <circle cx="22" cy="12" r="2" fill="white" opacity="0.85"/>
+        <text x="68" y="36" font-family="Inter, Arial, sans-serif" font-weight="900" font-size="24" fill="#0047BB">Refrifast</text>
+        <text x="69" y="51" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="11" fill="#41B6E6" letter-spacing="2">REFRIGERAÇÃO</text>
+      </svg>
+    </div>
+    <h2>Painel de Monitoramento</h2>
+    <p>Acesso restrito — informe suas credenciais</p>
+    <div class="login-group">
+      <label>Usuário</label>
+      <input type="text" id="loginUser" placeholder="seu usuário" />
+    </div>
+    <div class="login-group">
+      <label>Senha</label>
+      <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter') fazerLogin()" />
+    </div>
+    <button class="btn-login" onclick="fazerLogin()">Entrar</button>
+    <div class="login-error" id="loginErro"></div>
+  </div>
+</div>
+
+<!-- ===== PAINEL ===== -->
+<div id="painel">
+  <header>
+    <a href="index.html" class="logo-wrap">
+      <svg class="logo-svg" viewBox="0 0 260 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="30" cy="34" rx="16" ry="18" fill="#0047BB"/>
+        <ellipse cx="20" cy="16" rx="6" ry="6.5" fill="#0047BB"/>
+        <ellipse cx="12" cy="38" rx="7" ry="6.5" fill="#0047BB"/>
+        <ellipse cx="48" cy="38" rx="7" ry="6.5" fill="#003087"/>
+        <path d="M30 14 Q46 20 44 38 Q42 50 30 54 Q40 48 41 36 Q43 20 30 14Z" fill="#003087"/>
+        <path d="M28 13 Q42 21 40 38 Q38 50 28 54" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+        <circle cx="22" cy="12" r="2" fill="white" opacity="0.85"/>
+        <text x="68" y="36" font-family="Inter, Arial, sans-serif" font-weight="900" font-size="24" fill="#0047BB">Refrifast</text>
+        <text x="69" y="51" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="11" fill="#41B6E6" letter-spacing="2">REFRIGERAÇÃO</text>
+      </svg>
+    </a>
+    <div class="header-right">
+      <div class="header-user">Logado como: <span id="nomeUsuario"></span></div>
+      <button class="btn-logout" onclick="sair()">Sair</button>
+    </div>
+  </header>
+
+  <main>
+    <a href="index.html" class="btn-voltar">← Voltar ao site</a>
+
+    <div class="painel-title">Monitoramento de Temperatura</div>
+    <div class="painel-sub">
+      Atualizado em: <span id="ultimaAtualizacao">--</span> &nbsp;|&nbsp;
+      Unidade: <span id="nomeUnidade">Câmara Principal</span>
+    </div>
+
+    <!-- Cards de status -->
+    <div class="cards-grid">
+      <div class="status-card">
+        <div class="status-card-label">Temperatura Atual</div>
+        <div class="status-card-value" id="tempAtual">--</div>
+        <div class="status-card-unit">°C</div>
+        <div class="status-badge ok" id="statusBadge">Normal</div>
+      </div>
+      <div class="status-card">
+        <div class="status-card-label">Máxima 24h</div>
+        <div class="status-card-value" id="tempMax">--</div>
+        <div class="status-card-unit">°C</div>
+      </div>
+      <div class="status-card">
+        <div class="status-card-label">Mínima 24h</div>
+        <div class="status-card-value" id="tempMin">--</div>
+        <div class="status-card-unit">°C</div>
+      </div>
+      <div class="status-card">
+        <div class="status-card-label">Média 24h</div>
+        <div class="status-card-value" id="tempMedia">--</div>
+        <div class="status-card-unit">°C</div>
+      </div>
+      <div class="status-card">
+        <div class="status-card-label">Faixa configurada</div>
+        <div class="status-card-value" style="font-size:1.2rem; color:var(--azul-claro);">-5 a 4°C</div>
+        <div class="status-card-unit">zona segura</div>
+      </div>
+      <div class="status-card">
+        <div class="status-card-label">Alertas hoje</div>
+        <div class="status-card-value ok" id="totalAlertas">0</div>
+        <div class="status-card-unit">ocorrências</div>
+      </div>
+    </div>
+
+    <!-- Gráfico -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">Histórico de Temperatura</div>
+        <div class="chart-filters">
+          <button class="filter-btn active" onclick="mudarPeriodo(this,'24h')">24h</button>
+          <button class="filter-btn" onclick="mudarPeriodo(this,'7d')">7 dias</button>
+          <button class="filter-btn" onclick="mudarPeriodo(this,'30d')">30 dias</button>
+        </div>
+      </div>
+      <canvas id="graficoTemp" height="100"></canvas>
+    </div>
+
+    <!-- Tabela -->
+    <div class="table-card">
+      <div class="table-title">Registros Recentes</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Data / Hora</th>
+            <th>Temperatura</th>
+            <th>Status</th>
+            <th>Observação</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaRegistros"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script>
+  // ============================================================
+  // USUÁRIOS E SENHAS — edite aqui para adicionar clientes
+  // ============================================================
+  const USUARIOS = {
+    "admin":    { senha: "refrifast2026", nome: "Administrador", unidade: "Todas as unidades" },
+    "cliente1": { senha: "camara01",      nome: "Cliente 1",     unidade: "Câmara Fria 01" },
+    "cliente2": { senha: "camara02",      nome: "Cliente 2",     unidade: "Câmara Fria 02" },
+  };
+
+  // ============================================================
+  // FIREBASE — Cole aqui sua config do Firebase Realtime DB
+  // quando quiser leitura real do ESP32
+  // ============================================================
+  // const firebaseConfig = { apiKey: "...", databaseURL: "..." };
+
+  let grafico = null;
+  let periodoAtivo = "24h";
+
+  function fazerLogin() {
+    const user = document.getElementById("loginUser").value.trim().toLowerCase();
+    const pass = document.getElementById("loginPass").value;
+    const erro = document.getElementById("loginErro");
+
+    if (USUARIOS[user] && USUARIOS[user].senha === pass) {
+      erro.textContent = "";
+      document.getElementById("login-screen").style.display = "none";
+      document.getElementById("painel").style.display = "block";
+      document.getElementById("nomeUsuario").textContent = USUARIOS[user].nome;
+      document.getElementById("nomeUnidade").textContent = USUARIOS[user].unidade;
+      iniciarPainel();
+    } else {
+      erro.textContent = "Usuário ou senha incorretos.";
+    }
+  }
+
+  function sair() {
+    document.getElementById("painel").style.display = "none";
+    document.getElementById("login-screen").style.display = "flex";
+    document.getElementById("loginUser").value = "";
+    document.getElementById("loginPass").value = "";
+  }
+
+  function iniciarPainel() {
+    atualizarDados();
+    setInterval(atualizarDados, 30000); // atualiza a cada 30s
+  }
+
+  // Gera temperatura simulada — substitua por leitura real do Firebase
+  function gerarTemp(base, variacao) {
+    return +(base + (Math.random() * variacao * 2 - variacao)).toFixed(1);
+  }
+
+  function atualizarDados() {
+    const agora = new Date();
+    document.getElementById("ultimaAtualizacao").textContent =
+      agora.toLocaleString("pt-BR");
+
+    const atual = gerarTemp(-2.4, 1.2);
+    const max   = gerarTemp(-1.2, 0.5);
+    const min   = gerarTemp(-3.8, 0.4);
+    const media = gerarTemp(-2.5, 0.3);
+    const alertas = Math.random() > 0.8 ? Math.floor(Math.random() * 3) : 0;
+
+    document.getElementById("tempAtual").textContent  = atual;
+    document.getElementById("tempMax").textContent    = max;
+    document.getElementById("tempMin").textContent    = min;
+    document.getElementById("tempMedia").textContent  = media;
+    document.getElementById("totalAlertas").textContent = alertas;
+
+    // define status
+    const badge = document.getElementById("statusBadge");
+    const valEl = document.getElementById("tempAtual");
+    if (atual < -5 || atual > 4) {
+      badge.textContent = "⚠ Fora da faixa";
+      badge.className = "status-badge critico";
+      valEl.className = "status-card-value critico";
+    } else if (atual < -4 || atual > 3) {
+      badge.textContent = "Atenção";
+      badge.className = "status-badge alerta";
+      valEl.className = "status-card-value alerta";
+    } else {
+      badge.textContent = "Normal";
+      badge.className = "status-badge ok";
+      valEl.className = "status-card-value ok";
+    }
+
+    renderGrafico(periodoAtivo);
+    renderTabela();
+  }
+
+  function gerarLabels(periodo) {
+    const labels = [];
+    const agora = new Date();
+    let pontos, subtrairMs, formato;
+
+    if (periodo === "24h") {
+      pontos = 24; subtrairMs = 3600000;
+      formato = h => h.getHours() + ":00";
+    } else if (periodo === "7d") {
+      pontos = 7; subtrairMs = 86400000;
+      formato = d => d.toLocaleDateString("pt-BR", { weekday:"short", day:"2-digit" });
+    } else {
+      pontos = 30; subtrairMs = 86400000;
+      formato = d => d.toLocaleDateString("pt-BR", { day:"2-digit", month:"2-digit" });
+    }
+
+    for (let i = pontos - 1; i >= 0; i--) {
+      const t = new Date(agora - i * subtrairMs);
+      labels.push(formato(t));
+    }
+    return labels;
+  }
+
+  function gerarDadosGrafico(pontos) {
+    return Array.from({ length: pontos }, () => gerarTemp(-2.4, 2));
+  }
+
+  function renderGrafico(periodo) {
+    const ctx = document.getElementById("graficoTemp").getContext("2d");
+    const pontos = periodo === "24h" ? 24 : periodo === "7d" ? 7 : 30;
+    const labels = gerarLabels(periodo);
+    const dados  = gerarDadosGrafico(pontos);
+
+    if (grafico) grafico.destroy();
+
+    grafico = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: "Temperatura (°C)",
+            data: dados,
+            borderColor: "#41B6E6",
+            backgroundColor: "rgba(65,182,230,0.08)",
+            borderWidth: 2,
+            pointRadius: periodo === "30d" ? 2 : 4,
+            pointBackgroundColor: "#41B6E6",
+            tension: 0.4, fill: true,
+          },
+          {
+            label: "Limite máximo (4°C)",
+            data: Array(pontos).fill(4),
+            borderColor: "rgba(239,68,68,0.5)",
+            borderWidth: 1, borderDash: [6,4],
+            pointRadius: 0, fill: false,
+          },
+          {
+            label: "Limite mínimo (-5°C)",
+            data: Array(pontos).fill(-5),
+            borderColor: "rgba(245,158,11,0.5)",
+            borderWidth: 1, borderDash: [6,4],
+            pointRadius: 0, fill: false,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: { color: "#9ca3af", font: { size: 11 } }
+          },
+          tooltip: {
+            backgroundColor: "#0a1628",
+            borderColor: "rgba(65,182,230,0.3)",
+            borderWidth: 1,
+            titleColor: "#e5e7eb",
+            bodyColor: "#9ca3af",
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: "#9ca3af", font: { size: 10 }, maxTicksLimit: 10 },
+            grid: { color: "rgba(65,182,230,0.06)" }
+          },
+          y: {
+            ticks: { color: "#9ca3af", font: { size: 10 } },
+            grid: { color: "rgba(65,182,230,0.06)" },
+            min: -8, max: 8
+          }
+        }
+      }
+    });
+  }
+
+  function mudarPeriodo(btn, periodo) {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    periodoAtivo = periodo;
+    renderGrafico(periodo);
+  }
+
+  function renderTabela() {
+    const tbody = document.getElementById("tabelaRegistros");
+    tbody.innerHTML = "";
+    const agora = new Date();
+
+    for (let i = 0; i < 15; i++) {
+      const t = new Date(agora - i * 1800000);
+      const temp = gerarTemp(-2.4, 2);
+      let statusClass, statusLabel, obs;
+
+      if (temp < -5 || temp > 4) {
+        statusClass = "critico"; statusLabel = "Fora da faixa"; obs = "Verificar equipamento";
+      } else if (temp < -4 || temp > 3) {
+        statusClass = "alerta"; statusLabel = "Atenção"; obs = "Monitorar";
+      } else {
+        statusClass = "ok"; statusLabel = "Normal"; obs = "—";
+      }
+
+      tbody.innerHTML += `
+        <tr>
+          <td>${t.toLocaleString("pt-BR")}</td>
+          <td><strong style="color:var(--azul-claro)">${temp} °C</strong></td>
+          <td><span class="td-status ${statusClass}">${statusLabel}</span></td>
+          <td style="color:var(--muted)">${obs}</td>
+        </tr>`;
+    }
+  }
+</script>
+</body>
+</html>
