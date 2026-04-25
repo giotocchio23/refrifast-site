@@ -2,1048 +2,931 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <title>Refrifast Refrigeração</title>
+  <title>Sensor de Monitoramento RefrifastGo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
   <style>
     :root {
       --azul-principal: #0047BB;
       --azul-claro:     #41B6E6;
-      --azul-escuro:    #003087;
-      --ouro:           #A89060;
-      --verde:          #2CC84D;
-      --branco:         #FFFFFF;
-      --cinza-claro:    #E5E1E6;
+      --azul-texto:     #1F4FA8;
       --fundo-escuro:   #020617;
-      --fundo-card:     #0a1628;
-      --fundo-mid:      #0d1f3c;
+      --fundo-card:     #0b1324;
+      --fundo-mid:      #0f172a;
       --texto:          #e5e7eb;
       --muted:          #9ca3af;
-      --border:         rgba(65,182,230,0.2);
+      --border:         rgba(65,182,230,0.25);
+      --verde:          #22c55e;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", system-ui, sans-serif; }
     html { scroll-behavior: smooth; }
-    body { background: var(--fundo-escuro); color: var(--texto); overflow-x: hidden; }
+    body { background: var(--fundo-escuro); color: var(--texto); min-height: 100vh; }
 
-    /* ===== HEADER ===== */
-    header {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      background: rgba(2,6,23,0.95);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 5%; height: 68px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
+    a { color: inherit; text-decoration: none; }
 
-    .logo-wrap { display: flex; align-items: center; gap: 0; text-decoration: none; }
-    .logo-svg { height: 46px; width: auto; }
-
-    nav ul { list-style: none; display: flex; gap: 24px; align-items: center; }
-    nav ul li a {
-      color: var(--muted); text-decoration: none;
-      font-size: 0.8rem; font-weight: 500; letter-spacing: 0.06em;
-      text-transform: uppercase; transition: color 0.2s;
-    }
-    nav ul li a:hover { color: var(--azul-claro); }
-
-    .btn-nav {
-      padding: 8px 16px; border-radius: 999px;
-      background: linear-gradient(90deg, var(--azul-principal), var(--azul-claro));
-      color: #fff !important; font-weight: 700 !important;
-      border: none; cursor: pointer; text-decoration: none;
-      font-size: 0.75rem; letter-spacing: 0.05em; transition: opacity 0.2s;
-      white-space: nowrap;
-    }
-    .btn-nav:hover { opacity: 0.85; }
-
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
-    .hamburger span { width: 24px; height: 2px; background: var(--azul-claro); border-radius: 2px; display: block; }
-
-    @media (max-width: 900px) {
-      .hamburger { display: flex; }
-      nav {
-        position: absolute; top: 68px; left: 0; right: 0;
-        background: rgba(2,6,23,0.98);
-        padding: 20px 5%; display: none;
-        border-bottom: 1px solid var(--border);
-      }
-      nav.open { display: block; }
-      nav ul { flex-direction: column; gap: 16px; align-items: flex-start; }
+    /* ===== LAYOUT GERAL ===== */
+    .sec-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 72px 5% 40px;
     }
 
-    /* ===== HERO ===== */
-    .hero {
-      min-height: 100vh;
-      display: flex; align-items: center;
-      padding: 100px 5% 60px;
-      background:
-        radial-gradient(ellipse at 20% 50%, rgba(0,71,187,0.3) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 20%, rgba(65,182,230,0.15) 0%, transparent 50%),
-        radial-gradient(circle at top, #0d1f3c 0%, #020617 60%);
-      position: relative; overflow: hidden;
-    }
-    .hero-inner {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
-      align-items: center; max-width: 1200px; margin: 0 auto; width: 100%;
-    }
-    @media(max-width:900px){ .hero-inner { grid-template-columns: 1fr; } }
-
-    .hero-content { z-index: 1; }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 5px 14px; border-radius: 999px;
-      border: 1px solid rgba(65,182,230,0.4);
-      background: rgba(65,182,230,0.08);
-      color: var(--azul-claro); font-size: 0.75rem; font-weight: 600;
-      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px;
-    }
-    .hero-badge::before { content: "●"; font-size: 0.5rem; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-    .hero h1 {
-      font-size: clamp(2rem, 5vw, 3.6rem);
-      font-weight: 900; line-height: 1.1; margin-bottom: 12px; color: var(--branco);
-    }
-    .hero h1 .destaque {
-      background: linear-gradient(90deg, var(--azul-principal), var(--azul-claro));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .hero-slogan {
-      font-size: 1.1rem; color: var(--azul-claro); font-weight: 700;
-      margin-bottom: 16px; letter-spacing: 0.02em;
-    }
-    .hero p {
-      font-size: 0.95rem; color: var(--muted); line-height: 1.7; margin-bottom: 32px;
-    }
-    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-
-    .btn-primary {
-      padding: 13px 28px; border-radius: 999px;
-      background: linear-gradient(90deg, var(--azul-principal), var(--azul-claro));
-      color: #fff; font-weight: 700; font-size: 0.85rem;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      border: none; cursor: pointer; text-decoration: none;
-      transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 8px;
-    }
-    .btn-primary:hover { opacity: 0.85; }
-
-    .btn-outline {
-      padding: 13px 28px; border-radius: 999px;
-      background: transparent; border: 1px solid var(--azul-claro);
-      color: var(--azul-claro); font-weight: 700; font-size: 0.85rem;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      cursor: pointer; text-decoration: none;
-      transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
-    }
-    .btn-outline:hover { background: var(--azul-claro); color: #020617; }
-
-    .hero-stats { display: flex; gap: 32px; margin-top: 48px; flex-wrap: wrap; }
-    .hero-stat { display: flex; flex-direction: column; }
-    .hero-stat strong { font-size: 1.8rem; font-weight: 900; color: var(--azul-claro); }
-    .hero-stat span { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
-
-    .hero-visual {
-      position: relative;
-      min-height: 260px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .hero-card {
-      width: 100%; max-width: 360px;
-      background: radial-gradient(circle at top, #0f172a 0%, #020617 70%);
-      border-radius: 18px; padding: 18px 18px 16px;
-      border: 1px solid rgba(65,182,230,0.4);
-      box-shadow: 0 24px 60px rgba(0,0,0,0.75);
-    }
-    .hero-card-header {
-      display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
-    }
-    .hero-card-title { font-size: 0.85rem; color: var(--cinza-claro); }
-    .hero-card-sub { font-size: 0.7rem; color: var(--muted); }
-    .hero-card-tag {
-      font-size: 0.65rem; padding: 3px 8px; border-radius: 999px;
-      background: rgba(65,182,230,0.16); color: var(--azul-claro);
-      border: 1px solid rgba(65,182,230,0.5);
-    }
-    .hero-temp-main {
-      display: flex; align-items: baseline; gap: 6px; margin-bottom: 8px;
-    }
-    .hero-temp-value { font-size: 2.8rem; font-weight: 900; color: var(--azul-claro); }
-    .hero-temp-unit { font-size: 1.2rem; color: var(--muted); }
-    .hero-temp-status {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 0.78rem; color: var(--muted); margin-bottom: 10px;
-    }
-    .hero-status-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #22c55e; box-shadow: 0 0 0 4px rgba(34,197,94,0.18);
-    }
-    .hero-range { font-size: 0.75rem; color: var(--cinza-claro); margin-bottom: 12px; }
-    .hero-range strong { color: var(--azul-claro); }
-
-    .hero-mini {
-      display: flex; justify-content: space-between; gap: 8px;
-      border-top: 1px solid rgba(15,23,42,0.9); padding-top: 10px; margin-top: 8px;
-    }
-    .hero-mini-col { display: flex; flex-direction: column; gap: 2px; }
-    .hero-mini-label { font-size: 0.65rem; color: var(--muted); }
-    .hero-mini-value { font-size: 0.85rem; color: var(--cinza-claro); }
-    .hero-mini-value strong { color: var(--azul-claro); }
-
-    /* ===== SEÇÃO BASE ===== */
-    section { padding: 80px 5% 60px; }
-    .sec-inner { max-width: 1100px; margin: 0 auto; }
     .sec-label {
-      font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--azul-claro); margin-bottom: 10px;
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--azul-claro);
+      margin-bottom: 8px;
     }
+
     .sec-title {
-      font-size: 1.6rem; font-weight: 800; margin-bottom: 10px; color: var(--branco);
-    }
-    .sec-title .d { color: var(--azul-claro); }
-    .divider {
-      width: 54px; height: 2px;
-      background: linear-gradient(90deg, var(--azul-principal), var(--azul-claro));
-      border-radius: 999px; margin-bottom: 24px;
-    }
-    .sec-desc { font-size: 0.92rem; color: var(--muted); max-width: 640px; }
-
-    /* ===== SOBRE ===== */
-    .sobre-grid {
-      display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr); gap: 32px;
-      margin-top: 30px;
-    }
-    @media(max-width:900px){ .sobre-grid { grid-template-columns: 1fr; } }
-
-    .sobre-card {
-      background: linear-gradient(145deg, rgba(15,23,42,0.96), rgba(2,6,23,0.98));
-      border-radius: 20px; padding: 22px 22px 20px;
-      border: 1px solid rgba(75,85,99,0.4);
-    }
-    .sobre-card h3 { font-size: 1.1rem; margin-bottom: 8px; color: var(--branco); }
-    .sobre-card p { font-size: 0.92rem; color: var(--muted); line-height: 1.7; }
-
-    .sobre-pill {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 4px 12px; border-radius: 999px;
-      border: 1px solid rgba(65,182,230,0.4);
-      color: var(--azul-claro); font-size: 0.75rem;
-      text-transform: uppercase; letter-spacing: 0.08em;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #fff;
       margin-bottom: 10px;
     }
 
-    .atributos-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 18px; margin-top: 14px;
+    .sec-title .d {
+      background: linear-gradient(90deg, var(--azul-principal), var(--azul-claro));
+      -webkit-background-clip: text;
+      color: transparent;
     }
-    .atributo-item {
-      border-radius: 14px;
-      padding: 12px 12px;
-      background: radial-gradient(circle at top left, rgba(65,182,230,0.22), rgba(15,23,42,0.96));
-      border: 1px solid rgba(65,182,230,0.4);
-    }
-    .atributo-item h4 { font-size: 0.9rem; color: var(--cinza-claro); margin-bottom: 4px; }
-    .atributo-item p { font-size: 0.8rem; color: var(--muted); }
 
-    /* ===== SERVIÇOS ===== */
-    .servicos-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 18px; margin-top: 30px;
+    .sec-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+      max-width: 620px;
+      line-height: 1.6;
     }
-    .serv-card {
-      background: radial-gradient(circle at top, #0b1220 0%, #020617 70%);
-      border-radius: 18px; padding: 18px;
-      border: 1px solid rgba(31,41,55,0.9);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.6);
+
+    .divider {
+      width: 46px;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--azul-principal), var(--azul-claro));
+      margin: 14px 0 10px;
     }
-    .serv-card h3 { font-size: 1rem; margin-bottom: 6px; color: var(--cinza-claro); }
-    .serv-card p { font-size: 0.85rem; color: var(--muted); margin-bottom: 10px; }
-    .serv-tag {
-      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+
+    /* ===== HEADER ===== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(2, 6, 23, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-svg {
+      height: 40px;
+      width: auto;
+      display: block;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .logo-text-main {
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--azul-texto);
+    }
+
+    .logo-text-sub {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
       color: var(--azul-claro);
     }
 
-    /* ===== MONITORAMENTO ===== */
-    .mon-grid {
+    nav ul {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    nav a {
+      position: relative;
+      padding: 4px 0;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 0;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--azul-principal), var(--azul-claro));
+      transition: width 0.2s;
+    }
+
+    nav a:hover {
+      color: #fff;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .btn-header {
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--azul-claro);
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.1s;
+    }
+
+    .btn-header:hover {
+      background: var(--azul-principal);
+      border-color: var(--azul-principal);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* ===== HERO ===== */
+    #topo {
+      padding-top: 12px;
+      background:
+        radial-gradient(ellipse at 0% 0%, rgba(0,71,187,0.45) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 20%, rgba(65,182,230,0.25) 0%, transparent 55%),
+        #020617;
+    }
+
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 5% 60px;
       display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-      gap: 32px; margin-top: 30px;
+      grid-template-columns: minmax(0,1.2fr) minmax(0,1fr);
+      gap: 32px;
+      align-items: center;
     }
-    @media(max-width:900px){ .mon-grid { grid-template-columns: 1fr; } }
 
-    .mon-card {
-      background: radial-gradient(circle at top left, #0f172a 0%, #020617 70%);
-      border-radius: 18px; padding: 18px;
-      border: 1px solid rgba(65,182,230,0.4);
-      box-shadow: 0 20px 45px rgba(0,0,0,0.7);
+    .hero-title {
+      font-size: clamp(1.8rem, 3vw, 2.3rem);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.25;
+      margin-bottom: 12px;
     }
-    .mon-header {
-      display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
-    }
-    .mon-header-title { font-size: 0.9rem; color: var(--cinza-claro); }
-    .mon-header-sub { font-size: 0.75rem; color: var(--muted); }
-    .mon-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; }
-    .mon-dot.off { background: #f97316; }
 
-    .mon-temp-main {
-      display: flex; align-items: baseline; gap: 6px; margin-bottom: 8px;
+    .hero-title span {
+      background: linear-gradient(90deg, var(--azul-principal), var(--azul-claro));
+      -webkit-background-clip: text;
+      color: transparent;
     }
-    .mon-temp-value { font-size: 2.4rem; font-weight: 900; color: var(--azul-claro); }
-    .mon-temp-unit { font-size: 1rem; color: var(--muted); }
 
-    .mon-status {
-      font-size: 0.78rem; color: var(--muted); margin-bottom: 10px;
+    .hero-sub {
+      font-size: 0.96rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+      max-width: 520px;
+      line-height: 1.6;
     }
-    .mon-status span { color: var(--azul-claro); }
 
-    .mon-range { font-size: 0.75rem; color: var(--cinza-claro); margin-bottom: 12px; }
-    .mon-range strong { color: var(--azul-claro); }
-
-    .mon-footer {
-      display: flex; justify-content: space-between; gap: 8px;
-      border-top: 1px solid rgba(15,23,42,0.9); padding-top: 10px; margin-top: 8px;
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 22px;
     }
-    .mon-stat { font-size: 0.7rem; color: var(--muted); }
-    .mon-stat strong { color: var(--azul-claro); font-size: 0.85rem; }
 
-    .mon-chart {
-      margin-top: 12px; display: flex; gap: 4px; align-items: flex-end;
-      height: 80px;
+    .hero-badge {
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(65,182,230,0.5);
+      color: var(--azul-claro);
+      background: rgba(15,23,42,0.8);
     }
-    .mon-bar {
-      width: 8px; border-radius: 999px;
-      background: linear-gradient(to top, var(--azul-principal), var(--azul-claro));
-      opacity: 0.9;
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .btn-primary {
+      padding: 10px 20px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(90deg, var(--azul-principal), var(--azul-claro));
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 12px 30px rgba(15,23,42,0.9);
+      transition: transform 0.1s, box-shadow 0.1s, opacity 0.15s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+      box-shadow: 0 18px 35px rgba(15,23,42,1);
+    }
+
+    .btn-secondary {
+      padding: 9px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.8);
+      color: var(--muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(15,23,42,1);
+      color: #fff;
+      border-color: var(--azul-principal);
+    }
+
+    .hero-note {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hero-card {
+      background: rgba(11,19,36,0.95);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 18px 18px 16px;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.75);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0 0, rgba(65,182,230,0.3), transparent 60%);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .hero-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .hero-card-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .hero-card-status {
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(34,197,94,0.5);
+      color: var(--verde);
+      background: rgba(22,163,74,0.1);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .hero-card-main {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .hero-temp {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--azul-claro);
+      line-height: 1;
+    }
+
+    .hero-temp span {
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-left: 4px;
+    }
+
+    .hero-temp-range {
+      font-size: 0.76rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .hero-card-mini {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    .hero-card-mini strong {
+      color: var(--texto);
+    }
+
+    @media(max-width: 840px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+      .hero {
+        padding-top: 20px;
+      }
+    }
+
+    @media(max-width: 640px) {
+      .header-inner {
+        flex-wrap: wrap;
+      }
+      nav ul {
+        display: none; /* simplificar em mobile por enquanto */
+      }
+    }
+
+    /* ===== SOBRE ===== */
+    #sobre {
+      background: #020617;
+    }
+
+    .sobre-grid {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: minmax(0,2fr) minmax(0,1.4fr);
+      gap: 24px;
+    }
+
+    .sobre-list {
+      list-style: none;
+      font-size: 0.9rem;
+      color: var(--texto);
+    }
+
+    .sobre-list li {
+      margin-bottom: 8px;
+    }
+
+    .sobre-list li::before {
+      content: "• ";
+      color: var(--azul-claro);
+    }
+
+    .sobre-card {
+      background: var(--fundo-card);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 16px 18px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ===== GALERIA ===== */
+    #galeria {
+      background: #020617;
+    }
+
+    .galeria-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 26px;
+    }
+
+    .galeria-item {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--fundo-card);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .galeria-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+
+    .galeria-img-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+    }
+
+    .galeria-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s;
+    }
+
+    .galeria-item:hover .galeria-img-wrap img {
+      transform: scale(1.05);
+    }
+
+    .galeria-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,71,187,0.85) 0%, transparent 60%);
+      display: flex;
+      align-items: flex-end;
+      padding: 14px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .galeria-item:hover .galeria-overlay {
+      opacity: 1;
+    }
+
+    .galeria-overlay span {
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .galeria-caption {
+      padding: 10px 12px 12px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ===== MONITORAMENTO (CTA) ===== */
+    #monitoramento {
+      background: var(--fundo-mid);
+    }
+
+    .monitor-card {
+      margin-top: 26px;
+      background: var(--fundo-card);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 18px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .monitor-text {
+      max-width: 620px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .monitor-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 200px;
+    }
+
+    .monitor-actions .btn-primary {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .monitor-actions small {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-align: center;
     }
 
     /* ===== CONTATO ===== */
-    .contato-grid {
-      display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 32px;
-      margin-top: 28px;
+    #contato {
+      background: #020617;
     }
-    @media(max-width:900px){ .contato-grid { grid-template-columns: 1fr; } }
 
-    .contato-item {
-      display: flex; gap: 12px; margin-bottom: 16px;
+    .contato-grid {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: minmax(0,1.4fr) minmax(0,1.5fr);
+      gap: 22px;
     }
-    .contato-item-icon {
-      width: 32px; height: 32px; border-radius: 999px;
-      background: rgba(15,23,42,0.95); display: flex; align-items: center; justify-content: center;
+
+    .contato-card {
+      background: var(--fundo-card);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 18px 20px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .contato-list {
+      list-style: none;
+      margin-top: 12px;
       font-size: 0.9rem;
     }
-    .contato-item h4 { font-size: 0.95rem; color: var(--cinza-claro); margin-bottom: 2px; }
-    .contato-item p { font-size: 0.8rem; color: var(--muted); }
-    .contato-item a { color: var(--azul-claro); font-size: 0.85rem; text-decoration: none; }
 
-    .form-card {
-      background: radial-gradient(circle at top, #0b1220 0%, #020617 70%);
-      border-radius: 18px; padding: 18px 18px 20px;
-      border: 1px solid rgba(65,182,230,0.4);
-      box-shadow: 0 20px 45px rgba(0,0,0,0.7);
+    .contato-list li {
+      margin-bottom: 6px;
     }
-    .form-title { font-size: 1rem; font-weight: 700; color: var(--cinza-claro); margin-bottom: 10px; }
 
-    .form-row { display: flex; gap: 12px; margin-bottom: 10px; }
-    @media(max-width:600px){ .form-row { flex-direction: column; } }
-
-    .form-group { margin-bottom: 10px; }
-    .form-group label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%; border-radius: 10px; border: 1px solid rgba(55,65,81,0.8);
-      background: #020617; color: var(--texto); font-size: 0.85rem;
-      padding: 8px 10px; outline: none;
+    .contato-list strong {
+      color: var(--texto);
     }
-    .form-group textarea { min-height: 80px; resize: vertical; }
 
-    .btn-form {
-      width: 100%; padding: 10px 0; border-radius: 999px;
-      background: linear-gradient(90deg, var(--azul-principal), var(--azul-claro));
-      color: #fff; font-weight: 700; font-size: 0.85rem;
-      letter-spacing: 0.06em; text-transform: uppercase;
-      border: none; cursor: pointer; margin-top: 4px;
+    .contato-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 0.85rem;
     }
-    .btn-form:hover { opacity: 0.9; }
-    .form-msg { font-size: 0.78rem; margin-top: 6px; }
-    /* ===== GALERIA ===== */
-.galeria-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-top: 32px;
-}
 
-.galeria-item {
-  border-radius: 16px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  background: var(--fundo-card);
-  transition: transform 0.25s, box-shadow 0.25s;
-}
+    .contato-form label {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
 
-.galeria-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-}
+    .contato-form input,
+    .contato-form textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--fundo-mid);
+      color: var(--texto);
+      outline: none;
+      font-size: 0.85rem;
+    }
 
-.galeria-img-wrap {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 4/3;
-  overflow: hidden;
-}
+    .contato-form textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
 
-.galeria-img-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.35s;
-}
+    .contato-form button {
+      align-self: flex-start;
+    }
 
-.galeria-item:hover .galeria-img-wrap img {
-  transform: scale(1.05);
-}
-
-.galeria-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,71,187,0.85) 0%, transparent 60%);
-  display: flex;
-  align-items: flex-end;
-  padding: 16px;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.galeria-item:hover .galeria-overlay {
-  opacity: 1;
-}
-
-.galeria-overlay span {
-  color: #fff;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.galeria-caption {
-  padding: 12px 14px;
-  font-size: 0.8rem;
-  color: var(--muted);
-  border-top: 1px solid var(--border);
-}
+    .contato-hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
 
     /* ===== FOOTER ===== */
     footer {
-      border-top: 1px solid rgba(31,41,55,0.9);
-      padding: 28px 5% 20px; background: #020617;
-    }
-    .footer-grid {
-      max-width: 1100px; margin: 0 auto 10px;
-      display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr);
-      gap: 28px;
-    }
-    @media(max-width:900px){ .footer-grid { grid-template-columns: 1fr; } }
-
-    <img src="logo-refrifast-oficial.png" alt="Refrifast Refrigeração" style="height:40px;width:auto;">
-    .footer-slogan { color: var(--azul-claro); font-style: italic; font-size: 0.8rem; margin-top: 6px; }
-
-    .footer-col h4 { font-size: 0.9rem; color: var(--cinza-claro); margin-bottom: 8px; }
-    .footer-col ul { list-style: none; }
-    .footer-col li { margin-bottom: 6px; }
-    .footer-col a { font-size: 0.8rem; color: var(--muted); text-decoration: none; }
-    .footer-col a:hover { color: var(--azul-claro); }
-
-    .footer-bottom {
-      max-width: 1100px; margin: 0 auto;
-      border-top: 1px solid rgba(31,41,55,0.9);
-      padding-top: 10px;
-      display: flex; flex-wrap: wrap; justify-content: space-between;
-      font-size: 0.78rem; color: var(--muted);
+      border-top: 1px solid rgba(15,23,42,1);
+      background: #020617;
+      padding: 16px 5% 20px;
+      font-size: 0.78rem;
+      color: var(--muted);
     }
 
-    /* WHATSAPP FLOAT */
-    .whatsapp-float {
-      position: fixed; right: 18px; bottom: 18px;
-      width: 44px; height: 44px; border-radius: 999px;
-      background: #22c55e; display: flex; align-items: center; justify-content: center;
-      color: #020617; font-size: 1.3rem; text-decoration: none;
-      box-shadow: 0 12px 25px rgba(0,0,0,0.7); z-index: 90;
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-brand img {
+      height: 28px;
+      width: auto;
+    }
+
+    .footer-brand span {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .footer-right {
+      text-align: right;
+    }
+
+    @media(max-width: 700px) {
+      .sobre-grid,
+      .contato-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .footer-right {
+        text-align: left;
+      }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <a href="#topo" class="logo-wrap">
-  <img src="logo-refrifast.png" alt="Refrifast Refrigeração" class="logo-svg">
-</a>
-      <!-- corpo do urso -->
-      <ellipse cx="30" cy="34" rx="16" ry="18" fill="#0047BB"/>
-      <ellipse cx="20" cy="16" rx="6" ry="6.5" fill="#0047BB"/>
-      <ellipse cx="12" cy="38" rx="7" ry="6.5" fill="#0047BB"/>
-      <ellipse cx="48" cy="38" rx="7" ry="6.5" fill="#003087"/>
-      <path d="M30 14 Q46 20 44 38 Q42 50 30 54 Q40 48 41 36 Q43 20 30 14Z" fill="#003087"/>
-      <path d="M28 13 Q42 21 40 38 Q38 50 28 54" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
-      <circle cx="22" cy="12" r="2" fill="white" opacity="0.85"/>
-      <!-- texto -->
-      <text x="68" y="36" font-family="Inter, Arial, sans-serif" font-weight="900" font-size="24" fill="#0047BB">Refrifast</text>
-      <text x="69" y="51" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="11" fill="#41B6E6" letter-spacing="2">REFRIGERAÇÃO</text>
-    </svg>
-  </a>
+  <div class="header-inner">
+    <a href="#topo" class="logo-wrap">
+      <img src="logo-refrifast.png" alt="Refrifast Refrigeração" class="logo-svg">
+      <div class="logo-text">
+        <span class="logo-text-main">Refrifast</span>
+        <span class="logo-text-sub">REFRIGERAÇÃO</span>
+      </div>
+    </a>
 
-  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
+    <nav>
+      <ul>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#galeria">Galeria</a></li>
+        <li><a href="#monitoramento">Monitoramento</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+    </nav>
 
-  <nav id="navMenu">
-    <ul>
-      <li><a href="#sobre">Sobre</a></li>
-      <li><a href="#servicos">Serviços</a></li>
-      <li><a href="#equipamentos">Equipamentos</a></li>
-      <li><a href="#diferenciais">Diferenciais</a></li>
-      <li><a href="#galeria">Galeria</a></li>
-      <li><a href="#monitoramento">Monitoramento</a></li>
-      <li><a href="#contato">Contato</a></li>
-      <!-- botão painel -->
-      <li><a class="btn-nav" href="monitoramento.html">Acessar painel de monitoramento</a></li>
-    </ul>
-  </nav>
+    <button class="btn-header" onclick="window.location.href='#contato'">
+      Solicitar orçamento
+    </button>
+  </div>
 </header>
 
-<main id="topo">
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-inner">
-      <div class="hero-content">
-        <div class="hero-badge">Refrigeração profissional com resposta rápida</div>
-        <h1>
-          Refrigeração confiável<br />
-          para o seu negócio<br />
-          <span class="destaque">24 horas por dia</span>
-        </h1>
-        <div class="hero-slogan">Sua necessidade é nossa urgência.</div>
-        <p>
-          A Refrifast é especializada em soluções de refrigeração comercial e industrial,
-          com atendimento ágil, equipe certificada e monitoramento inteligente da temperatura.
-        </p>
-
-        <div class="hero-btns">
-          <a href="#contato" class="btn-primary">Solicitar avaliação técnica</a>
-          <a href="monitoramento.html" class="btn-outline">Acessar painel de monitoramento</a>
-        </div>
-
-        <div class="hero-stats">
-          <div class="hero-stat">
-            <strong>+10</strong>
-            <span>anos de experiência</span>
-          </div>
-          <div class="hero-stat">
-            <strong>GO</strong>
-            <span>atendimento em Goiás</span>
-          </div>
-          <div class="hero-stat">
-            <strong>24/7</strong>
-            <span>suporte emergencial</span>
-          </div>
-        </div>
+<section id="topo">
+  <div class="hero">
+    <div>
+      <div class="hero-title">
+        Sensor de monitoramento <span>RefrifastGo</span>
       </div>
-
-      <div class="hero-visual">
-        <div class="hero-card">
-          <div class="hero-card-header">
-            <div>
-              <div class="hero-card-title">Câmara Fria 01</div>
-              <div class="hero-card-sub">Açougue — Unidade Central</div>
-            </div>
-            <span class="hero-card-tag">Monitorando em tempo real</span>
-          </div>
-          <div class="hero-temp-main">
-            <div class="hero-temp-value">-2.4</div>
-            <div class="hero-temp-unit">°C</div>
-          </div>
-          <div class="hero-temp-status">
-            <span class="hero-status-dot"></span>
-            Dentro da faixa segura (conforme RDC 216)
-          </div>
-          <div class="hero-range">
-            Faixa configurada: <strong>-5,0 °C a 4,0 °C</strong>
-          </div>
-          <div class="hero-mini">
-            <div class="hero-mini-col">
-              <span class="hero-mini-label">Máxima 24h</span>
-              <span class="hero-mini-value"><strong>-1,2 °C</strong></span>
-            </div>
-            <div class="hero-mini-col">
-              <span class="hero-mini-label">Mínima 24h</span>
-              <span class="hero-mini-value"><strong>-3,8 °C</strong></span>
-            </div>
-            <div class="hero-mini-col">
-              <span class="hero-mini-label">Média 24h</span>
-              <span class="hero-mini-value"><strong>-2,5 °C</strong></span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- SOBRE -->
-  <section id="sobre">
-    <div class="sec-inner">
-      <div class="sec-label">Sobre a Refrifast</div>
-      <h2 class="sec-title">Quem cuida da sua <span class="d">refrigeração</span></h2>
-      <div class="divider"></div>
-      <p class="sec-desc">
-        A Refrifast nasceu do amor ao trabalho e ao compromisso com a segurança dos alimentos
-        e o conforto térmico. Nosso objetivo é oferecer soluções modernas, sérias e acessíveis,
-        garantindo que seus equipamentos de refrigeração funcionem com máxima eficiência.
+      <p class="hero-sub">
+        Monitore a temperatura das suas câmaras frias, expositores e balcões
+        em tempo real, de qualquer lugar, com alertas direto no WhatsApp.
       </p>
 
-      <div class="sobre-grid">
-        <div>
-          <div class="sobre-pill">Arquétipo: O Cuidador</div>
-          <div class="sobre-card">
-            <h3>Fazer pelos outros o que fazemos por nós</h3>
-            <p>
-              Guiados pelo arquétipo do Cuidador, tratamos cada instalação, manutenção e projeto
-              como se fosse para nós mesmos. Nosso foco é proteger o que é importante para você:
-              seus produtos, seus clientes e seu negócio.
-            </p>
-          </div>
-
-          <div class="atributos-grid">
-            <div class="atributo-item">
-              <h4>Moderna & Séria</h4>
-              <p>Combinamos tecnologia de monitoramento com uma postura profissional e responsável.</p>
-            </div>
-            <div class="atributo-item">
-              <h4>Acessível & Inteligente</h4>
-              <p>Projetos bem pensados, com soluções econômicas e de alto desempenho.</p>
-            </div>
-            <div class="atributo-item">
-              <h4>Confiável & Dedicada</h4>
-              <p>Atendimento próximo, com visão de longo prazo e foco em relacionamento.</p>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <div class="sobre-card">
-            <h3>Nome que traduz o nosso propósito</h3>
-            <p>
-              Refrifast une <strong>Refri</strong> (refrigeração) + <strong>Fast</strong> (rápido),
-              mostrando de forma clara a nossa especialidade e a velocidade em atender seus clientes.
-            </p>
-            <p>
-              Atendemos empresas que precisam de refrigeração confiável e assistência ágil,
-              com foco em supermercados, açougues, restaurantes, cozinhas industriais e comércios em geral.
-            </p>
-          </div>
-        </div>
+      <div class="hero-badges">
+        <span class="hero-badge">Monitoramento 24h</span>
+        <span class="hero-badge">Alertas automáticos</span>
+        <span class="hero-badge">Acesso via navegador</span>
       </div>
-    </div>
-  </section>
 
-  <!-- SERVIÇOS -->
-  <section id="servicos">
-    <div class="sec-inner">
-      <div class="sec-label">O que fazemos</div>
-      <h2 class="sec-title">Soluções completas em <span class="d">refrigeração</span></h2>
-      <div class="divider"></div>
-      <p class="sec-desc">
-        Do projeto à manutenção, oferecemos serviços personalizados de refrigeração comercial
-        e industrial, com foco em segurança, eficiência e conformidade com normas técnicas.
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="window.location.href='#monitoramento'">
+          Ver como funciona
+        </button>
+        <button class="btn-secondary" onclick="window.location.href='#contato'">
+          Falar com a Refrifast
+        </button>
+      </div>
+
+      <p class="hero-note">
+        Sua necessidade é nossa urgência.
       </p>
+    </div>
 
-      <div class="servicos-grid">
-        <div class="serv-card">
-          <h3>Montagem de Câmaras Frias</h3>
-          <p>
-            Dimensionamento, instalação e start-up de câmaras frias para diferentes aplicações:
-            carnes, laticínios, congelados e hortifrúti.
-          </p>
-          <div class="serv-tag">Projetos sob medida</div>
-        </div>
-        <div class="serv-card">
-          <h3>Manutenção Preventiva</h3>
-          <p>
-            Planos de manutenção programados para reduzir falhas, aumentar a vida útil dos
-            equipamentos e reduzir custos de energia.
-          </p>
-          <div class="serv-tag">Rotinas planejadas</div>
-        </div>
-        <div class="serv-card">
-          <h3>Manutenção Corretiva</h3>
-          <p>
-            Atendimento rápido em casos de falha, evitando perdas de produtos e interrupções nas operações.
-          </p>
-          <div class="serv-tag">Resposta rápida</div>
-        </div>
-        <div class="serv-card">
-          <h3>Instalação de Expositores e Chillers</h3>
-          <p>
-            Instalação e adequação de expositores verticais, horizontais e ilhas, garantindo
-            a correta circulação de ar e performance.
-          </p>
-          <div class="serv-tag">Varejo e supermercados</div>
-        </div>
-        <div class="serv-card">
-          <h3>Monitoramento Inteligente</h3>
-          <p>
-            Sistema próprio de monitoramento de temperatura com alertas, históricos e acesso remoto.
-          </p>
-          <div class="serv-tag">Tecnologia Refrifast</div>
-        </div>
-        <div class="serv-card">
-          <h3>Consultoria Técnica</h3>
-          <p>
-            Análise de instalações, diagnósticos e recomendações para melhoria de performance
-            e economia de energia.
-          </p>
-          <div class="serv-tag">Visão estratégica</div>
+    <div class="hero-card">
+      <div class="hero-card-header">
+        <div class="hero-card-title">Câmara fria - Loja 01</div>
+        <div class="hero-card-status">
+          <span>●</span> Online
         </div>
       </div>
+      <div class="hero-card-main">
+        <div>
+          <div class="hero-temp">-2,4<span>°C</span></div>
+          <div class="hero-temp-range">Faixa segura: -5 a 4 °C</div>
+        </div>
+      </div>
+      <div class="hero-card-mini">
+        Último registro há <strong>2 minutos</strong> · Monitoramento via RefrifastGo
+      </div>
     </div>
-  </section>
-  <!-- GALERIA -->
+  </div>
+</section>
+
+<section id="sobre">
+  <div class="sec-inner">
+    <div class="sec-label">Sobre a Refrifast</div>
+    <h2 class="sec-title">Especialistas em <span class="d">refrigeração comercial</span></h2>
+    <div class="divider"></div>
+    <p class="sec-desc">
+      A Refrifast atua com instalação, manutenção e monitoramento de câmaras frias,
+      expositores e sistemas de refrigeração comercial. Com o RefrifastGo, você
+      acompanha a temperatura dos seus equipamentos em tempo real, com alertas
+      automáticos em caso de falhas.
+    </p>
+
+    <div class="sobre-grid">
+      <ul class="sobre-list">
+        <li>Monitoramento contínuo de temperatura.</li>
+        <li>Alertas configuráveis por equipamento.</li>
+        <li>Acesso web protegido por login.</li>
+        <li>Integração com sensores instalados no local.</li>
+      </ul>
+      <div class="sobre-card">
+        Cada cliente recebe acesso exclusivo ao painel online, onde pode visualizar
+        histórico de temperatura, relatórios e status das câmaras. Nosso objetivo é
+        reduzir perdas de estoque e garantir que a cadeia de frio seja mantida
+        com segurança.
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="galeria">
   <div class="sec-inner">
     <div class="sec-label">Nossos trabalhos</div>
     <h2 class="sec-title">Galeria de <span class="d">realizações</span></h2>
     <div class="divider"></div>
     <p class="sec-desc">
-      Conheça alguns dos trabalhos realizados pela Refrifast em instalações,
-      câmaras frias, expositores e projetos de refrigeração comercial.
+      Alguns registros de instalações, manutenções e projetos de refrigeração
+      realizados pela Refrifast.
     </p>
 
     <div class="galeria-grid">
 
-      <!-- 
-        COMO ADICIONAR FOTOS:
-        1. Suba a imagem no GitHub (Add file → Upload files)
-        2. Copie e cole um bloco .galeria-item abaixo
-        3. Troque "sua-foto.jpg" pelo nome exato do arquivo que você subiu
-        4. Troque o texto da legenda pelo que quiser
-      -->
-
       <!-- ITEM 1 -->
       <div class="galeria-item">
         <div class="galeria-img-wrap">
-          <img src="galeria/foto1.jpg" alt="Instalação de câmara fria" loading="lazy" />
+          <img src="galeria/foto1.jpg" alt="Trabalho 1" loading="lazy" />
           <div class="galeria-overlay">
             <span>Instalação de câmara fria</span>
           </div>
         </div>
-        <div class="galeria-caption">Instalação de câmara fria — Anápolis, GO</div>
+        <div class="galeria-caption">Câmara fria - cliente 01</div>
       </div>
 
       <!-- ITEM 2 -->
       <div class="galeria-item">
         <div class="galeria-img-wrap">
-          <img src="galeria/foto2.jpg" alt="Manutenção preventiva" loading="lazy" />
+          <img src="galeria/foto2.jpg" alt="Trabalho 2" loading="lazy" />
           <div class="galeria-overlay">
             <span>Manutenção preventiva</span>
           </div>
         </div>
-        <div class="galeria-caption">Manutenção preventiva — Supermercado</div>
+        <div class="galeria-caption">Manutenção preventiva em supermercado</div>
       </div>
 
       <!-- ITEM 3 -->
       <div class="galeria-item">
         <div class="galeria-img-wrap">
-          <img src="galeria/foto3.jpg" alt="Expositor vertical" loading="lazy" />
+          <img src="galeria/foto3.jpg" alt="Trabalho 3" loading="lazy" />
           <div class="galeria-overlay">
-            <span>Expositor vertical</span>
+            <span>Expositores verticais</span>
           </div>
         </div>
-        <div class="galeria-caption">Instalação de expositor vertical</div>
+        <div class="galeria-caption">Instalação de expositores verticais</div>
       </div>
 
       <!-- ITEM 4 -->
       <div class="galeria-item">
         <div class="galeria-img-wrap">
-          <img src="galeria/foto4.jpg" alt="Câmara fria industrial" loading="lazy" />
+          <img src="galeria/foto4.jpg" alt="Trabalho 4" loading="lazy" />
           <div class="galeria-overlay">
-            <span>Câmara fria industrial</span>
+            <span>Projeto completo</span>
           </div>
         </div>
-        <div class="galeria-caption">Câmara fria industrial — montagem completa</div>
+        <div class="galeria-caption">Projeto completo de refrigeração</div>
       </div>
 
-     
-
-    </div><!-- fim galeria-grid -->
+    </div>
   </div>
 </section>
 
-  <!-- MONITORAMENTO -->
-  <section id="monitoramento">
-    <div class="sec-inner">
-      <div class="sec-label">Monitoramento Refrifast</div>
-      <h2 class="sec-title">Controle em tempo real <span class="d">onde você estiver</span></h2>
-      <div class="divider"></div>
-      <p class="sec-desc">
-        Nosso sistema de monitoramento permite acompanhar a temperatura dos seus equipamentos
-        em tempo real, com alertas configuráveis, histórico de leituras e acesso remoto
-        via painel online.
-      </p>
+<section id="monitoramento">
+  <div class="sec-inner">
+    <div class="sec-label">Monitoramento online</div>
+    <h2 class="sec-title">Painel de <span class="d">temperatura</span></h2>
+    <div class="divider"></div>
+    <p class="sec-desc">
+      Cada cliente da Refrifast pode acessar um painel exclusivo de monitoramento
+      com gráficos, históricos e alertas em tempo real.
+    </p>
 
-      <div class="mon-grid">
-        <div class="mon-card">
-          <div class="mon-header">
-            <div>
-              <div class="mon-header-title">Câmara Fria 01 — Açougue</div>
-              <div class="mon-header-sub">Loja Matriz — Refrigeração Comercial</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;">
-              <span class="mon-dot"></span>
-              <span class="mon-header-sub">Online</span>
-            </div>
-          </div>
-
-          <div class="mon-temp-main">
-            <div class="mon-temp-value">-2.4</div>
-            <div class="mon-temp-unit">°C</div>
-          </div>
-
-          <div class="mon-status">
-            Status: <span>dentro da faixa programada</span>
-          </div>
-          <div class="mon-range">
-            Faixa configurada: <strong>-5,0 °C a 4,0 °C</strong>
-          </div>
-
-          <div class="mon-chart">
-            <div class="mon-bar" style="height:60%"></div>
-            <div class="mon-bar" style="height:72%"></div>
-            <div class="mon-bar" style="height:68%"></div>
-            <div class="mon-bar" style="height:74%"></div>
-            <div class="mon-bar" style="height:65%"></div>
-            <div class="mon-bar" style="height:70%"></div>
-            <div class="mon-bar" style="height:62%"></div>
-          </div>
-
-          <div class="mon-footer">
-            <div class="mon-stat">
-              Máxima 24h<br /><strong>-1,2 °C</strong>
-            </div>
-            <div class="mon-stat">
-              Mínima 24h<br /><strong>-3,8 °C</strong>
-            </div>
-            <div class="mon-stat">
-              Média 24h<br /><strong>-2,5 °C</strong>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h3 style="font-size:1rem;margin-bottom:10px;color:var(--cinza-claro);">
-            Como funciona o painel de monitoramento
-          </h3>
-          <p style="font-size:0.9rem;color:var(--muted);margin-bottom:12px;">
-            Cada sensor instalado em câmaras frias, balcões e expositores envia leituras
-            de temperatura para a nuvem, permitindo consulta via painel web.
-          </p>
-          <ul style="font-size:0.9rem;color:var(--muted);margin-left:20px;margin-bottom:14px;">
-            <li>Leituras contínuas de temperatura</li>
-            <li>Alertas configuráveis conforme sua necessidade</li>
-            <li>Visualização por equipamento, loja ou grupo</li>
-            <li>Histórico de 24h, 7 dias e 30 dias</li>
-          </ul>
-          <a href="monitoramento.html" class="btn-primary">Acessar painel de monitoramento</a>
-        </div>
+    <div class="monitor-card">
+      <div class="monitor-text">
+        Através do RefrifastGo, você acompanha em tempo real a temperatura dos
+        seus equipamentos. O painel mostra histórico das últimas 24 horas,
+        7 dias e 30 dias, com indicação visual de quando a temperatura saiu
+        da faixa segura configurada.
       </div>
-    </div>
-  </section>
-
-  <!-- CONTATO -->
-  <section id="contato">
-    <div class="sec-inner">
-      <div class="sec-label">Fale conosco</div>
-      <h2 class="sec-title">Entre em <span class="d">contato</span></h2>
-      <div class="divider"></div>
-      <div class="contato-grid">
-        <div class="contato-info">
-          <div class="contato-item">
-            <div class="contato-item-icon">📞</div>
-            <div>
-              <h4>WhatsApp / Telefone</h4>
-              <a href="https://wa.me/5562994859256" target="_blank">(62) 99485-9256</a>
-              <p>Disponível para atendimento e avaliação técnica.</p>
-            </div>
-          </div>
-          <div class="contato-item">
-            <div class="contato-item-icon">📧</div>
-            <div>
-              <h4>E-mail</h4>
-              <a href="mailto:refrifastgogoiania@gmail.com">refrifastgogoiania@gmail.com</a>
-              <p>Respondemos em até 24 horas úteis.</p>
-            </div>
-          </div>
-          <div class="contato-item">
-            <div class="contato-item-icon">📍</div>
-            <div>
-              <h4>Localização</h4>
-              <p>Rua Jorge Salomão, 245 — Vila São Jorge</p>
-              <p>Anápolis — GO, CEP 75044-310</p>
-            </div>
-          </div>
-          <div class="contato-item">
-            <div class="contato-item-icon">👤</div>
-            <div>
-              <h4>Responsável Técnico</h4>
-              <p>Giovanni Tocchio</p>
-              <p>CNPJ: 66.359.495/0001-58</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-card">
-          <div class="form-title">Solicite uma avaliação técnica</div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Nome completo</label>
-              <input id="fNome" type="text" placeholder="Seu nome" />
-            </div>
-            <div class="form-group">
-              <label>WhatsApp</label>
-              <input id="fWhatsapp" type="tel" placeholder="(62) 99999-9999" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label>E-mail</label>
-            <input id="fEmail" type="email" placeholder="seuemail@exemplo.com" />
-          </div>
-          <div class="form-group">
-            <label>Tipo de serviço</label>
-            <select id="fServico">
-              <option value="">Selecione o serviço</option>
-              <option>Montagem de Câmara Fria</option>
-              <option>Manutenção Preventiva</option>
-              <option>Manutenção Corretiva</option>
-              <option>Instalação de Expositores / Chillers</option>
-              <option>Monitoramento Inteligente</option>
-              <option>Consultoria Técnica</option>
-              <option>Outro</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Mensagem</label>
-            <textarea id="fMsg" placeholder="Descreva brevemente sua necessidade..."></textarea>
-          </div>
-          <button class="btn-form" onclick="enviarFormulario()">Enviar solicitação via WhatsApp</button>
-          <div id="formMsg" class="form-msg"></div>
-        </div>
+      <div class="monitor-actions">
+        <button class="btn-primary" onclick="window.location.href='monitoramento.html'">
+          Acessar painel de monitoramento
+        </button>
+        <small>
+          Acesso protegido por login. Cada cliente tem usuário e senha próprios.
+        </small>
       </div>
-    </div>
-  </section>
-
-</main>
-
-<footer>
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <!-- Mesmo logo no footer -->
-      <img src="logo-refrifast.png" alt="Refrifast Refrigeração" style="height:40px;width:auto;">
-        <ellipse cx="30" cy="34" rx="16" ry="18" fill="#0047BB"/>
-        <ellipse cx="20" cy="16" rx="6" ry="6.5" fill="#0047BB"/>
-        <ellipse cx="12" cy="38" rx="7" ry="6.5" fill="#0047BB"/>
-        <ellipse cx="48" cy="38" rx="7" ry="6.5" fill="#003087"/>
-        <path d="M30 14 Q46 20 44 38 Q42 50 30 54 Q40 48 41 36 Q43 20 30 14Z" fill="#003087"/>
-        <path d="M28 13 Q42 21 40 38 Q38 50 28 54" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
-        <circle cx="22" cy="12" r="2" fill="white" opacity="0.85"/>
-        <text x="68" y="36" font-family="Inter, Arial, sans-serif" font-weight="900" font-size="24" fill="#0047BB">Refrifast</text>
-        <text x="69" y="51" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="11" fill="#41B6E6" letter-spacing="2">REFRIGERAÇÃO</text>
-      </svg>
-      <p>Especialistas em soluções completas de refrigeração comercial e industrial. Equipe com formação no Reino Unido, atendendo com padrão técnico internacional.</p>
-      <p class="footer-slogan">"Sua necessidade é nossa urgência."</p>
-    </div>
-    <div class="footer-col">
-      <h4>Serviços</h4>
-      <ul>
-        <li><a href="#servicos">Câmaras Frias</a></li>
-        <li><a href="#servicos">Manutenção Preventiva</a></li>
-        <li><a href="#servicos">Manutenção Corretiva</a></li>
-        <li><a href="#servicos">Expositores e Chillers</a></li>
-        <li><a href="#monitoramento">Monitoramento</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Contato</h4>
-      <ul>
-        <li><a href="https://wa.me/5562994859256">(62) 99485-9256</a></li>
-        <li><a href="mailto:refrifastgogoiania@gmail.com">refrifastgogoiania@gmail.com</a></li>
-        <li><a href="#sobre">Sobre nós</a></li>
-        <li><a href="#diferenciais">Diferenciais</a></li>
-        <li><a href="monitoramento.html">Painel de Monitoramento</a></li>
-      </ul>
     </div>
   </div>
-  <div class="footer-bottom">
-    <p>© 2026 Refrifast Refrigeração — Todos os direitos reservados.</p>
-    <span>CNPJ 66.359.495/0001-58 — Anápolis, GO</span>
+</section>
+
+<section id="contato">
+  <div class="sec-inner">
+    <div class="sec-label">Contato</div>
+    <h2 class="sec-title">Fale com a <span class="d">Refrifast</span></h2>
+    <div class="divider"></div>
+    <p class="sec-desc">
+      Entre em contato para solicitar orçamento, esclarecer dúvidas ou agendar
+      uma visita técnica.
+    </p>
+
+    <div class="contato-grid">
+      <div class="contato-card">
+        <div>Informações de contato:</div>
+        <ul class="contato-list">
+          <li><strong>Telefone / WhatsApp:</strong> (62) 9 0000-0000</li>
+          <li><strong>Cidade:</strong> Anápolis - GO</li>
+        </ul>
+      </div>
+
+      <div class="contato-card">
+        <form class="contato-form" onsubmit="abrirWhatsapp(event)">
+          <div>
+            <label for="nome">Nome</label>
+            <input id="nome" type="text" placeholder="Seu nome" required />
+          </div>
+          <div>
+            <label for="mensagem">Mensagem</label>
+            <textarea id="mensagem" placeholder="Descreva sua necessidade"></textarea>
+          </div>
+          <button class="btn-primary" type="submit">
+            Enviar mensagem no WhatsApp
+          </button>
+          <div class="contato-hint">
+            Ao clicar, seu WhatsApp será aberto com a mensagem preenchida.
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="logo-refrifast.png" alt="Refrifast" />
+      <span>Refrifast Refrigeração • Todos os direitos reservados</span>
+    </div>
+    <div class="footer-right">
+      <span>Sensor de monitoramento RefrifastGo</span>
+    </div>
   </div>
 </footer>
 
-<a class="whatsapp-float" href="https://wa.me/5562994859256" target="_blank" title="Fale pelo WhatsApp">💬</a>
-
 <script>
-  function toggleMenu() {
-    document.getElementById("navMenu").classList.toggle("open");
-  }
+  function abrirWhatsapp(e) {
+    e.preventDefault();
+    const nome = document.getElementById("nome").value.trim();
+    const mensagem = document.getElementById("mensagem").value.trim();
+    const telefone = "556200000000"; // ajuste depois para o número correto
 
-  document.querySelectorAll("#navMenu a").forEach(a => {
-    a.addEventListener("click", () => {
-      document.getElementById("navMenu").classList.remove("open");
-    });
-  });
-
-  window.addEventListener("scroll", () => {
-    const h = document.querySelector("header");
-    h.style.boxShadow = window.scrollY > 30 ? "0 4px 30px rgba(0,0,0,0.6)" : "none";
-  });
-
-  function enviarFormulario() {
-    const nome     = document.getElementById("fNome").value.trim();
-    const whatsapp = document.getElementById("fWhatsapp").value.trim();
-    const email    = document.getElementById("fEmail").value.trim();
-    const servico  = document.getElementById("fServico").value;
-    const msg      = document.getElementById("fMsg").value.trim();
-    const msgEl    = document.getElementById("formMsg");
-
-    if (!nome || !whatsapp || !servico) {
-      msgEl.textContent = "Preencha pelo menos nome, WhatsApp e tipo de serviço.";
-      msgEl.style.color = "#ef4444";
-      return;
+    let texto = "Olá, meu nome é " + nome + ".%0A";
+    texto += "Tenho interesse no sensor de monitoramento RefrifastGo.";
+    if (mensagem) {
+      texto += "%0A%0A" + "Detalhes: " + mensagem;
     }
 
-    const texto =
-      `Olá! Meu nome é ${nome}.%0A` +
-      `WhatsApp: ${whatsapp}%0A` +
-      (email ? `E-mail: ${email}%0A` : "") +
-      `Serviço: ${servico}%0A` +
-      (msg ? `Mensagem: ${msg}%0A%0A` : "%0A") +
-      `Gostaria de solicitar uma avaliação técnica.`;
-
-    window.open(`https://wa.me/5562994859256?text=${texto}`, "_blank");
-
-    msgEl.textContent = "Redirecionando para o WhatsApp...";
-    msgEl.style.color = "#22c55e";
-
-    setTimeout(() => {
-      document.getElementById("fNome").value = "";
-      document.getElementById("fWhatsapp").value = "";
-      document.getElementById("fEmail").value = "";
-      document.getElementById("fServico").value = "";
-      document.getElementById("fMsg").value = "";
-      msgEl.textContent = "";
-    }, 3000);
+    const url = "https://wa.me/" + telefone + "?text=" + texto;
+    window.open(url, "_blank");
   }
 </script>
+
 </body>
 </html>
