@@ -57,7 +57,12 @@
     }
 
     .logo-wrap { display: flex; align-items: center; gap: 10px; }
-    .logo-img { height: 40px; width: auto; display: block; }
+    .logo-img {
+  height: 40px;      /* controla a altura */
+  width: auto;       /* mantém a proporção */
+  max-width: 180px;  /* impede que fique gigante */
+  display: block;
+}
     .logo-text { display: flex; flex-direction: column; gap: 2px; line-height: 1.1; }
     .logo-main { font-weight: 800; font-size: 1.05rem; color: #f9fafb; }
     .logo-sub { font-size: 0.74rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue-light); }
