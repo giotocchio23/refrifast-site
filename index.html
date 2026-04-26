@@ -73,22 +73,12 @@
 
     /* ===== HEADER ===== */
     header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(2, 6, 23, 0.95);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(2,6,23,0.95);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
-    }
-
-    .header-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 10px 5%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
+      padding: 0 5%; height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
     }
 
     .logo-wrap {
