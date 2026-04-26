@@ -2,586 +2,1288 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <title>Sensor de Monitoramento RefrifastGO</title>
+  <title>Sensor de monitoramento RefrifastGo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --azul-principal: #0047BB;
-      --azul-claro:     #41B6E6;
-      --azul-escuro:    #003087;
-      --verde:          #2CC84D;
-      --vermelho:       #ef4444;
-      --amarelo:        #f59e0b;
-      --branco:         #FFFFFF;
-      --fundo-escuro:   #020617;
-      --fundo-card:     #0a1628;
-      --fundo-mid:      #0d1f3c;
-      --texto:          #e5e7eb;
-      --muted:          #9ca3af;
-      --border:         rgba(65,182,230,0.2);
+      --bg-main:        #020718;
+      --bg-section:     #020c20;
+      --bg-card:        #020c1f;
+      --bg-card-soft:   #041026;
+      --border-soft:    rgba(56, 189, 248, 0.16);
+      --border-strong:  rgba(37, 99, 235, 0.6);
+      --blue-main:      #0f9cf5;
+      --blue-light:     #38bdf8;
+      --blue-deep:      #0b4fd8;
+      --green:          #22c55e;
+      --text-main:      #e5e7eb;
+      --text-muted:     #9ca3af;
+      --text-softer:    #93b4e8;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", system-ui, sans-serif; }
     html { scroll-behavior: smooth; }
-    body { background: var(--fundo-escuro); color: var(--texto); min-height: 100vh; }
-
-    /* ===== LOGIN ===== */
-    #login-screen {
+    body {
+      background: radial-gradient(circle at top left, #031433 0, #020617 45%, #000 100%);
+      color: var(--text-main);
       min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      background:
-        radial-gradient(ellipse at 30% 50%, rgba(0,71,187,0.3) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 20%, rgba(65,182,230,0.15) 0%, transparent 50%),
-        #020617;
     }
-    .login-card {
-      background: var(--fundo-card);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 40px 36px;
-      width: 100%; max-width: 400px;
+    a { color: inherit; text-decoration: none; }
+
+    /* ===== HEADER ===== */
+    header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: 72px;
+      background: rgba(2,6,23,0.96);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-soft);
+      display: flex;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .header-inner {
+      width: 100%;
+      max-width: 1120px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .logo-wrap { display: flex; align-items: center; gap: 10px; }
+    .logo-img { height: 40px; width: auto; display: block; }
+    .logo-text { display: flex; flex-direction: column; gap: 2px; line-height: 1.1; }
+    .logo-main { font-weight: 800; font-size: 1.05rem; color: #f9fafb; }
+    .logo-sub { font-size: 0.74rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue-light); }
+
+    nav ul { list-style: none; display: flex; align-items: center; gap: 18px; font-size: 0.86rem; color: var(--text-muted); }
+    nav a { position: relative; padding: 4px 0; }
+    nav a::after {
+      content: ""; position: absolute; left: 0; bottom: -3px;
+      width: 0; height: 2px; border-radius: 999px;
+      background: linear-gradient(90deg, var(--blue-main), var(--blue-light));
+      transition: width 0.18s;
+    }
+    nav a:hover { color: #e5f0ff; }
+    nav a:hover::after { width: 100%; }
+
+    .btn-header {
+      padding: 9px 22px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(90deg, #0f9cf5, #38bdf8);
+      color: #f9fafb;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      box-shadow: 0 12px 28px rgba(15,23,42,0.9);
+      transition: transform 0.1s, box-shadow 0.1s, opacity 0.15s;
+      white-space: nowrap;
+    }
+    .btn-header::before { content: "🌡"; font-size: 0.9rem; }
+    .btn-header:hover { transform: translateY(-1px); opacity: 0.96; }
+
+    @media (max-width: 720px) {
+      nav { display: none; }
+    }
+
+    /* ===== MAIN ===== */
+    main { padding-top: 80px; }
+
+    /* ===== HERO ===== */
+    .hero {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 32px 18px 40px;
+      display: grid;
+      grid-template-columns: minmax(0,1.15fr) minmax(0,1fr);
+      gap: 28px;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding-top: 20px; }
+    }
+
+    .hero-title {
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 900;
+      color: #f9fafb;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+    .hero-title span {
+      background: linear-gradient(90deg, #0f9cf5, #38bdf8);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .hero-sub {
+      font-size: 0.96rem;
+      color: var(--text-muted);
+      max-width: 540px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .hero-chip {
+      font-size: 0.78rem;
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.4);
+      color: var(--blue-light);
+      background: rgba(4,13,37,0.9);
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+
+    .btn-primary {
+      padding: 10px 20px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(90deg, #0f9cf5, #38bdf8);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 12px 30px rgba(15,23,42,0.9);
+      transition: transform 0.1s, opacity 0.15s;
+    }
+    .btn-primary:hover { transform: translateY(-1px); opacity: 0.96; }
+
+    .btn-secondary {
+      padding: 9px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: rgba(15,23,42,0.85);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .btn-secondary:hover { background: rgba(15,23,42,1); color: #e5f0ff; border-color: var(--blue-main); }
+
+    .hero-note { font-size: 0.8rem; color: var(--text-muted); }
+
+    /* ===== CARD AO VIVO ===== */
+    .card-ao-vivo {
+      background: #020c1f;
+      border-radius: 22px;
+      border: 1px solid rgba(37,99,235,0.6);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.9);
+      padding: 20px 20px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .cav-topo { display: flex; justify-content: space-between; align-items: flex-start; }
+    .cav-label { font-size: 0.86rem; color: #e5f0ff; font-weight: 500; }
+    .cav-sublabel { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+    .cav-badge-live {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.15);
+      color: var(--green);
+      border: 1px solid rgba(34,197,94,0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .cav-badge-live::before {
+      content: "";
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 1.4s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .cav-temp {
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--blue-light);
+      letter-spacing: -0.02em;
+    }
+    .cav-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--green);
+      font-weight: 500;
+    }
+    .cav-faixa { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+    .cav-bars-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .cav-bars-label { font-size: 0.72rem; color: var(--text-muted); }
+    .cav-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 40px;
+    }
+    .cav-bar {
+      flex: 1;
+      border-radius: 3px 3px 0 0;
+      background: linear-gradient(180deg, #38bdf8, #0b4fd8);
+      min-height: 4px;
+      transition: height 0.3s;
+    }
+    .cav-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+    .cav-stat {
+      background: rgba(15,23,42,0.8);
+      border-radius: 10px;
+      padding: 8px 10px;
+      border: 1px solid rgba(15,23,42,0.9);
+    }
+    .cav-stat-label { font-size: 0.68rem; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+    .cav-stat-value { font-size: 1rem; font-weight: 700; color: #e5f0ff; margin-top: 2px; }
+
+    /* ===== SEÇÕES GENÉRICAS ===== */
+    .sec {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 56px 18px 40px;
+    }
+
+    .sec-tag {
+      font-size: 0.76rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--blue-light);
+      margin-bottom: 8px;
+    }
+
+    .sec-title {
+      font-size: clamp(1.5rem, 2.5vw, 1.9rem);
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+
+    .sec-title span {
+      background: linear-gradient(90deg, #0f9cf5, #38bdf8);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .sec-divider {
+      width: 44px; height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #0f9cf5, #38bdf8);
+      margin: 12px 0 14px;
+    }
+
+    .sec-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    /* ===== SOBRE ===== */
+    .sobre-intro {
+      display: grid;
+      grid-template-columns: minmax(0,1.2fr) minmax(0,1fr);
+      gap: 28px;
+      align-items: start;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 800px) {
+      .sobre-intro { grid-template-columns: 1fr; }
+    }
+
+    .sobre-destaque {
+      background: linear-gradient(135deg, #020c1f, #041026);
+      border: 1px solid rgba(56,189,248,0.18);
+      border-radius: 18px;
+      padding: 22px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .sobre-destaque-titulo {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e5f0ff;
+    }
+
+    .sobre-destaque-texto {
+      font-size: 0.88rem;
+      color: var(--text-softer);
+      line-height: 1.7;
+    }
+
+    .sobre-cert-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .sobre-cert-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.83rem;
+      color: var(--text-softer);
+      line-height: 1.5;
+    }
+
+    .sobre-cert-item::before {
+      content: "✔";
+      color: var(--blue-light);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .sobre-numeros {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 600px) {
+      .sobre-numeros { grid-template-columns: 1fr; }
+    }
+
+    .sobre-numero-card {
+      background: rgba(4,16,40,0.9);
+      border: 1px solid rgba(56,189,248,0.1);
+      border-radius: 14px;
+      padding: 16px 14px;
       text-align: center;
     }
-    .login-logo { margin-bottom: 28px; }
-    .login-logo svg { height: 52px; width: auto; }
-    .login-card h2 {
-      font-size: 1.2rem; font-weight: 700;
-      color: var(--azul-claro); margin-bottom: 6px;
-    }
-    .login-card p {
-      font-size: 0.8rem; color: var(--muted); margin-bottom: 28px;
-    }
-    .login-group { margin-bottom: 16px; text-align: left; }
-    .login-group label {
-      display: block; font-size: 0.75rem; color: var(--muted);
-      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px;
-    }
-    .login-group input {
-      width: 100%; padding: 11px 14px;
-      background: var(--fundo-mid); border: 1px solid var(--border);
-      border-radius: 10px; color: var(--texto); font-size: 0.9rem;
-      outline: none; transition: border 0.2s;
-    }
-    .login-group input:focus { border-color: var(--azul-claro); }
-    .btn-login {
-      width: 100%; padding: 13px;
-      background: linear-gradient(90deg, var(--azul-principal), var(--azul-claro));
-      border: none; border-radius: 999px;
-      color: #fff; font-weight: 700; font-size: 0.9rem;
-      cursor: pointer; margin-top: 8px; transition: opacity 0.2s;
-    }
-    .btn-login:hover { opacity: 0.85; }
-    .login-error {
-      margin-top: 12px; font-size: 0.8rem;
-      color: var(--vermelho); min-height: 20px;
-    }
 
-    /* ===== PAINEL ===== */
-    #painel { display: none; }
-
-    header {
-      background: rgba(2,6,23,0.95);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 5%; height: 68px;
-      display: flex; align-items: center; justify-content: space-between;
-      position: sticky; top: 0; z-index: 100;
-    }
-    .logo-wrap { display: flex; align-items: center; gap: 0; text-decoration: none; }
-    .logo-svg { height: 44px; width: auto; }
-
-    .header-right { display: flex; align-items: center; gap: 16px; }
-    .header-user {
-      font-size: 0.78rem; color: var(--muted);
-    }
-    .header-user span { color: var(--azul-claro); font-weight: 600; }
-    .btn-logout {
-      padding: 7px 16px; border-radius: 999px;
-      background: transparent; border: 1px solid var(--border);
-      color: var(--muted); font-size: 0.75rem; cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-logout:hover { border-color: var(--vermelho); color: var(--vermelho); }
-
-    main { padding: 32px 5%; max-width: 1300px; margin: 0 auto; }
-
-    .painel-title {
-      font-size: 1.4rem; font-weight: 900; color: var(--branco);
+    .sobre-numero-valor {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--blue-light);
       margin-bottom: 4px;
     }
-    .painel-sub {
-      font-size: 0.82rem; color: var(--muted); margin-bottom: 28px;
-    }
-    .painel-sub span {
-      color: var(--azul-claro); font-weight: 600;
+
+    .sobre-numero-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
     }
 
-    /* cards de status */
-    .cards-grid {
+    /* Grid de serviços */
+    .servicos-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px; margin-bottom: 28px;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 14px;
+      margin-bottom: 28px;
     }
-    .status-card {
-      background: var(--fundo-card);
-      border: 1px solid var(--border);
-      border-radius: 16px; padding: 20px 22px;
-    }
-    .status-card-label {
-      font-size: 0.7rem; text-transform: uppercase;
-      letter-spacing: 0.1em; color: var(--muted); margin-bottom: 10px;
-    }
-    .status-card-value {
-      font-size: 2rem; font-weight: 900; line-height: 1;
-      color: var(--azul-claro);
-    }
-    .status-card-value.ok { color: var(--verde); }
-    .status-card-value.alerta { color: var(--amarelo); }
-    .status-card-value.critico { color: var(--vermelho); }
-    .status-card-unit {
-      font-size: 0.85rem; color: var(--muted); margin-top: 4px;
-    }
-    .status-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 4px 12px; border-radius: 999px;
-      font-size: 0.72rem; font-weight: 600; margin-top: 8px;
-    }
-    .status-badge.ok { background: rgba(44,200,77,0.15); color: var(--verde); }
-    .status-badge.alerta { background: rgba(245,158,11,0.15); color: var(--amarelo); }
-    .status-badge.critico { background: rgba(239,68,68,0.15); color: var(--vermelho); }
-    .status-badge::before { content: "●"; font-size: 0.5rem; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-    /* gráfico */
-    .chart-card {
-      background: var(--fundo-card);
-      border: 1px solid var(--border);
-      border-radius: 16px; padding: 24px;
+    @media (max-width: 800px) {
+      .servicos-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 500px) {
+      .servicos-grid { grid-template-columns: 1fr; }
+    }
+
+    .servico-card {
+      background: linear-gradient(135deg, #020c1f, #041026);
+      border: 1px solid rgba(56,189,248,0.13);
+      border-radius: 16px;
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+
+    .servico-card:hover {
+      border-color: rgba(56,189,248,0.4);
+      transform: translateY(-2px);
+    }
+
+    .servico-icon {
+      width: 38px; height: 38px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 0 0, #38bdf8, #0b4fd8);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .servico-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #e5f0ff;
+    }
+
+    .servico-desc {
+      font-size: 0.8rem;
+      color: var(--text-softer);
+      line-height: 1.55;
+    }
+
+    /* Grid de equipamentos */
+    .equip-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .equip-grid { grid-template-columns: 1fr; }
+    }
+
+    .equip-card {
+      background: rgba(4,16,40,0.9);
+      border: 1px solid rgba(56,189,248,0.1);
+      border-radius: 14px;
+      padding: 16px 16px;
+    }
+
+    .equip-card-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--blue-light);
+      margin-bottom: 10px;
+    }
+
+    .equip-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .equip-list li {
+      font-size: 0.82rem;
+      color: var(--text-softer);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .equip-list li::before {
+      content: "›";
+      color: var(--blue-light);
+      font-weight: 700;
+    }
+
+    /* ===== MONITORAMENTO INTELIGENTE ===== */
+    .sec-monitor {
+      background: linear-gradient(180deg, rgba(4,16,40,0.7) 0%, rgba(2,6,23,0.95) 100%);
+      border-top: 1px solid rgba(56,189,248,0.1);
+      border-bottom: 1px solid rgba(56,189,248,0.1);
+      padding: 56px 0 40px;
+    }
+
+    .monitor-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    .monitor-numbers {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 14px;
       margin-bottom: 24px;
     }
-    .chart-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
-    }
-    .chart-title {
-      font-size: 0.9rem; font-weight: 700; color: var(--texto);
-    }
-    .chart-filters { display: flex; gap: 8px; }
-    .filter-btn {
-      padding: 5px 14px; border-radius: 999px;
-      background: var(--fundo-mid); border: 1px solid var(--border);
-      color: var(--muted); font-size: 0.72rem; cursor: pointer;
-      transition: all 0.2s;
-    }
-    .filter-btn.active, .filter-btn:hover {
-      background: var(--azul-principal); color: #fff; border-color: var(--azul-principal);
+
+    @media (max-width: 600px) {
+      .monitor-numbers { grid-template-columns: 1fr; }
     }
 
-    /* tabela */
-    .table-card {
-      background: var(--fundo-card);
-      border: 1px solid var(--border);
-      border-radius: 16px; padding: 24px;
-      margin-bottom: 40px; overflow-x: auto;
+    .monitor-number-item {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(4,16,40,0.9);
+      border: 1px solid rgba(56,189,248,0.1);
     }
-    .table-title {
-      font-size: 0.9rem; font-weight: 700; color: var(--texto);
-      margin-bottom: 16px;
-    }
-    table {
-      width: 100%; border-collapse: collapse; font-size: 0.82rem;
-    }
-    thead tr th {
-      text-align: left; padding: 10px 14px;
-      color: var(--muted); font-size: 0.7rem;
-      text-transform: uppercase; letter-spacing: 0.08em;
-      border-bottom: 1px solid var(--border);
-    }
-    tbody tr td {
-      padding: 11px 14px; border-bottom: 1px solid rgba(65,182,230,0.07);
-      color: var(--texto);
-    }
-    tbody tr:last-child td { border-bottom: none; }
-    tbody tr:hover td { background: rgba(65,182,230,0.04); }
-    .td-status {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 3px 10px; border-radius: 999px;
-      font-size: 0.7rem; font-weight: 600;
-    }
-    .td-status.ok { background: rgba(44,200,77,0.12); color: var(--verde); }
-    .td-status.alerta { background: rgba(245,158,11,0.12); color: var(--amarelo); }
-    .td-status.critico { background: rgba(239,68,68,0.12); color: var(--vermelho); }
 
-    /* link voltar */
-    .btn-voltar {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 9px 20px; border-radius: 999px;
-      background: transparent; border: 1px solid var(--border);
-      color: var(--muted); font-size: 0.78rem; text-decoration: none;
-      transition: all 0.2s; margin-bottom: 28px;
+    .monitor-number {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #e5f0ff;
+      margin-bottom: 4px;
     }
-    .btn-voltar:hover { border-color: var(--azul-claro); color: var(--azul-claro); }
 
-    @media(max-width:600px) {
-      .cards-grid { grid-template-columns: 1fr 1fr; }
-      .status-card-value { font-size: 1.5rem; }
+    .monitor-number-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .monitor-list {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+      gap: 12px 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 700px) {
+      .monitor-list { grid-template-columns: 1fr; }
+    }
+
+    .monitor-item {
+      display: flex;
+      gap: 12px;
+      padding: 14px 14px;
+      border-radius: 14px;
+      background: rgba(4,16,40,0.9);
+      border: 1px solid rgba(15,23,42,0.9);
+      align-items: flex-start;
+    }
+
+    .monitor-icon {
+      width: 38px; height: 38px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 0 0, #38bdf8, #0b4fd8);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .monitor-item-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #f9fafb;
+      margin-bottom: 4px;
+    }
+
+    .monitor-item-desc {
+      font-size: 0.82rem;
+      color: var(--text-softer);
+      line-height: 1.55;
+    }
+
+    .monitor-cta { margin-top: 8px; }
+
+    .btn-monitor {
+      padding: 12px 28px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(90deg, #0ea5e9, #2563eb);
+      color: #f9fafb;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 16px 40px rgba(15,23,42,0.9);
+      transition: transform 0.1s, opacity 0.15s;
+    }
+
+    .btn-monitor:hover { transform: translateY(-1px); opacity: 0.96; }
+
+    .monitor-faq {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(56,189,248,0.1);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 14px 20px;
+    }
+
+    @media (max-width: 700px) {
+      .monitor-faq { grid-template-columns: 1fr; }
+    }
+
+    .monitor-faq-item h3 {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #e5f0ff;
+      margin-bottom: 5px;
+    }
+
+    .monitor-faq-item p {
+      font-size: 0.81rem;
+      color: var(--text-softer);
+      line-height: 1.55;
+    }
+
+    /* ===== GALERIA ===== */
+    .galeria-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .galeria-grid { grid-template-columns: repeat(2,1fr); }
+    }
+
+    @media (max-width: 500px) {
+      .galeria-grid { grid-template-columns: 1fr; }
+    }
+
+    .galeria-item { display: flex; flex-direction: column; gap: 8px; }
+
+    .galeria-img-wrap {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      background: #041026;
+      border: 1px solid rgba(56,189,248,0.13);
+    }
+
+    .galeria-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s;
+    }
+
+    .galeria-img-wrap:hover img { transform: scale(1.05); }
+
+    .galeria-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(2,12,31,0.75);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.2s;
+    }
+
+    .galeria-img-wrap:hover .galeria-overlay { opacity: 1; }
+
+    .galeria-overlay span {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--blue-light);
+      text-align: center;
+      padding: 0 12px;
+    }
+
+    .galeria-caption {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* ===== CONTATO ===== */
+    .contato-inner {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) minmax(0,1.3fr);
+      gap: 24px;
+      align-items: start;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 800px) {
+      .contato-inner { grid-template-columns: 1fr; }
+    }
+
+    .contato-info-card {
+      background: linear-gradient(135deg, #020c1f, #041026);
+      border: 1px solid rgba(56,189,248,0.15);
+      border-radius: 18px;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .contato-info-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .contato-info-card li {
+      font-size: 0.88rem;
+      color: var(--text-softer);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .contato-info-card li strong { color: #e5f0ff; }
+
+    .contato-form-card {
+      background: linear-gradient(135deg, #020c1f, #041026);
+      border: 1px solid rgba(56,189,248,0.15);
+      border-radius: 18px;
+      padding: 24px 20px;
+    }
+
+    .contato-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .contato-form label {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+
+    .contato-form input,
+    .contato-form textarea {
+      width: 100%;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(56,189,248,0.15);
+      border-radius: 10px;
+      color: #e5f0ff;
+      padding: 10px 12px;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .contato-form input:focus,
+    .contato-form textarea:focus {
+      border-color: var(--blue-main);
+    }
+
+    .contato-form textarea { resize: vertical; min-height: 90px; }
+
+    .contato-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      border-top: 1px solid rgba(56,189,248,0.1);
+      padding: 24px 18px;
+    }
+
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .footer-brand img { height: 28px; width: auto; }
+
+    .footer-right {
+      font-size: 0.8rem;
+      color: var(--text-muted);
     }
   </style>
 </head>
 <body>
 
-<!-- ===== TELA DE LOGIN ===== -->
-<div id="login-screen">
-  <div class="login-card">
-    <div class="login-logo">
-      <svg viewBox="0 0 260 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="30" cy="34" rx="16" ry="18" fill="#0047BB"/>
-        <ellipse cx="20" cy="16" rx="6" ry="6.5" fill="#0047BB"/>
-        <ellipse cx="12" cy="38" rx="7" ry="6.5" fill="#0047BB"/>
-        <ellipse cx="48" cy="38" rx="7" ry="6.5" fill="#003087"/>
-        <path d="M30 14 Q46 20 44 38 Q42 50 30 54 Q40 48 41 36 Q43 20 30 14Z" fill="#003087"/>
-        <path d="M28 13 Q42 21 40 38 Q38 50 28 54" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
-        <circle cx="22" cy="12" r="2" fill="white" opacity="0.85"/>
-        <text x="68" y="36" font-family="Inter, Arial, sans-serif" font-weight="900" font-size="24" fill="#0047BB">Refrifast</text>
-        <text x="69" y="51" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="11" fill="#41B6E6" letter-spacing="2">REFRIGERAÇÃO</text>
-      </svg>
-    </div>
-    <h2>Painel de Monitoramento</h2>
-    <p>Acesso restrito — informe suas credenciais</p>
-    <div class="login-group">
-      <label>Usuário</label>
-      <input type="text" id="loginUser" placeholder="seu usuário" />
-    </div>
-    <div class="login-group">
-      <label>Senha</label>
-      <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter') fazerLogin()" />
-    </div>
-    <button class="btn-login" onclick="fazerLogin()">Entrar</button>
-    <div class="login-error" id="loginErro"></div>
-  </div>
-</div>
-
-<!-- ===== PAINEL ===== -->
-<div id="painel">
-  <header>
-    <a href="index.html" class="logo-wrap">
-      <svg class="logo-svg" viewBox="0 0 260 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="30" cy="34" rx="16" ry="18" fill="#0047BB"/>
-        <ellipse cx="20" cy="16" rx="6" ry="6.5" fill="#0047BB"/>
-        <ellipse cx="12" cy="38" rx="7" ry="6.5" fill="#0047BB"/>
-        <ellipse cx="48" cy="38" rx="7" ry="6.5" fill="#003087"/>
-        <path d="M30 14 Q46 20 44 38 Q42 50 30 54 Q40 48 41 36 Q43 20 30 14Z" fill="#003087"/>
-        <path d="M28 13 Q42 21 40 38 Q38 50 28 54" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
-        <circle cx="22" cy="12" r="2" fill="white" opacity="0.85"/>
-        <text x="68" y="36" font-family="Inter, Arial, sans-serif" font-weight="900" font-size="24" fill="#0047BB">Refrifast</text>
-        <text x="69" y="51" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="11" fill="#41B6E6" letter-spacing="2">REFRIGERAÇÃO</text>
-      </svg>
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="header-inner">
+    <a href="#topo" class="logo-wrap">
+      <img src="logo-refrifastgo.png" alt="RefrifastGo" class="logo-img" />
+      <div class="logo-text">
+        <span class="logo-main">RefrifastGo</span>
+        <span class="logo-sub">Monitoramento</span>
+      </div>
     </a>
-    <div class="header-right">
-      <div class="header-user">Logado como: <span id="nomeUsuario"></span></div>
-      <button class="btn-logout" onclick="sair()">Sair</button>
+
+    <nav>
+      <ul>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#monitoramento">Monitoramento</a></li>
+        <li><a href="#galeria">Galeria</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+    </nav>
+
+    <button class="btn-header" onclick="window.location.href='monitoramento.html'">
+      ACESSAR PAINEL
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===== HERO ===== -->
+  <section id="topo">
+    <div class="hero">
+      <!-- Texto esquerdo -->
+      <div>
+        <h1 class="hero-title">
+          Sensor de <span>monitoramento</span><br>de temperatura
+        </h1>
+        <p class="hero-sub">
+          Acompanhe a temperatura das suas câmaras frias, expositores e chillers
+          em tempo real, de qualquer lugar. Alertas automáticos no WhatsApp quando
+          algo sair da faixa configurada.
+        </p>
+        <div class="hero-chips">
+          <span class="hero-chip">📡 Monitoramento 24/7</span>
+          <span class="hero-chip">📲 Alertas no WhatsApp</span>
+          <span class="hero-chip">📈 Histórico 30 dias</span>
+          <span class="hero-chip">🔐 Acesso por cliente</span>
+        </div>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="window.location.href='monitoramento.html'">
+            🌡 Acessar painel
+          </button>
+          <button class="btn-secondary" onclick="document.getElementById('contato').scrollIntoView({behavior:'smooth'})">
+            Solicitar orçamento
+          </button>
+        </div>
+        <p class="hero-note">Sua necessidade é nossa urgência.</p>
+      </div>
+
+      <!-- Card ao vivo -->
+      <aside class="card-ao-vivo">
+        <div class="cav-topo">
+          <div>
+            <div class="cav-label">Câmara fria — Loja 01</div>
+            <div class="cav-sublabel">Sensor de temperatura</div>
+          </div>
+          <span class="cav-badge-live">AO VIVO</span>
+        </div>
+
+        <div>
+          <div class="cav-temp">-2.4 °C</div>
+          <div class="cav-status">✅ Dentro da faixa de segurança</div>
+          <div class="cav-faixa">Faixa configurada: -5 °C a 0 °C</div>
+        </div>
+
+        <div class="cav-bars-wrap">
+          <div class="cav-bars-label">Histórico — últimas horas</div>
+          <div class="cav-bars" id="cavBars"></div>
+        </div>
+
+        <div class="cav-stats">
+          <div class="cav-stat">
+            <div class="cav-stat-label">MÁXIMA 24H</div>
+            <div class="cav-stat-value">-1.2 °C</div>
+          </div>
+          <div class="cav-stat">
+            <div class="cav-stat-label">MÍNIMA 24H</div>
+            <div class="cav-stat-value">-3.8 °C</div>
+          </div>
+          <div class="cav-stat">
+            <div class="cav-stat-label">MÉDIA 24H</div>
+            <div class="cav-stat-value">-2.5 °C</div>
+          </div>
+        </div>
+      </aside>
     </div>
-  </header>
+  </section>
 
-  <main>
-    <a href="index.html" class="btn-voltar">← Voltar ao site</a>
+  <!-- ===== SOBRE ===== -->
+  <section id="sobre">
+    <div class="sec">
+      <div class="sec-tag">Sobre a empresa</div>
+      <h2 class="sec-title">
+        Especialistas em <span>refrigeração comercial</span>
+      </h2>
+      <div class="sec-divider"></div>
+      <p class="sec-desc">
+        A RefrifastGo Refrigeração é uma empresa especializada em soluções completas de refrigeração
+        para o setor comercial e supermercadista. Com equipe formada e certificada no Reino Unido,
+        entregamos serviços com padrão técnico internacional e atendimento ágil.
+      </p>
 
-    <div class="painel-title">Monitoramento de Temperatura</div>
-    <div class="painel-sub">
-      Atualizado em: <span id="ultimaAtualizacao">--</span> &nbsp;|&nbsp;
-      Unidade: <span id="nomeUnidade">Câmara Principal</span>
-    </div>
+      <!-- Intro + certificações -->
+      <div class="sobre-intro">
+        <div class="sobre-destaque">
+          <div class="sobre-destaque-titulo">Nossa história e diferenciais</div>
+          <div class="sobre-destaque-texto">
+            Nosso diferencial está na combinação de expertise técnica avançada, certificações
+            internacionais reconhecidas e profundo conhecimento das necessidades operacionais
+            do varejo alimentar. Atendemos com responsabilidade, precisão e foco na continuidade
+            das suas operações.
+          </div>
+          <div class="sobre-cert-list">
+            <div class="sobre-cert-item">
+              Formação técnica especializada em refrigeração comercial e industrial — Reino Unido
+            </div>
+            <div class="sobre-cert-item">
+              Certificações internacionais em sistemas de refrigeração e climatização
+            </div>
+            <div class="sobre-cert-item">
+              Capacitação em normas europeias de segurança e eficiência energética
+            </div>
+            <div class="sobre-cert-item">
+              Treinamento em manuseio, instalação e manutenção de equipamentos de alta complexidade
+            </div>
+            <div class="sobre-cert-item">
+              Atualização contínua em tecnologias de refrigeração de última geração
+            </div>
+          </div>
+        </div>
 
-    <!-- Cards de status -->
-    <div class="cards-grid">
-      <div class="status-card">
-        <div class="status-card-label">Temperatura Atual</div>
-        <div class="status-card-value" id="tempAtual">--</div>
-        <div class="status-card-unit">°C</div>
-        <div class="status-badge ok" id="statusBadge">Normal</div>
-      </div>
-      <div class="status-card">
-        <div class="status-card-label">Máxima 24h</div>
-        <div class="status-card-value" id="tempMax">--</div>
-        <div class="status-card-unit">°C</div>
-      </div>
-      <div class="status-card">
-        <div class="status-card-label">Mínima 24h</div>
-        <div class="status-card-value" id="tempMin">--</div>
-        <div class="status-card-unit">°C</div>
-      </div>
-      <div class="status-card">
-        <div class="status-card-label">Média 24h</div>
-        <div class="status-card-value" id="tempMedia">--</div>
-        <div class="status-card-unit">°C</div>
-      </div>
-      <div class="status-card">
-        <div class="status-card-label">Faixa configurada</div>
-        <div class="status-card-value" style="font-size:1.2rem; color:var(--azul-claro);">-5 a 4°C</div>
-        <div class="status-card-unit">zona segura</div>
-      </div>
-      <div class="status-card">
-        <div class="status-card-label">Alertas hoje</div>
-        <div class="status-card-value ok" id="totalAlertas">0</div>
-        <div class="status-card-unit">ocorrências</div>
-      </div>
-    </div>
-
-    <!-- Gráfico -->
-    <div class="chart-card">
-      <div class="chart-header">
-        <div class="chart-title">Histórico de Temperatura</div>
-        <div class="chart-filters">
-          <button class="filter-btn active" onclick="mudarPeriodo(this,'24h')">24h</button>
-          <button class="filter-btn" onclick="mudarPeriodo(this,'7d')">7 dias</button>
-          <button class="filter-btn" onclick="mudarPeriodo(this,'30d')">30 dias</button>
+        <!-- Números -->
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div class="sobre-numeros" style="grid-template-columns:1fr 1fr; margin-bottom:0;">
+            <div class="sobre-numero-card">
+              <div class="sobre-numero-valor">24/7</div>
+              <div class="sobre-numero-label">Monitoramento contínuo dos equipamentos</div>
+            </div>
+            <div class="sobre-numero-card">
+              <div class="sobre-numero-valor">🌍</div>
+              <div class="sobre-numero-label">Certificações internacionais — Reino Unido</div>
+            </div>
+            <div class="sobre-numero-card">
+              <div class="sobre-numero-valor">5+</div>
+              <div class="sobre-numero-label">Serviços especializados em refrigeração</div>
+            </div>
+            <div class="sobre-numero-card">
+              <div class="sobre-numero-valor">⚡</div>
+              <div class="sobre-numero-label">Atendimento ágil e corretivo</div>
+            </div>
+          </div>
         </div>
       </div>
-      <canvas id="graficoTemp" height="100"></canvas>
-    </div>
 
-    <!-- Tabela -->
-    <div class="table-card">
-      <div class="table-title">Registros Recentes</div>
-      <table>
-        <thead>
-          <tr>
-            <th>Data / Hora</th>
-            <th>Temperatura</th>
-            <th>Status</th>
-            <th>Observação</th>
-          </tr>
-        </thead>
-        <tbody id="tabelaRegistros"></tbody>
-      </table>
+      <!-- Serviços -->
+      <div class="sec-tag" style="margin-bottom:12px;">Nossos serviços</div>
+      <div class="servicos-grid">
+        <div class="servico-card">
+          <div class="servico-icon">🏗️</div>
+          <div class="servico-title">Montagem de Câmaras Frias</div>
+          <div class="servico-desc">
+            Projeto, instalação e montagem completa de câmaras frigoríficas industriais e comerciais,
+            com controle técnico rigoroso desde a estrutura até o sistema de refrigeração.
+          </div>
+        </div>
+        <div class="servico-card">
+          <div class="servico-icon">🔧</div>
+          <div class="servico-title">Manutenção Preventiva</div>
+          <div class="servico-desc">
+            Programa estruturado de inspeções e ajustes periódicos para identificar falhas antes que
+            ocorram, prolongando a vida útil dos equipamentos e reduzindo consumo energético.
+          </div>
+        </div>
+        <div class="servico-card">
+          <div class="servico-icon">🛠️</div>
+          <div class="servico-title">Manutenção Corretiva</div>
+          <div class="servico-desc">
+            Atendimento técnico ágil para diagnóstico e reparo de falhas, minimizando o tempo de
+            inatividade e protegendo os produtos armazenados.
+          </div>
+        </div>
+        <div class="servico-card">
+          <div class="servico-icon">❄️</div>
+          <div class="servico-title">Instalação de Expositores e Chillers</div>
+          <div class="servico-desc">
+            Instalação e comissionamento de expositores refrigerados, chillers e racks para
+            supermercados e varejo alimentar, com configuração técnica adequada a cada ambiente.
+          </div>
+        </div>
+        <div class="servico-card">
+          <div class="servico-icon">📋</div>
+          <div class="servico-title">Suporte Técnico e Consultoria</div>
+          <div class="servico-desc">
+            Assessoria especializada para seleção, dimensionamento e otimização de sistemas de
+            refrigeração, apoiando a tomada de decisão com critérios técnicos e operacionais.
+          </div>
+        </div>
+        <div class="servico-card">
+          <div class="servico-icon">🌡️</div>
+          <div class="servico-title">Monitoramento RefrifastGo</div>
+          <div class="servico-desc">
+            Sensor próprio de monitoramento contínuo de temperatura, com alertas automáticos no
+            WhatsApp e painel online exclusivo por cliente.
+          </div>
+        </div>
+      </div>
+
+      <!-- Equipamentos atendidos -->
+      <div class="sec-tag" style="margin-bottom:12px;">Equipamentos atendidos</div>
+      <div class="equip-grid">
+        <div class="equip-card">
+          <div class="equip-card-title">Refrigeração</div>
+          <ul class="equip-list">
+            <li>Câmaras Frigoríficas</li>
+            <li>Chillers Industriais</li>
+            <li>Racks de Refrigeração</li>
+            <li>Sistemas Centralizados</li>
+          </ul>
+        </div>
+        <div class="equip-card">
+          <div class="equip-card-title">Exposição e Varejo</div>
+          <ul class="equip-list">
+            <li>Expositores Verticais e Horizontais</li>
+            <li>Ilhas de Congelados</li>
+            <li>Murais Refrigerados</li>
+            <li>Balcões Frigoríficos</li>
+          </ul>
+        </div>
+      </div>
     </div>
-  </main>
-</div>
+  </section>
+
+  <!-- ===== MONITORAMENTO INTELIGENTE ===== -->
+  <section id="monitoramento" class="sec-monitor">
+    <div class="monitor-inner">
+      <div class="sec-tag">Tecnologia própria</div>
+      <h2 class="sec-title">Monitoramento <span>inteligente</span></h2>
+      <div class="sec-divider"></div>
+      <p class="sec-desc">
+        Sistema próprio de monitoramento contínuo de temperatura, integrado ao seu equipamento.
+        Alertas automáticos no WhatsApp sempre que a temperatura sair da faixa configurada.
+        Tudo pensado para evitar perda de estoque e garantir que a cadeia de frio seja respeitada.
+      </p>
+
+      <div class="monitor-numbers">
+        <div class="monitor-number-item">
+          <div class="monitor-number">24/7</div>
+          <div class="monitor-number-label">Monitoramento contínuo, sem interrupção</div>
+        </div>
+        <div class="monitor-number-item">
+          <div class="monitor-number">3 períodos</div>
+          <div class="monitor-number-label">Histórico de 24h, 7 dias e 30 dias</div>
+        </div>
+        <div class="monitor-number-item">
+          <div class="monitor-number">WhatsApp</div>
+          <div class="monitor-number-label">Alertas direto no seu celular</div>
+        </div>
+      </div>
+
+      <div class="monitor-list">
+        <div class="monitor-item">
+          <div class="monitor-icon">📡</div>
+          <div>
+            <div class="monitor-item-title">Leitura em tempo real</div>
+            <div class="monitor-item-desc">
+              Temperatura monitorada continuamente via ESP32, com envio automático para o painel online.
+              Cada leitura é gravada com data e hora para análise completa.
+            </div>
+          </div>
+        </div>
+        <div class="monitor-item">
+          <div class="monitor-icon">📲</div>
+          <div>
+            <div class="monitor-item-title">Alertas automáticos no WhatsApp</div>
+            <div class="monitor-item-desc">
+              Notificação imediata com emoji de alerta, nome do sensor e temperatura registrada
+              quando a faixa configurada for ultrapassada.
+            </div>
+          </div>
+        </div>
+        <div class="monitor-item">
+          <div class="monitor-icon">📈</div>
+          <div>
+            <div class="monitor-item-title">Histórico completo</div>
+            <div class="monitor-item-desc">
+              Gráficos detalhados com leituras das últimas 24h, 7 e 30 dias, com indicação visual
+              de variações fora da faixa segura.
+            </div>
+          </div>
+        </div>
+        <div class="monitor-item">
+          <div class="monitor-icon">🔐</div>
+          <div>
+            <div class="monitor-item-title">Painel exclusivo por cliente</div>
+            <div class="monitor-item-desc">
+              Acesso seguro com login individual para cada cliente, e acesso geral para supervisão
+              de todos os sensores cadastrados.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="monitor-cta">
+        <button class="btn-monitor" onclick="window.location.href='monitoramento.html'">
+          🌡 ACESSAR PAINEL DE MONITORAMENTO
+        </button>
+      </div>
+
+      <div class="monitor-faq">
+        <div class="monitor-faq-item">
+          <h3>Como recebo os alertas?</h3>
+          <p>Os alertas chegam direto no seu WhatsApp, com o nome do sensor, a temperatura registrada e um emoji de alerta para fácil identificação.</p>
+        </div>
+        <div class="monitor-faq-item">
+          <h3>Preciso instalar algum aplicativo?</h3>
+          <p>Não. O painel funciona direto no navegador do celular ou computador, sem necessidade de instalar nada.</p>
+        </div>
+        <div class="monitor-faq-item">
+          <h3>Cada cliente tem acesso separado?</h3>
+          <p>Sim. Cada cliente possui login e senha próprios, acessando apenas os seus sensores. A RefrifastGo tem acesso geral para supervisão.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== GALERIA ===== -->
+  <section id="galeria">
+    <div class="sec">
+      <div class="sec-tag">Nossos trabalhos</div>
+      <h2 class="sec-title">Galeria de <span>realizações</span></h2>
+      <div class="sec-divider"></div>
+      <p class="sec-desc">
+        Alguns registros de instalações, manutenções e projetos realizados pela RefrifastGo
+        com o mais alto padrão técnico.
+      </p>
+
+      <div class="galeria-grid">
+        <div class="galeria-item">
+          <div class="galeria-img-wrap">
+            <img src="galeria/foto1.jpg" alt="Câmara fria" loading="lazy" />
+            <div class="galeria-overlay"><span>Instalação de câmara fria</span></div>
+          </div>
+          <div class="galeria-caption">Câmara fria monitorada com RefrifastGo</div>
+        </div>
+        <div class="galeria-item">
+          <div class="galeria-img-wrap">
+            <img src="galeria/foto2.jpg" alt="Manutenção preventiva" loading="lazy" />
+            <div class="galeria-overlay"><span>Manutenção preventiva</span></div>
+          </div>
+          <div class="galeria-caption">Manutenção preventiva em supermercado</div>
+        </div>
+        <div class="galeria-item">
+          <div class="galeria-img-wrap">
+            <img src="galeria/foto3.jpg" alt="Expositores" loading="lazy" />
+            <div class="galeria-overlay"><span>Expositores refrigerados</span></div>
+          </div>
+          <div class="galeria-caption">Instalação de expositores verticais</div>
+        </div>
+        <div class="galeria-item">
+          <div class="galeria-img-wrap">
+            <img src="galeria/foto4.jpg" alt="Projeto completo" loading="lazy" />
+            <div class="galeria-overlay"><span>Projeto completo</span></div>
+          </div>
+          <div class="galeria-caption">Projeto completo de refrigeração</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTATO ===== -->
+  <section id="contato">
+    <div class="sec">
+      <div class="sec-tag">Contato</div>
+      <h2 class="sec-title">Fale com a <span>RefrifastGo</span></h2>
+      <div class="sec-divider"></div>
+      <p class="sec-desc">
+        Entre em contato para solicitar orçamento, esclarecer dúvidas ou agendar uma visita técnica.
+        Sua necessidade é nossa urgência.
+      </p>
+
+      <div class="contato-inner">
+        <div class="contato-info-card">
+          <div class="sec-tag">Informações</div>
+          <ul>
+            <li>📞 <strong>Telefone / WhatsApp:</strong>&nbsp;(62) 9 9485-9256</li>
+            <li>📍 <strong>Cidade:</strong>&nbsp;Anápolis — GO</li>
+            <li>🕐 <strong>Atendimento:</strong>&nbsp;Segunda a sábado</li>
+          </ul>
+          <p style="font-size:0.82rem; color:var(--text-softer); line-height:1.6;">
+            Atendemos todo o setor comercial e supermercadista. Câmaras frias, expositores, chillers,
+            racks e sistemas centralizados.
+          </p>
+        </div>
+
+        <div class="contato-form-card">
+          <form class="contato-form" onsubmit="abrirWhatsapp(event)">
+            <div>
+              <label for="nome">Nome</label>
+              <input id="nome" type="text" placeholder="Seu nome" required />
+            </div>
+            <div>
+              <label for="mensagem">Mensagem</label>
+              <textarea id="mensagem" placeholder="Descreva sua necessidade"></textarea>
+            </div>
+            <button class="btn-primary" type="submit">
+              📲 Enviar mensagem no WhatsApp
+            </button>
+            <p class="contato-hint">
+              Ao clicar, seu WhatsApp será aberto com a mensagem preenchida.
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="logo-refrifastgo.png" alt="RefrifastGo" />
+      <span>RefrifastGo • Sensor de monitoramento de temperatura</span>
+    </div>
+    <div class="footer-right">
+      <span>&copy; <span id="anoAtual"></span> • Sua necessidade é nossa urgência.</span>
+    </div>
+  </div>
+</footer>
 
 <script>
-  // ============================================================
-  // USUÁRIOS E SENHAS — edite aqui para adicionar clientes
-  // ============================================================
-  const USUARIOS = {
-    "admin":    { senha: "refrifast2026", nome: "Administrador", unidade: "Todas as unidades" },
-    "cliente1": { senha: "camara01",      nome: "Cliente 1",     unidade: "Câmara Fria 01" },
-    "cliente2": { senha: "camara02",      nome: "Cliente 2",     unidade: "Câmara Fria 02" },
-  };
+  document.getElementById("anoAtual").textContent = new Date().getFullYear();
 
-  // ============================================================
-  // FIREBASE — Cole aqui sua config do Firebase Realtime DB
-  // quando quiser leitura real do ESP32
-  // ============================================================
-  // const firebaseConfig = { apiKey: "...", databaseURL: "..." };
-
-  let grafico = null;
-  let periodoAtivo = "24h";
-
-  function fazerLogin() {
-    const user = document.getElementById("loginUser").value.trim().toLowerCase();
-    const pass = document.getElementById("loginPass").value;
-    const erro = document.getElementById("loginErro");
-
-    if (USUARIOS[user] && USUARIOS[user].senha === pass) {
-      erro.textContent = "";
-      document.getElementById("login-screen").style.display = "none";
-      document.getElementById("painel").style.display = "block";
-      document.getElementById("nomeUsuario").textContent = USUARIOS[user].nome;
-      document.getElementById("nomeUnidade").textContent = USUARIOS[user].unidade;
-      iniciarPainel();
-    } else {
-      erro.textContent = "Usuário ou senha incorretos.";
-    }
-  }
-
-  function sair() {
-    document.getElementById("painel").style.display = "none";
-    document.getElementById("login-screen").style.display = "flex";
-    document.getElementById("loginUser").value = "";
-    document.getElementById("loginPass").value = "";
-  }
-
-  function iniciarPainel() {
-    atualizarDados();
-    setInterval(atualizarDados, 30000); // atualiza a cada 30s
-  }
-
-  // Gera temperatura simulada — substitua por leitura real do Firebase
-  function gerarTemp(base, variacao) {
-    return +(base + (Math.random() * variacao * 2 - variacao)).toFixed(1);
-  }
-
-  function atualizarDados() {
-    const agora = new Date();
-    document.getElementById("ultimaAtualizacao").textContent =
-      agora.toLocaleString("pt-BR");
-
-    const atual = gerarTemp(-2.4, 1.2);
-    const max   = gerarTemp(-1.2, 0.5);
-    const min   = gerarTemp(-3.8, 0.4);
-    const media = gerarTemp(-2.5, 0.3);
-    const alertas = Math.random() > 0.8 ? Math.floor(Math.random() * 3) : 0;
-
-    document.getElementById("tempAtual").textContent  = atual;
-    document.getElementById("tempMax").textContent    = max;
-    document.getElementById("tempMin").textContent    = min;
-    document.getElementById("tempMedia").textContent  = media;
-    document.getElementById("totalAlertas").textContent = alertas;
-
-    // define status
-    const badge = document.getElementById("statusBadge");
-    const valEl = document.getElementById("tempAtual");
-    if (atual < -5 || atual > 4) {
-      badge.textContent = "⚠ Fora da faixa";
-      badge.className = "status-badge critico";
-      valEl.className = "status-card-value critico";
-    } else if (atual < -4 || atual > 3) {
-      badge.textContent = "Atenção";
-      badge.className = "status-badge alerta";
-      valEl.className = "status-card-value alerta";
-    } else {
-      badge.textContent = "Normal";
-      badge.className = "status-badge ok";
-      valEl.className = "status-card-value ok";
-    }
-
-    renderGrafico(periodoAtivo);
-    renderTabela();
-  }
-
-  function gerarLabels(periodo) {
-    const labels = [];
-    const agora = new Date();
-    let pontos, subtrairMs, formato;
-
-    if (periodo === "24h") {
-      pontos = 24; subtrairMs = 3600000;
-      formato = h => h.getHours() + ":00";
-    } else if (periodo === "7d") {
-      pontos = 7; subtrairMs = 86400000;
-      formato = d => d.toLocaleDateString("pt-BR", { weekday:"short", day:"2-digit" });
-    } else {
-      pontos = 30; subtrairMs = 86400000;
-      formato = d => d.toLocaleDateString("pt-BR", { day:"2-digit", month:"2-digit" });
-    }
-
-    for (let i = pontos - 1; i >= 0; i--) {
-      const t = new Date(agora - i * subtrairMs);
-      labels.push(formato(t));
-    }
-    return labels;
-  }
-
-  function gerarDadosGrafico(pontos) {
-    return Array.from({ length: pontos }, () => gerarTemp(-2.4, 2));
-  }
-
-  function renderGrafico(periodo) {
-    const ctx = document.getElementById("graficoTemp").getContext("2d");
-    const pontos = periodo === "24h" ? 24 : periodo === "7d" ? 7 : 30;
-    const labels = gerarLabels(periodo);
-    const dados  = gerarDadosGrafico(pontos);
-
-    if (grafico) grafico.destroy();
-
-    grafico = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels,
-        datasets: [
-          {
-            label: "Temperatura (°C)",
-            data: dados,
-            borderColor: "#41B6E6",
-            backgroundColor: "rgba(65,182,230,0.08)",
-            borderWidth: 2,
-            pointRadius: periodo === "30d" ? 2 : 4,
-            pointBackgroundColor: "#41B6E6",
-            tension: 0.4, fill: true,
-          },
-          {
-            label: "Limite máximo (4°C)",
-            data: Array(pontos).fill(4),
-            borderColor: "rgba(239,68,68,0.5)",
-            borderWidth: 1, borderDash: [6,4],
-            pointRadius: 0, fill: false,
-          },
-          {
-            label: "Limite mínimo (-5°C)",
-            data: Array(pontos).fill(-5),
-            borderColor: "rgba(245,158,11,0.5)",
-            borderWidth: 1, borderDash: [6,4],
-            pointRadius: 0, fill: false,
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            labels: { color: "#9ca3af", font: { size: 11 } }
-          },
-          tooltip: {
-            backgroundColor: "#0a1628",
-            borderColor: "rgba(65,182,230,0.3)",
-            borderWidth: 1,
-            titleColor: "#e5e7eb",
-            bodyColor: "#9ca3af",
-          }
-        },
-        scales: {
-          x: {
-            ticks: { color: "#9ca3af", font: { size: 10 }, maxTicksLimit: 10 },
-            grid: { color: "rgba(65,182,230,0.06)" }
-          },
-          y: {
-            ticks: { color: "#9ca3af", font: { size: 10 } },
-            grid: { color: "rgba(65,182,230,0.06)" },
-            min: -8, max: 8
-          }
-        }
-      }
+  // Gera barras do card ao vivo
+  (function gerarBarras() {
+    const container = document.getElementById("cavBars");
+    if (!container) return;
+    const alturas = [55, 70, 60, 85, 75, 65, 80, 70, 60, 75, 65, 72];
+    alturas.forEach(h => {
+      const bar = document.createElement("div");
+      bar.className = "cav-bar";
+      bar.style.height = h + "%";
+      container.appendChild(bar);
     });
-  }
+  })();
 
-  function mudarPeriodo(btn, periodo) {
-    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    periodoAtivo = periodo;
-    renderGrafico(periodo);
-  }
+  // WhatsApp
+  function abrirWhatsapp(e) {
+    e.preventDefault();
+    const nome = document.getElementById("nome").value.trim();
+    const mensagem = document.getElementById("mensagem").value.trim();
 
-  function renderTabela() {
-    const tbody = document.getElementById("tabelaRegistros");
-    tbody.innerHTML = "";
-    const agora = new Date();
+    // AJUSTE O NÚMERO AQUI SE NECESSÁRIO (somente dígitos, com DDI 55)
+    const telefone = "5562994859256";
 
-    for (let i = 0; i < 15; i++) {
-      const t = new Date(agora - i * 1800000);
-      const temp = gerarTemp(-2.4, 2);
-      let statusClass, statusLabel, obs;
-
-      if (temp < -5 || temp > 4) {
-        statusClass = "critico"; statusLabel = "Fora da faixa"; obs = "Verificar equipamento";
-      } else if (temp < -4 || temp > 3) {
-        statusClass = "alerta"; statusLabel = "Atenção"; obs = "Monitorar";
-      } else {
-        statusClass = "ok"; statusLabel = "Normal"; obs = "—";
-      }
-
-      tbody.innerHTML += `
-        <tr>
-          <td>${t.toLocaleString("pt-BR")}</td>
-          <td><strong style="color:var(--azul-claro)">${temp} °C</strong></td>
-          <td><span class="td-status ${statusClass}">${statusLabel}</span></td>
-          <td style="color:var(--muted)">${obs}</td>
-        </tr>`;
+    let texto = "Olá, meu nome é " + nome + ".%0A";
+    texto += "Tenho interesse nos serviços da RefrifastGo Refrigeração.";
+    if (mensagem) {
+      texto += "%0A%0A" + "Detalhes: " + mensagem;
     }
+
+    window.open("https://wa.me/" + telefone + "?text=" + texto, "_blank");
   }
 </script>
+
 </body>
 </html>
