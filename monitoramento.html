@@ -7,25 +7,35 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <!-- jsPDF + AutoTable (PDF) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- SheetJS (Excel) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
   <style>
     :root {
-      --bg-main:      #020718;
-      --bg-card:      #020c1f;
-      --bg-soft:      #041026;
-      --border-soft:  rgba(56,189,248,0.16);
-      --border-strong:rgba(37,99,235,0.6);
-      --blue-main:    #0f9cf5;
-      --blue-light:   #38bdf8;
-      --blue-deep:    #0b4fd8;
-      --green:        #22c55e;
-      --red:          #ef4444;
-      --yellow:       #f59e0b;
-      --text-main:    #e5e7eb;
-      --text-muted:   #9ca3af;
-      --text-softer:  #93b4e8;
+      --bg-main:       #020718;
+      --bg-card:       #020c1f;
+      --bg-soft:       #041026;
+      --border-soft:   rgba(56,189,248,0.16);
+      --border-strong: rgba(37,99,235,0.6);
+      --blue-main:     #0f9cf5;
+      --blue-light:    #38bdf8;
+      --blue-deep:     #0b4fd8;
+      --green:         #22c55e;
+      --red:           #ef4444;
+      --yellow:        #f59e0b;
+      --text-main:     #e5e7eb;
+      --text-muted:    #9ca3af;
+      --text-softer:   #93b4e8;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", system-ui, sans-serif; }
@@ -36,6 +46,8 @@
       color: var(--text-main);
       min-height: 100vh;
     }
+
+    a { color: inherit; text-decoration: none; }
 
     /* ===== HEADER ===== */
     header {
@@ -60,39 +72,35 @@
       gap: 18px;
     }
 
-    .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .logo-img { height: 36px; width: auto; max-width: 160px; display: block; }
+    .logo-wrap { display: flex; align-items: center; gap: 10px; }
+    .logo-img  { height: 36px; width: auto; max-width: 160px; display: block; }
     .logo-text { display: flex; flex-direction: column; gap: 2px; line-height: 1.1; }
     .logo-main { font-weight: 800; font-size: 1.05rem; color: #f9fafb; }
     .logo-sub  { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue-light); }
 
-    .header-right { display: flex; align-items: center; gap: 12px; }
+    .header-right { display: flex; align-items: center; gap: 10px; }
 
     .header-user {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
       display: none;
     }
 
-    .btn-header {
-      padding: 9px 22px;
+    .btn-voltar {
+      padding: 8px 16px;
       border-radius: 999px;
-      border: none;
-      background: linear-gradient(90deg, #0f9cf5, #38bdf8);
-      color: #f9fafb;
+      border: 1px solid var(--border-soft);
+      background: rgba(15,23,42,0.85);
+      color: var(--text-muted);
       font-size: 0.8rem;
-      font-weight: 700;
+      font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      box-shadow: 0 12px 28px rgba(15,23,42,0.9);
-      transition: transform 0.1s, opacity 0.15s;
-      white-space: nowrap;
+      transition: background 0.2s, color 0.2s;
     }
-    .btn-header:hover { transform: translateY(-1px); opacity: 0.96; }
+    .btn-voltar:hover { background: rgba(15,23,42,1); color: #e5f0ff; border-color: var(--blue-main); }
 
     .btn-logout {
       padding: 8px 18px;
@@ -110,7 +118,7 @@
     }
     .btn-logout:hover { background: rgba(239,68,68,0.18); border-color: rgba(239,68,68,0.7); }
 
-    /* ===== TELA DE LOGIN ===== */
+    /* ===== LOGIN ===== */
     #tela-login {
       min-height: 100vh;
       display: flex;
@@ -151,21 +159,11 @@
       margin-bottom: 4px;
     }
 
-    .login-titulo {
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: #f9fafb;
-    }
-
-    .login-sub {
-      font-size: 0.83rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
+    .login-titulo { font-size: 1.2rem; font-weight: 800; color: #f9fafb; }
+    .login-sub    { font-size: 0.83rem; color: var(--text-muted); line-height: 1.5; }
 
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group label { font-size: 0.8rem; color: var(--text-muted); }
-
     .form-group input {
       width: 100%;
       background: rgba(15,23,42,0.9);
@@ -206,40 +204,77 @@
       display: none;
     }
 
-    /* ===== PAINEL PRINCIPAL ===== */
+    /* ===== PAINEL ===== */
     #tela-painel {
       display: none;
-      padding: 90px 18px 48px;
+      padding: 90px 18px 60px;
       max-width: 1120px;
       margin: 0 auto;
     }
 
     .painel-topo {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 14px;
       margin-bottom: 24px;
     }
 
-    .painel-titulo {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: #f9fafb;
+    .painel-titulo { font-size: 1.3rem; font-weight: 800; color: #f9fafb; }
+    .painel-sub    { font-size: 0.83rem; color: var(--text-muted); margin-top: 3px; }
+
+    /* ===== BOTÕES DE EXPORTAÇÃO ===== */
+    .export-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
     }
 
-    .painel-sub {
-      font-size: 0.83rem;
+    .btn-export {
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: none;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: transform 0.1s, opacity 0.15s;
+      white-space: nowrap;
+    }
+    .btn-export:hover { transform: translateY(-1px); opacity: 0.92; }
+
+    .btn-export.pdf {
+      background: linear-gradient(90deg, #dc2626, #ef4444);
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(220,38,38,0.4);
+    }
+
+    .btn-export.excel {
+      background: linear-gradient(90deg, #16a34a, #22c55e);
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(34,197,94,0.4);
+    }
+
+    .btn-export.print {
+      background: rgba(15,23,42,0.9);
       color: var(--text-muted);
-      margin-top: 3px;
+      border: 1px solid var(--border-soft);
+      box-shadow: none;
     }
+    .btn-export.print:hover { color: #e5f0ff; border-color: var(--blue-main); }
 
-    /* filtros de período */
-    .filtros {
+    /* ===== FILTROS ===== */
+    .filtros-bar {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
+      margin-bottom: 20px;
     }
 
     .btn-filtro {
@@ -253,19 +288,19 @@
       cursor: pointer;
       transition: all 0.18s;
     }
-    .btn-filtro:hover { border-color: var(--blue-main); color: #e5f0ff; }
-    .btn-filtro.ativo {
+    .btn-filtro:hover  { border-color: var(--blue-main); color: #e5f0ff; }
+    .btn-filtro.ativo  {
       background: linear-gradient(90deg, #0f9cf5, #2563eb);
       border-color: transparent;
       color: #fff;
     }
 
-    /* cards de resumo */
+    /* ===== RESUMO ===== */
     .resumo-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0,1fr));
       gap: 12px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
     @media (max-width: 800px) { .resumo-grid { grid-template-columns: repeat(2,1fr); } }
     @media (max-width: 480px) { .resumo-grid { grid-template-columns: 1fr; } }
@@ -276,17 +311,18 @@
       border-radius: 16px;
       padding: 16px 14px;
     }
-    .resumo-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
-    .resumo-valor { font-size: 1.6rem; font-weight: 900; color: var(--blue-light); }
-    .resumo-detalhe { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
 
-    /* card do gráfico */
+    .resumo-label   { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .resumo-valor   { font-size: 1.6rem; font-weight: 900; color: var(--blue-light); }
+    .resumo-detalhe { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+    /* ===== GRÁFICO ===== */
     .grafico-card {
       background: #020c1f;
       border: 1px solid rgba(37,99,235,0.5);
       border-radius: 20px;
       padding: 22px 20px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     .grafico-topo {
@@ -322,7 +358,6 @@
     }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-    /* gráfico de barras */
     .grafico-barras-wrap {
       position: relative;
       height: 180px;
@@ -339,7 +374,6 @@
       align-items: center;
       justify-content: flex-end;
       height: 100%;
-      gap: 4px;
       position: relative;
     }
 
@@ -348,11 +382,9 @@
       border-radius: 4px 4px 0 0;
       background: linear-gradient(180deg, #38bdf8, #0b4fd8);
       min-height: 4px;
-      transition: height 0.4s;
-      position: relative;
       cursor: pointer;
+      position: relative;
     }
-
     .g-barra.alerta { background: linear-gradient(180deg, #f59e0b, #dc2626); }
 
     .g-barra:hover::after {
@@ -377,85 +409,115 @@
       font-size: 0.6rem;
       color: var(--text-muted);
       white-space: nowrap;
+      transform: rotate(-40deg);
+      transform-origin: top left;
     }
 
-    /* linha de referência */
-    .grafico-faixa-info {
+    .faixa-info {
       display: flex;
-      gap: 14px;
+      gap: 10px;
       flex-wrap: wrap;
-      margin-top: 10px;
+      margin-top: 8px;
     }
-    .faixa-badge {
-      font-size: 0.76rem;
-      padding: 3px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(56,189,248,0.3);
-      color: var(--blue-light);
-      background: rgba(4,13,37,0.8);
-    }
-    .faixa-badge.alerta { border-color: rgba(239,68,68,0.4); color: #fca5a5; background: rgba(239,68,68,0.08); }
 
-    /* tabela de leituras */
+    .faixa-badge {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.25);
+      color: var(--text-softer);
+      background: rgba(4,16,40,0.9);
+    }
+    .faixa-badge.alerta {
+      border-color: rgba(245,158,11,0.4);
+      color: #fcd34d;
+    }
+
+    /* ===== TABELA ===== */
     .tabela-card {
       background: #020c1f;
       border: 1px solid rgba(56,189,248,0.12);
       border-radius: 20px;
       padding: 20px;
-      overflow-x: auto;
+      margin-bottom: 20px;
+      overflow: hidden;
     }
 
-    .tabela-titulo { font-size: 0.95rem; font-weight: 700; color: #e5f0ff; margin-bottom: 14px; }
+    .tabela-topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tabela-titulo { font-size: 0.95rem; font-weight: 700; color: #e5f0ff; }
+
+    .tabela-scroll { overflow-x: auto; }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.84rem;
+      font-size: 0.85rem;
     }
 
     thead th {
       text-align: left;
-      padding: 8px 12px;
-      color: var(--text-muted);
-      font-size: 0.75rem;
+      padding: 10px 12px;
+      font-size: 0.72rem;
       text-transform: uppercase;
-      letter-spacing: 0.07em;
-      border-bottom: 1px solid rgba(56,189,248,0.1);
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      border-bottom: 1px solid rgba(56,189,248,0.12);
     }
 
     tbody tr {
       border-bottom: 1px solid rgba(56,189,248,0.06);
       transition: background 0.15s;
     }
-    tbody tr:hover { background: rgba(15,23,42,0.5); }
-    tbody td { padding: 10px 12px; color: var(--text-softer); }
-    tbody td:first-child { color: #e5f0ff; font-weight: 500; }
+    tbody tr:hover { background: rgba(15,30,60,0.6); }
 
-    .td-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.76rem;
-      padding: 3px 9px;
-      border-radius: 999px;
+    tbody td {
+      padding: 10px 12px;
+      color: var(--text-main);
     }
-    .td-status.ok     { background: rgba(34,197,94,0.12);  color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
-    .td-status.alerta { background: rgba(239,68,68,0.12);  color: #fca5a5;      border: 1px solid rgba(239,68,68,0.3); }
 
-    /* config whatsapp */
+    .td-status { display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; font-weight: 600; }
+    .td-status.ok     { color: var(--green); }
+    .td-status.alerta { color: #fcd34d; }
+
+    .loading { text-align: center; color: var(--text-muted); padding: 24px; font-size: 0.88rem; }
+
+    /* ===== CONFIGURAÇÕES ===== */
     .config-card {
       background: #020c1f;
       border: 1px solid rgba(56,189,248,0.12);
       border-radius: 20px;
       padding: 22px 20px;
-      margin-top: 24px;
+      margin-bottom: 20px;
     }
-    .config-titulo { font-size: 0.95rem; font-weight: 700; color: #e5f0ff; margin-bottom: 6px; }
-    .config-desc   { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
-    .config-grid   { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    @media (max-width: 600px) { .config-grid { grid-template-columns: 1fr; } }
 
-    .config-group label { font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 5px; }
+    .config-titulo {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #e5f0ff;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 14px;
+    }
+    @media (max-width: 640px) { .config-grid { grid-template-columns: 1fr; } }
+
+    .config-group { display: flex; flex-direction: column; gap: 5px; }
+    .config-group label { font-size: 0.78rem; color: var(--text-muted); }
+
     .config-group input {
       width: 100%;
       background: rgba(15,23,42,0.9);
@@ -469,6 +531,8 @@
     }
     .config-group input:focus { border-color: var(--blue-main); }
 
+    .config-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
     .btn-salvar {
       margin-top: 14px;
       padding: 10px 24px;
@@ -476,26 +540,52 @@
       border: none;
       background: linear-gradient(90deg, #0f9cf5, #2563eb);
       color: #fff;
-      font-size: 0.86rem;
+      font-size: 0.88rem;
       font-weight: 700;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 10px 28px rgba(15,23,42,0.9);
       transition: transform 0.1s, opacity 0.15s;
     }
     .btn-salvar:hover { transform: translateY(-1px); opacity: 0.96; }
 
     .config-ok {
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: var(--green);
-      margin-top: 8px;
       display: none;
+      margin-top: 8px;
     }
 
-    /* mensagem carregando */
-    .loading {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.88rem;
-      padding: 32px 0;
+    /* ===== PRINT ===== */
+    @media print {
+      header, .export-bar, .filtros-bar, .btn-filtro,
+      .btn-salvar, .config-card, .btn-voltar, .btn-logout { display: none !important; }
+
+      body { background: #fff !important; color: #000 !important; }
+
+      #tela-painel {
+        display: block !important;
+        padding: 10px !important;
+        max-width: 100% !important;
+      }
+
+      .resumo-card, .grafico-card, .tabela-card {
+        border: 1px solid #ccc !important;
+        background: #fff !important;
+        color: #000 !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+      }
+
+      .resumo-valor, .painel-titulo, .grafico-titulo,
+      .tabela-titulo { color: #000 !important; }
+
+      .resumo-label, .resumo-detalhe, .painel-sub,
+      .grafico-sub, thead th, tbody td { color: #333 !important; }
+
+      table { font-size: 0.75rem !important; }
     }
   </style>
 </head>
@@ -514,9 +604,11 @@
 
     <div class="header-right">
       <span class="header-user" id="headerUser"></span>
-      <button class="btn-logout" id="btnLogout">Sair</button>
-      <button class="btn-header" onclick="window.location.href='index.html'">
+      <button class="btn-voltar" onclick="window.location.href='index.html'">
         ← Voltar ao site
+      </button>
+      <button class="btn-logout" id="btnLogout">
+        🚪 Sair
       </button>
     </div>
   </div>
@@ -529,19 +621,18 @@
       <div class="login-icon">🌡</div>
       <div class="login-titulo">Painel de Monitoramento</div>
       <div class="login-sub">
-        Acesse com seu e-mail e senha cadastrados.<br />
-        Cada cliente tem acesso exclusivo ao seu sensor.
+        Acesse com seu e-mail e senha para visualizar os dados do seu sensor.
       </div>
     </div>
 
     <div class="form-group">
       <label for="inputEmail">E-mail</label>
-      <input type="email" id="inputEmail" placeholder="seuemail@exemplo.com" />
+      <input id="inputEmail" type="email" placeholder="seu@email.com" autocomplete="username" />
     </div>
 
     <div class="form-group">
       <label for="inputSenha">Senha</label>
-      <input type="password" id="inputSenha" placeholder="••••••••" />
+      <input id="inputSenha" type="password" placeholder="••••••••" autocomplete="current-password" />
     </div>
 
     <div class="login-erro" id="loginErro"></div>
@@ -550,40 +641,57 @@
   </div>
 </div>
 
-<!-- ===== PAINEL PRINCIPAL ===== -->
+<!-- ===== PAINEL ===== -->
 <div id="tela-painel">
+
+  <!-- Topo do painel -->
   <div class="painel-topo">
     <div>
       <div class="painel-titulo" id="painelTitulo">Painel de Temperatura</div>
-      <div class="painel-sub" id="painelSub">Carregando dados…</div>
+      <div class="painel-sub" id="painelSub">Carregando...</div>
     </div>
-    <div class="filtros">
-      <button class="btn-filtro ativo" onclick="mudarPeriodo(1,   this)">24 horas</button>
-      <button class="btn-filtro"       onclick="mudarPeriodo(7,   this)">7 dias</button>
-      <button class="btn-filtro"       onclick="mudarPeriodo(30,  this)">30 dias</button>
+
+    <!-- BOTÕES DE EXPORTAÇÃO -->
+    <div class="export-bar">
+      <button class="btn-export pdf"   onclick="exportarPDF()">
+        📄 Exportar PDF
+      </button>
+      <button class="btn-export excel" onclick="exportarExcel()">
+        📊 Exportar Excel
+      </button>
+      <button class="btn-export print" onclick="window.print()">
+        🖨️ Imprimir
+      </button>
     </div>
   </div>
 
-  <!-- Resumo -->
+  <!-- Filtros de período -->
+  <div class="filtros-bar">
+    <button class="btn-filtro ativo" onclick="mudarPeriodo(1, this)">Últimas 24h</button>
+    <button class="btn-filtro"       onclick="mudarPeriodo(7, this)">7 dias</button>
+    <button class="btn-filtro"       onclick="mudarPeriodo(30, this)">30 dias</button>
+  </div>
+
+  <!-- Resumo em cards -->
   <div class="resumo-grid">
     <div class="resumo-card">
-      <div class="resumo-label">Temperatura atual</div>
-      <div class="resumo-valor" id="rAtual">—</div>
-      <div class="resumo-detalhe" id="rStatus">Aguardando…</div>
+      <div class="resumo-label">Temperatura Atual</div>
+      <div class="resumo-valor" id="rAtual">--</div>
+      <div class="resumo-detalhe" id="rStatus">Aguardando...</div>
     </div>
     <div class="resumo-card">
       <div class="resumo-label">Mínima do período</div>
-      <div class="resumo-valor" id="rMin">—</div>
+      <div class="resumo-valor" id="rMin">--</div>
       <div class="resumo-detalhe" id="rMinHora"></div>
     </div>
     <div class="resumo-card">
       <div class="resumo-label">Máxima do período</div>
-      <div class="resumo-valor" id="rMax">—</div>
+      <div class="resumo-valor" id="rMax">--</div>
       <div class="resumo-detalhe" id="rMaxHora"></div>
     </div>
     <div class="resumo-card">
       <div class="resumo-label">Média do período</div>
-      <div class="resumo-valor" id="rMedia">—</div>
+      <div class="resumo-valor" id="rMedia">--</div>
       <div class="resumo-detalhe" id="rLeituras"></div>
     </div>
   </div>
@@ -592,73 +700,76 @@
   <div class="grafico-card">
     <div class="grafico-topo">
       <div>
-        <div class="grafico-titulo" id="graficoTitulo">Histórico de temperatura</div>
+        <div class="grafico-titulo">Histórico de Temperatura</div>
         <div class="grafico-sub" id="graficoSub">Últimas 24 horas</div>
       </div>
       <span class="badge-live">AO VIVO</span>
     </div>
 
-    <div class="grafico-barras-wrap" id="grafBarras">
-      <div class="loading">Carregando gráfico…</div>
+    <div class="grafico-barras-wrap">
+      <div class="grafico-barras-wrap" id="grafBarras" style="padding-bottom:0; height:100%; width:100%; display:flex; align-items:flex-end; gap:3px;"></div>
     </div>
 
-    <div class="grafico-faixa-info" id="faixaInfo"></div>
+    <div class="faixa-info" id="faixaInfo"></div>
   </div>
 
   <!-- Tabela -->
   <div class="tabela-card">
-    <div class="tabela-titulo">Leituras recentes</div>
-    <table>
-      <thead>
-        <tr>
-          <th>Data / Hora</th>
-          <th>Temperatura</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="tabelaBody">
-        <tr><td colspan="3" class="loading">Carregando…</td></tr>
-      </tbody>
-    </table>
+    <div class="tabela-topo">
+      <div class="tabela-titulo">📋 Leituras detalhadas</div>
+    </div>
+    <div class="tabela-scroll">
+      <table id="tabelaDados">
+        <thead>
+          <tr>
+            <th>Data / Hora</th>
+            <th>Temperatura</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaBody">
+          <tr><td colspan="3" class="loading">Carregando dados...</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <!-- Config WhatsApp -->
+  <!-- Configurações -->
   <div class="config-card">
     <div class="config-titulo">⚙️ Configurações do sensor</div>
-    <div class="config-desc">
-      Configure seu número de WhatsApp para receber alertas automáticos
-      quando a temperatura sair da faixa segura.
-    </div>
     <div class="config-grid">
       <div class="config-group">
         <label>Nome do sensor</label>
-        <input type="text" id="cfgNome" placeholder="Ex: Câmara Fria Setor A" />
+        <input id="cfgNome" type="text" placeholder="Ex: Câmara Fria 01" />
       </div>
       <div class="config-group">
-        <label>WhatsApp (com DDD, só números)</label>
-        <input type="text" id="cfgTel" placeholder="Ex: 62994859256" />
+        <label>Telefone para alertas (WhatsApp)</label>
+        <input id="cfgTel" type="tel" placeholder="62999999999" />
+        <div class="config-hint">Somente números, com DDD. Ex: 62994859256</div>
       </div>
       <div class="config-group">
-        <label>API Key do CallMeBot</label>
-        <input type="text" id="cfgApiKey" placeholder="Sua chave CallMeBot" />
+        <label>API Key CallMeBot</label>
+        <input id="cfgApiKey" type="text" placeholder="Cole sua API Key aqui" />
+        <div class="config-hint">Obtenha em callmebot.com/blog/free-whatsapp-api/</div>
       </div>
       <div class="config-group">
         <label>Temperatura mínima segura (°C)</label>
-        <input type="number" id="cfgMin" placeholder="Ex: -5" />
+        <input id="cfgMin" type="number" step="0.1" placeholder="-5" />
       </div>
       <div class="config-group">
         <label>Temperatura máxima segura (°C)</label>
-        <input type="number" id="cfgMax" placeholder="Ex: 2" />
+        <input id="cfgMax" type="number" step="0.1" placeholder="2" />
       </div>
     </div>
-    <button class="btn-salvar" onclick="salvarConfig()">Salvar configurações</button>
+    <button class="btn-salvar" onclick="salvarConfig()">💾 Salvar configurações</button>
     <div class="config-ok" id="configOk">✅ Configurações salvas com sucesso!</div>
   </div>
+
 </div>
 
 <script>
   // ============================================================
-  // CONFIGURAÇÃO DO FIREBASE — SUBSTITUA PELOS SEUS DADOS
+  // FIREBASE CONFIG — SUBSTITUA PELOS SEUS DADOS
   // ============================================================
   const firebaseConfig = {
     apiKey:            "AIzaSyDjwnOHvLDI1R-x28wnwMweiMNfl9celwY",
@@ -674,17 +785,21 @@
   const auth = firebase.auth();
   const db   = firebase.database();
 
-  // ============================================================
-  // VARIÁVEIS GLOBAIS
-  // ============================================================
-  let usuarioAtual  = null;
-  let sensorPath    = null;   // ex: "leituras/sensor_01"
-  let periodoAtual  = 1;      // dias
-  let configAtual   = { min: -5, max: 2, nome: "Sensor", tel: "", apiKey: "" };
-  let unsubscribe   = null;
+  let usuarioAtual = null;
+  let sensorPath   = "leituras/sensor_01";
+  let periodoAtual = 1;
+  let leiturasCache = [];
+
+  let configAtual = {
+    nome:   "",
+    tel:    "",
+    apiKey: "",
+    min:    -5,
+    max:    2
+  };
 
   // ============================================================
-  // AUTH — LOGIN / LOGOUT
+  // AUTH
   // ============================================================
   auth.onAuthStateChanged(user => {
     if (user) {
@@ -699,25 +814,21 @@
     const email = document.getElementById("inputEmail").value.trim();
     const senha = document.getElementById("inputSenha").value;
     const erro  = document.getElementById("loginErro");
-
     erro.style.display = "none";
-
-    auth.signInWithEmailAndPassword(email, senha)
-      .catch(e => {
-        erro.textContent = "E-mail ou senha incorretos. Tente novamente.";
-        erro.style.display = "block";
-      });
+    auth.signInWithEmailAndPassword(email, senha).catch(() => {
+      erro.textContent = "E-mail ou senha incorretos. Tente novamente.";
+      erro.style.display = "block";
+    });
   }
 
   document.getElementById("btnLogout").onclick = () => auth.signOut();
 
-  // Enter para login
   document.getElementById("inputSenha").addEventListener("keydown", e => {
     if (e.key === "Enter") fazerLogin();
   });
 
   // ============================================================
-  // MOSTRAR / OCULTAR TELAS
+  // TELAS
   // ============================================================
   function mostrarLogin() {
     document.getElementById("tela-login").style.display  = "flex";
@@ -732,18 +843,13 @@
     document.getElementById("btnLogout").style.display   = "inline-flex";
     document.getElementById("headerUser").style.display  = "inline";
     document.getElementById("headerUser").textContent    = user.email;
-
-    // Define o path do sensor com base no e-mail (ou uid)
-    // Para acesso geral (admin), carrega todos; aqui simplificamos com sensor_01
-    sensorPath = "leituras/sensor_01";
-
     carregarConfig();
     iniciarLeituraAoVivo();
     carregarPeriodo(periodoAtual);
   }
 
   // ============================================================
-  // CONFIGURAÇÕES DO SENSOR (salvas no Firebase)
+  // CONFIG
   // ============================================================
   function carregarConfig() {
     db.ref("config/" + usuarioAtual.uid).once("value", snap => {
@@ -754,7 +860,6 @@
         document.getElementById("cfgApiKey").value = configAtual.apiKey || "";
         document.getElementById("cfgMin").value    = configAtual.min    ?? -5;
         document.getElementById("cfgMax").value    = configAtual.max    ?? 2;
-
         document.getElementById("painelTitulo").textContent =
           configAtual.nome ? "Sensor: " + configAtual.nome : "Painel de Temperatura";
       }
@@ -772,16 +877,14 @@
       const ok = document.getElementById("configOk");
       ok.style.display = "block";
       setTimeout(() => ok.style.display = "none", 3000);
-
       document.getElementById("painelTitulo").textContent =
         configAtual.nome ? "Sensor: " + configAtual.nome : "Painel de Temperatura";
-
       carregarPeriodo(periodoAtual);
     });
   }
 
   // ============================================================
-  // LEITURA AO VIVO (última leitura)
+  // LEITURA AO VIVO
   // ============================================================
   function iniciarLeituraAoVivo() {
     db.ref(sensorPath).orderByChild("timestamp").limitToLast(1)
@@ -790,14 +893,12 @@
         if (!d) return;
         const temp   = parseFloat(d.temperature);
         const dentro = temp >= configAtual.min && temp <= configAtual.max;
-
         document.getElementById("rAtual").textContent =
           temp.toFixed(1) + " °C";
         document.getElementById("rStatus").textContent =
           dentro ? "✅ Dentro da faixa segura" : "⚠️ Fora da faixa!";
         document.getElementById("rStatus").style.color =
           dentro ? "#22c55e" : "#fca5a5";
-
         const ts = new Date(d.timestamp);
         document.getElementById("painelSub").textContent =
           "Última leitura: " + ts.toLocaleString("pt-BR");
@@ -817,9 +918,8 @@
   function carregarPeriodo(dias) {
     const labels = { 1: "Últimas 24 horas", 7: "Últimos 7 dias", 30: "Últimos 30 dias" };
     document.getElementById("graficoSub").textContent = labels[dias] || "";
-
-    const agora    = Date.now();
-    const inicio   = agora - dias * 24 * 60 * 60 * 1000;
+    const agora  = Date.now();
+    const inicio = agora - dias * 24 * 60 * 60 * 1000;
 
     db.ref(sensorPath)
       .orderByChild("timestamp")
@@ -832,6 +932,8 @@
             leituras.push({ temp: parseFloat(v.temperature), ts: v.timestamp });
           }
         });
+
+        leiturasCache = leituras;
 
         if (leituras.length === 0) {
           document.getElementById("grafBarras").innerHTML =
@@ -851,19 +953,17 @@
   // RESUMO
   // ============================================================
   function renderizarResumo(leituras) {
-    const temps  = leituras.map(l => l.temp);
-    const min    = Math.min(...temps);
-    const max    = Math.max(...temps);
-    const media  = temps.reduce((a,b) => a+b, 0) / temps.length;
+    const temps = leituras.map(l => l.temp);
+    const min   = Math.min(...temps);
+    const max   = Math.max(...temps);
+    const media = temps.reduce((a,b) => a+b, 0) / temps.length;
+    const iMin  = leituras.find(l => l.temp === min);
+    const iMax  = leituras.find(l => l.temp === max);
 
-    const iMin = leituras.find(l => l.temp === min);
-    const iMax = leituras.find(l => l.temp === max);
-
-    document.getElementById("rMin").textContent    = min.toFixed(1) + " °C";
-    document.getElementById("rMax").textContent    = max.toFixed(1) + " °C";
-    document.getElementById("rMedia").textContent  = media.toFixed(1) + " °C";
+    document.getElementById("rMin").textContent     = min.toFixed(1) + " °C";
+    document.getElementById("rMax").textContent     = max.toFixed(1) + " °C";
+    document.getElementById("rMedia").textContent   = media.toFixed(1) + " °C";
     document.getElementById("rLeituras").textContent = leituras.length + " leituras";
-
     document.getElementById("rMinHora").textContent =
       iMin ? new Date(iMin.ts).toLocaleString("pt-BR") : "";
     document.getElementById("rMaxHora").textContent =
@@ -871,13 +971,11 @@
   }
 
   // ============================================================
-  // GRÁFICO DE BARRAS
+  // GRÁFICO
   // ============================================================
   function renderizarGrafico(leituras, dias) {
     const wrap = document.getElementById("grafBarras");
     wrap.innerHTML = "";
-
-    // Agrupa em até 30 grupos
     const grupos = agrupar(leituras, Math.min(leituras.length, 30));
     const temps  = grupos.map(g => g.media);
     const minT   = Math.min(...temps);
@@ -885,7 +983,7 @@
     const range  = maxT - minT || 1;
 
     grupos.forEach(g => {
-      const pct    = ((g.media - minT) / range) * 80 + 10; // 10%–90%
+      const pct    = ((g.media - minT) / range) * 80 + 10;
       const dentro = g.media >= configAtual.min && g.media <= configAtual.max;
       const label  = new Date(g.ts).toLocaleString("pt-BR",
         dias === 1
@@ -896,7 +994,7 @@
       col.className = "g-barra-col";
 
       const bar  = document.createElement("div");
-      bar.className = "g-barra" + (dentro ? "" : " alerta");
+      bar.className    = "g-barra" + (dentro ? "" : " alerta");
       bar.style.height = pct + "%";
       bar.dataset.tip  = g.media.toFixed(1) + " °C • " + label;
 
@@ -909,16 +1007,14 @@
       wrap.appendChild(col);
     });
 
-    // Faixa info
-    const fi = document.getElementById("faixaInfo");
-    fi.innerHTML = `
+    document.getElementById("faixaInfo").innerHTML = `
       <span class="faixa-badge">Faixa segura: ${configAtual.min} °C a ${configAtual.max} °C</span>
       <span class="faixa-badge alerta">Barras em laranja/vermelho = fora da faixa</span>
     `;
   }
 
   function agrupar(leituras, n) {
-    const tam = Math.ceil(leituras.length / n);
+    const tam    = Math.ceil(leituras.length / n);
     const grupos = [];
     for (let i = 0; i < leituras.length; i += tam) {
       const grupo = leituras.slice(i, i + tam);
@@ -933,8 +1029,7 @@
   // ============================================================
   function renderizarTabela(leituras) {
     const tbody   = document.getElementById("tabelaBody");
-    const recentes = [...leituras].reverse().slice(0, 50);
-
+    const recentes = [...leituras].reverse().slice(0, 100);
     tbody.innerHTML = recentes.map(l => {
       const dentro = l.temp >= configAtual.min && l.temp <= configAtual.max;
       const status = dentro
@@ -947,6 +1042,207 @@
           <td>${status}</td>
         </tr>`;
     }).join("");
+  }
+
+  // ============================================================
+  // EXPORTAR PDF
+  // ============================================================
+  function exportarPDF() {
+    if (!leiturasCache.length) {
+      alert("Nenhum dado carregado para exportar.");
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+
+    const nomeRelatorio = configAtual.nome || "Sensor de Temperatura";
+    const periodo = { 1: "Últimas 24 horas", 7: "Últimos 7 dias", 30: "Últimos 30 dias" };
+    const agora = new Date().toLocaleString("pt-BR");
+
+    // Cabeçalho
+    doc.setFillColor(2, 7, 24);
+    doc.rect(0, 0, 210, 40, "F");
+
+    doc.setTextColor(56, 189, 248);
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.text("RefrifastGo", 15, 16);
+
+    doc.setTextColor(148, 163, 184);
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.text("Sensor de Monitoramento de Temperatura", 15, 23);
+    doc.text("(62) 99485-9256 | refrifastgo.com", 15, 29);
+
+    doc.setTextColor(229, 231, 235);
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "bold");
+    doc.text(nomeRelatorio, 15, 38);
+
+    // Informações do relatório
+    doc.setFillColor(4, 16, 40);
+    doc.rect(0, 42, 210, 22, "F");
+
+    doc.setTextColor(147, 180, 232);
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "normal");
+    doc.text("Período: " + (periodo[periodoAtual] || ""), 15, 50);
+    doc.text("Gerado em: " + agora, 15, 56);
+    doc.text("Total de leituras: " + leiturasCache.length, 100, 50);
+    doc.text("Faixa segura: " + configAtual.min + " °C a " + configAtual.max + " °C", 100, 56);
+
+    // Resumo estatístico
+    const temps = leiturasCache.map(l => l.temp);
+    const min   = Math.min(...temps);
+    const max   = Math.max(...temps);
+    const media = temps.reduce((a,b) => a+b, 0) / temps.length;
+
+    doc.setFillColor(15, 156, 245);
+    doc.rect(15, 68, 42, 22, "F");
+    doc.setFillColor(34, 197, 94);
+    doc.rect(62, 68, 42, 22, "F");
+    doc.setFillColor(239, 68, 68);
+    doc.rect(109, 68, 42, 22, "F");
+    doc.setFillColor(37, 99, 235);
+    doc.rect(156, 68, 42, 22, "F");
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "normal");
+    doc.text("MÍNIMA", 36, 73, { align: "center" });
+    doc.text("MÉDIA", 83, 73, { align: "center" });
+    doc.text("MÁXIMA", 130, 73, { align: "center" });
+    doc.text("LEITURAS", 177, 73, { align: "center" });
+
+    doc.setFontSize(13);
+    doc.setFont("helvetica", "bold");
+    doc.text(min.toFixed(1) + " °C", 36, 83, { align: "center" });
+    doc.text(media.toFixed(1) + " °C", 83, 83, { align: "center" });
+    doc.text(max.toFixed(1) + " °C", 130, 83, { align: "center" });
+    doc.text(String(leiturasCache.length), 177, 83, { align: "center" });
+
+    // Tabela de leituras
+    const linhas = [...leiturasCache].reverse().map(l => {
+      const dentro = l.temp >= configAtual.min && l.temp <= configAtual.max;
+      return [
+        new Date(l.ts).toLocaleString("pt-BR"),
+        l.temp.toFixed(1) + " °C",
+        dentro ? "Normal" : "⚠ Alerta"
+      ];
+    });
+
+    doc.autoTable({
+      startY: 98,
+      head: [["Data / Hora", "Temperatura", "Status"]],
+      body: linhas,
+      theme: "grid",
+      headStyles: {
+        fillColor: [2, 7, 24],
+        textColor: [56, 189, 248],
+        fontSize: 8,
+        fontStyle: "bold"
+      },
+      bodyStyles: {
+        fontSize: 8,
+        textColor: [30, 30, 30]
+      },
+      alternateRowStyles: {
+        fillColor: [245, 247, 250]
+      },
+      didParseCell: (data) => {
+        if (data.section === "body" && data.column.index === 2) {
+          if (data.cell.raw === "⚠ Alerta") {
+            data.cell.styles.textColor = [220, 38, 38];
+            data.cell.styles.fontStyle = "bold";
+          } else {
+            data.cell.styles.textColor = [22, 163, 74];
+          }
+        }
+      },
+      margin: { left: 15, right: 15 }
+    });
+
+    // Rodapé
+    const totalPages = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFontSize(7);
+      doc.setTextColor(148, 163, 184);
+      doc.text(
+        "RefrifastGo • Sensor de monitoramento de temperatura • (62) 99485-9256 • refrifastgo.com",
+        105, 290, { align: "center" }
+      );
+      doc.text("Página " + i + " de " + totalPages, 195, 290, { align: "right" });
+    }
+
+    const nomePDF = "relatorio-" + (configAtual.nome || "sensor").replace(/\s+/g, "-").toLowerCase()
+      + "-" + new Date().toISOString().slice(0,10) + ".pdf";
+
+    doc.save(nomePDF);
+  }
+
+  // ============================================================
+  // EXPORTAR EXCEL
+  // ============================================================
+  function exportarExcel() {
+    if (!leiturasCache.length) {
+      alert("Nenhum dado carregado para exportar.");
+      return;
+    }
+
+    const nomeRelatorio = configAtual.nome || "Sensor de Temperatura";
+    const periodo = { 1: "Últimas 24 horas", 7: "Últimos 7 dias", 30: "Últimos 30 dias" };
+    const agora   = new Date().toLocaleString("pt-BR");
+
+    const temps = leiturasCache.map(l => l.temp);
+    const min   = Math.min(...temps);
+    const max   = Math.max(...temps);
+    const media = temps.reduce((a,b) => a+b, 0) / temps.length;
+
+    // Aba de resumo
+    const wsResumo = XLSX.utils.aoa_to_sheet([
+      ["RefrifastGo — Relatório de Temperatura"],
+      [],
+      ["Sensor:",        nomeRelatorio],
+      ["Período:",       periodo[periodoAtual] || ""],
+      ["Gerado em:",     agora],
+      ["Faixa segura:",  configAtual.min + " °C a " + configAtual.max + " °C"],
+      [],
+      ["RESUMO ESTATÍSTICO"],
+      ["Mínima",  min.toFixed(1) + " °C"],
+      ["Máxima",  max.toFixed(1) + " °C"],
+      ["Média",   media.toFixed(1) + " °C"],
+      ["Total de leituras", leiturasCache.length],
+      [],
+      ["Contato: (62) 99485-9256 | refrifastgo.com"]
+    ]);
+
+    // Aba de leituras
+    const cabecalho = [["Data / Hora", "Temperatura (°C)", "Status"]];
+    const linhas    = [...leiturasCache].reverse().map(l => {
+      const dentro = l.temp >= configAtual.min && l.temp <= configAtual.max;
+      return [
+        new Date(l.ts).toLocaleString("pt-BR"),
+        l.temp.toFixed(1),
+        dentro ? "Normal" : "Alerta"
+      ];
+    });
+
+    const wsLeituras = XLSX.utils.aoa_to_sheet([...cabecalho, ...linhas]);
+
+    // Largura das colunas
+    wsLeituras["!cols"] = [{ wch: 22 }, { wch: 18 }, { wch: 12 }];
+    wsResumo["!cols"]   = [{ wch: 22 }, { wch: 30 }];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, wsResumo, "Resumo");
+    XLSX.utils.book_append_sheet(wb, wsLeituras, "Leituras");
+
+    const nomeArquivo = "relatorio-" + (configAtual.nome || "sensor").replace(/\s+/g, "-").toLowerCase()
+      + "-" + new Date().toISOString().slice(0,10) + ".xlsx";
+
+    XLSX.writeFile(wb, nomeArquivo);
   }
 </script>
 
