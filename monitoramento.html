@@ -769,7 +769,7 @@
 
 <script>
   // ============================================================
-  // FIREBASE CONFIG — SUBSTITUA PELOS SEUS DADOS
+  // FIREBASE CONFIG
   // ============================================================
   const firebaseConfig = {
     apiKey:            "AIzaSyDjwnOHvLDI1R-x28wnwMweiMNfl9celwY",
@@ -785,9 +785,14 @@
   const auth = firebase.auth();
   const db   = firebase.database();
 
-  let usuarioAtual = null;
-  let sensorPath   = "leituras/sensor_01";
-  let periodoAtual = 1;
+  // ============================================================
+  // ✅ CORREÇÃO 1: DEVICE_ID definido aqui
+  // ============================================================
+  const DEVICE_ID = "sensor_01";
+
+  let usuarioAtual  = null;
+  let sensorPath    = "leituras/sensor_01";
+  let periodoAtual  = 1;
   let leiturasCache = [];
 
   let configAtual = {
@@ -849,10 +854,10 @@
   }
 
   // ============================================================
-  // CONFIG
+  // ✅ CORREÇÃO 2 e 3: CONFIG lendo e salvando em configuracoes/sensor_01
   // ============================================================
   function carregarConfig() {
-    db.ref("config/" + usuarioAtual.uid).once("value", snap => {
+    db.ref("configuracoes/" + DEVICE_ID).once("value", snap => {
       if (snap.exists()) {
         configAtual = { ...configAtual, ...snap.val() };
         document.getElementById("cfgNome").value   = configAtual.nome   || "";
@@ -873,7 +878,7 @@
     configAtual.min    = parseFloat(document.getElementById("cfgMin").value) || -5;
     configAtual.max    = parseFloat(document.getElementById("cfgMax").value) || 2;
 
-    db.ref("config/" + usuarioAtual.uid).set(configAtual).then(() => {
+    db.ref("configuracoes/" + DEVICE_ID).set(configAtual).then(() => {
       const ok = document.getElementById("configOk");
       ok.style.display = "block";
       setTimeout(() => ok.style.display = "none", 3000);
@@ -960,13 +965,13 @@
     const iMin  = leituras.find(l => l.temp === min);
     const iMax  = leituras.find(l => l.temp === max);
 
-    document.getElementById("rMin").textContent     = min.toFixed(1) + " °C";
-    document.getElementById("rMax").textContent     = max.toFixed(1) + " °C";
-    document.getElementById("rMedia").textContent   = media.toFixed(1) + " °C";
+    document.getElementById("rMin").textContent      = min.toFixed(1) + " °C";
+    document.getElementById("rMax").textContent      = max.toFixed(1) + " °C";
+    document.getElementById("rMedia").textContent    = media.toFixed(1) + " °C";
     document.getElementById("rLeituras").textContent = leituras.length + " leituras";
-    document.getElementById("rMinHora").textContent =
+    document.getElementById("rMinHora").textContent  =
       iMin ? new Date(iMin.ts).toLocaleString("pt-BR") : "";
-    document.getElementById("rMaxHora").textContent =
+    document.getElementById("rMaxHora").textContent  =
       iMax ? new Date(iMax.ts).toLocaleString("pt-BR") : "";
   }
 
@@ -1028,7 +1033,7 @@
   // TABELA
   // ============================================================
   function renderizarTabela(leituras) {
-    const tbody   = document.getElementById("tabelaBody");
+    const tbody    = document.getElementById("tabelaBody");
     const recentes = [...leituras].reverse().slice(0, 100);
     tbody.innerHTML = recentes.map(l => {
       const dentro = l.temp >= configAtual.min && l.temp <= configAtual.max;
@@ -1060,7 +1065,6 @@
     const periodo = { 1: "Últimas 24 horas", 7: "Últimos 7 dias", 30: "Últimos 30 dias" };
     const agora = new Date().toLocaleString("pt-BR");
 
-    // Cabeçalho
     doc.setFillColor(2, 7, 24);
     doc.rect(0, 0, 210, 40, "F");
 
@@ -1080,7 +1084,6 @@
     doc.setFont("helvetica", "bold");
     doc.text(nomeRelatorio, 15, 38);
 
-    // Informações do relatório
     doc.setFillColor(4, 16, 40);
     doc.rect(0, 42, 210, 22, "F");
 
@@ -1092,7 +1095,6 @@
     doc.text("Total de leituras: " + leiturasCache.length, 100, 50);
     doc.text("Faixa segura: " + configAtual.min + " °C a " + configAtual.max + " °C", 100, 56);
 
-    // Resumo estatístico
     const temps = leiturasCache.map(l => l.temp);
     const min   = Math.min(...temps);
     const max   = Math.max(...temps);
@@ -1122,7 +1124,6 @@
     doc.text(max.toFixed(1) + " °C", 130, 83, { align: "center" });
     doc.text(String(leiturasCache.length), 177, 83, { align: "center" });
 
-    // Tabela de leituras
     const linhas = [...leiturasCache].reverse().map(l => {
       const dentro = l.temp >= configAtual.min && l.temp <= configAtual.max;
       return [
@@ -1163,7 +1164,6 @@
       margin: { left: 15, right: 15 }
     });
 
-    // Rodapé
     const totalPages = doc.internal.getNumberOfPages();
     for (let i = 1; i <= totalPages; i++) {
       doc.setPage(i);
@@ -1200,7 +1200,6 @@
     const max   = Math.max(...temps);
     const media = temps.reduce((a,b) => a+b, 0) / temps.length;
 
-    // Aba de resumo
     const wsResumo = XLSX.utils.aoa_to_sheet([
       ["RefrifastGo — Relatório de Temperatura"],
       [],
@@ -1218,7 +1217,6 @@
       ["Contato: (62) 99485-9256 | refrifastgo.com"]
     ]);
 
-    // Aba de leituras
     const cabecalho = [["Data / Hora", "Temperatura (°C)", "Status"]];
     const linhas    = [...leiturasCache].reverse().map(l => {
       const dentro = l.temp >= configAtual.min && l.temp <= configAtual.max;
@@ -1231,7 +1229,6 @@
 
     const wsLeituras = XLSX.utils.aoa_to_sheet([...cabecalho, ...linhas]);
 
-    // Largura das colunas
     wsLeituras["!cols"] = [{ wch: 22 }, { wch: 18 }, { wch: 12 }];
     wsResumo["!cols"]   = [{ wch: 22 }, { wch: 30 }];
 
