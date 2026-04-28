@@ -856,38 +856,46 @@
   // ============================================================
   // ✅ CORREÇÃO 2 e 3: CONFIG lendo e salvando em configuracoes/sensor_01
   // ============================================================
-  function carregarConfig() {
-    db.ref("configuracoes/sensor_01").once("value", snap => {     
-      if (snap.exists()) {
-        configAtual = { ...configAtual, ...snap.val() };
-        document.getElementById("cfgNome").value   = configAtual.nome   || "";
-        document.getElementById("cfgTel").value    = configAtual.tel    || "";
-        document.getElementById("cfgApiKey").value = configAtual.apiKey || "";
-        document.getElementById("cfgMin").value    = configAtual.min    ?? -5;
-        document.getElementById("cfgMax").value    = configAtual.max    ?? 2;
-        document.getElementById("painelTitulo").textContent =
-          configAtual.nome ? "Sensor: " + configAtual.nome : "Painel de Temperatura";
-      }
-    });
-  }
+  // ============================================================
+// CONFIG
+// ============================================================
+function carregarConfig() {
+  // Lê as configurações do caminho usado pelo ESP32
+  db.ref("configuracoes/sensor_01").once("value", snap => {
+    if (snap.exists()) {
+      configAtual = { ...configAtual, ...snap.val() };
 
-  function salvarConfig() {
-    configAtual.nome   = document.getElementById("cfgNome").value.trim();
-    configAtual.tel    = document.getElementById("cfgTel").value.trim();
-    configAtual.apiKey = document.getElementById("cfgApiKey").value.trim();
-    configAtual.min    = parseFloat(document.getElementById("cfgMin").value) || -5;
-    configAtual.max    = parseFloat(document.getElementById("cfgMax").value) || 2;
+      document.getElementById("cfgNome").value   = configAtual.nome   || "";
+      document.getElementById("cfgTel").value    = configAtual.tel    || "";
+      document.getElementById("cfgApiKey").value = configAtual.apiKey || "";
+      document.getElementById("cfgMin").value    = configAtual.min    ?? -5;
+      document.getElementById("cfgMax").value    = configAtual.max    ?? 2;
 
-    db.ref("configuracoes/sensor_01").set(configAtual).then(() => {
-      const ok = document.getElementById("configOk");
-      ok.style.display = "block";
-      setTimeout(() => ok.style.display = "none", 3000);
       document.getElementById("painelTitulo").textContent =
         configAtual.nome ? "Sensor: " + configAtual.nome : "Painel de Temperatura";
-      carregarPeriodo(periodoAtual);
-    });
-  }
+    }
+  });
+}
 
+function salvarConfig() {
+  configAtual.nome   = document.getElementById("cfgNome").value.trim();
+  configAtual.tel    = document.getElementById("cfgTel").value.trim();
+  configAtual.apiKey = document.getElementById("cfgApiKey").value.trim();
+  configAtual.min    = parseFloat(document.getElementById("cfgMin").value) || -5;
+  configAtual.max    = parseFloat(document.getElementById("cfgMax").value) || 2;
+
+  // Salva exatamente onde o ESP32 vai ler
+  db.ref("configuracoes/sensor_01").set(configAtual).then(() => {
+    const ok = document.getElementById("configOk");
+    ok.style.display = "block";
+    setTimeout(() => ok.style.display = "none", 3000);
+
+    document.getElementById("painelTitulo").textContent =
+      configAtual.nome ? "Sensor: " + configAtual.nome : "Painel de Temperatura";
+
+    carregarPeriodo(periodoAtual);
+  });
+}
   // ============================================================
   // LEITURA AO VIVO
   // ============================================================
