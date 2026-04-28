@@ -857,7 +857,7 @@
   // ✅ CORREÇÃO 2 e 3: CONFIG lendo e salvando em configuracoes/sensor_01
   // ============================================================
   function carregarConfig() {
-    db.ref("configuracoes/" + DEVICE_ID).once("value", snap => {
+    db.ref("configuracoes/sensor_01").once("value", snap => {     
       if (snap.exists()) {
         configAtual = { ...configAtual, ...snap.val() };
         document.getElementById("cfgNome").value   = configAtual.nome   || "";
@@ -878,7 +878,7 @@
     configAtual.min    = parseFloat(document.getElementById("cfgMin").value) || -5;
     configAtual.max    = parseFloat(document.getElementById("cfgMax").value) || 2;
 
-    db.ref("configuracoes/" + DEVICE_ID).set(configAtual).then(() => {
+    db.ref("configuracoes/sensor_01").set(configAtual).then(() => {
       const ok = document.getElementById("configOk");
       ok.style.display = "block";
       setTimeout(() => ok.style.display = "none", 3000);
