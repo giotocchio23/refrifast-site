@@ -680,6 +680,45 @@
       </p>
     </div>
   </div>
+  
+  <!-- TELA DE REGISTRO (INICIALMENTE OCULTA) -->
+<section id="tela-registro" style="display:none; min-height:100vh; display:none; align-items:center; justify-content:center; padding:100px 18px 40px;">
+  <div class="login-card">
+    <div class="login-topo">
+      <div class="login-icon">👤</div>
+      <h1 class="login-titulo">Criar conta</h1>
+      <p class="login-sub">
+        Preencha os dados abaixo para criar seu acesso ao painel de monitoramento.
+      </p>
+    </div>
+
+    <div class="form-group">
+      <label for="regEmail">E-mail</label>
+      <input type="email" id="regEmail" placeholder="seu@email.com" />
+    </div>
+
+    <div class="form-group">
+      <label for="regSenha">Senha</label>
+      <input type="password" id="regSenha" placeholder="mínimo 6 caracteres" />
+    </div>
+
+    <div class="form-group">
+      <label for="regSenhaConfirm">Confirmar senha</label>
+      <input type="password" id="regSenhaConfirm" placeholder="repita a senha" />
+    </div>
+
+    <div id="regErro" class="login-erro"></div>
+
+    <button id="btnRegistrar" class="btn-login">Criar conta</button>
+
+    <div style="text-align:center; margin-top:10px; font-size:0.82rem; color:#9ca3af;">
+      Já tem conta?
+      <a href="#" id="linkVoltarLoginReg" style="color:#3b82f6; font-weight:600;">
+        Voltar para o login
+      </a>
+    </div>
+  </div>
+</section>
 <!-- ===== PAINEL ===== -->
 <div id="tela-painel">
 
