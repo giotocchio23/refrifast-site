@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -637,88 +638,10 @@
 
     <div class="login-erro" id="loginErro"></div>
 
-          <button class="btn-login" onclick="fazerLogin()">Entrar</button>
-      <div class="login-erro" id="loginErro"></div>
-      <p class="login-sub" style="text-align: center; margin-top: 10px;">
-        <a href="#" id="linkEsqueceuSenha" style="color: var(--text-muted); font-size: 0.78rem;">Esqueceu sua senha?</a>
-      </p>
-      <p class="login-sub" style="text-align: center; margin-top: 10px;">
-        Não tem uma conta? <a href="#" id="linkIrParaRegistro" style="color: var(--blue-light); font-weight: 600;">Registre-se aqui</a>
-      </p>
+    <button class="btn-login" onclick="fazerLogin()">Entrar no painel</button>
+  </div>
 </div>
-  
-  <!-- ===== REGISTRO ===== -->
-  <div id="tela-registro" style="display: none;">
-    <div class="login-card">
-      <div class="login-topo">
-        <div class="login-icon">📝</div>
-        <h2 class="login-titulo">Registrar Novo Cliente</h2>
-        <p class="login-sub">Crie uma conta para gerenciar seus sensores RefrifastGo.</p>
-      </div>
 
-      <div class="form-group">
-        <label for="regEmail">E-mail</label>
-        <input type="email" id="regEmail" placeholder="seu@email.com" required />
-      </div>
-      <div class="form-group">
-        <label for="regSenha">Senha</label>
-        <input type="password" id="regSenha" placeholder="Mínimo 6 caracteres" required />
-      </div>
-      <div class="form-group">
-        <label for="regSenhaConfirm">Confirmar Senha</label>
-        <input type="password" id="regSenhaConfirm" placeholder="Repita a senha" required />
-      </div>
-
-        <button class="btn-login" onclick="fazerLogin()">Entrar</button>
-      <div class="login-erro" id="loginErro"></div>
-      <p class="login-sub" style="text-align: center; margin-top: 10px;">
-        Não tem uma conta? <a href="#" id="linkIrParaRegistro" style="color: var(--blue-light); font-weight: 600;">Registre-se aqui</a>
-      </p>
-
-      <p class="login-sub" style="text-align: center; margin-top: 10px;">
-        Já tem uma conta? <a href="#" id="linkVoltarLoginReg" style="color: var(--blue-light); font-weight: 600;">Faça login</a>
-      </p>
-    </div>
-  </div>
-  
-  <!-- TELA DE REGISTRO (INICIALMENTE OCULTA) -->
-<section id="tela-registro" style="display:none; min-height:100vh; display:none; align-items:center; justify-content:center; padding:100px 18px 40px;">
-  <div class="login-card">
-    <div class="login-topo">
-      <div class="login-icon">👤</div>
-      <h1 class="login-titulo">Criar conta</h1>
-      <p class="login-sub">
-        Preencha os dados abaixo para criar seu acesso ao painel de monitoramento.
-      </p>
-    </div>
-
-    <div class="form-group">
-      <label for="regEmail">E-mail</label>
-      <input type="email" id="regEmail" placeholder="seu@email.com" />
-    </div>
-
-    <div class="form-group">
-      <label for="regSenha">Senha</label>
-      <input type="password" id="regSenha" placeholder="mínimo 6 caracteres" />
-    </div>
-
-    <div class="form-group">
-      <label for="regSenhaConfirm">Confirmar senha</label>
-      <input type="password" id="regSenhaConfirm" placeholder="repita a senha" />
-    </div>
-
-    <div id="regErro" class="login-erro"></div>
-
-    <button id="btnRegistrar" class="btn-login">Criar conta</button>
-
-    <div style="text-align:center; margin-top:10px; font-size:0.82rem; color:#9ca3af;">
-      Já tem conta?
-      <a href="#" id="linkVoltarLoginReg" style="color:#3b82f6; font-weight:600;">
-        Voltar para o login
-      </a>
-    </div>
-  </div>
-</section>
 <!-- ===== PAINEL ===== -->
 <div id="tela-painel">
 
@@ -839,12 +762,8 @@
         <input id="cfgMax" type="number" step="0.1" placeholder="2" />
       </div>
     </div>
-        <div style="display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;">
-      <button class="btn-salvar" onclick="salvarConfig()">💾 Salvar configurações</button>
-      <button id="btnTestarWhats" class="btn-salvar" style="background: #0f9cf5; border-color: #0f9cf5;">📞 Testar WhatsApp</button>
-    </div>
+    <button class="btn-salvar" onclick="salvarConfig()">💾 Salvar configurações</button>
     <div class="config-ok" id="configOk">✅ Configurações salvas com sucesso!</div>
-    <div id="whatsTestMsg" class="config-hint" style="margin-top: 8px;"></div>
   </div>
 
 </div>
@@ -1331,178 +1250,6 @@ function salvarConfig() {
 
     XLSX.writeFile(wb, nomeArquivo);
   }
-  // ============================================================
-// TESTE DE WHATSAPP (CallMeBot)
-// ============================================================
-document.addEventListener("DOMContentLoaded", () => { // Garante que o DOM esteja carregado
-  const btnTestarWhats = document.getElementById("btnTestarWhats");
-  if (btnTestarWhats) { // Verifica se o botão existe antes de adicionar o listener
-    btnTestarWhats.addEventListener("click", () => {
-      const tel    = document.getElementById("cfgTel").value.trim();
-      const apiKey = document.getElementById("cfgApiKey").value.trim();
-      const msgEl  = document.getElementById("whatsTestMsg");
-
-      msgEl.textContent = ""; // Limpa mensagens anteriores
-      msgEl.style.color = "red"; // Cor padrão para erro
-
-      if (!tel || !apiKey) {
-        msgEl.textContent = "Preencha o telefone e a API Key antes de testar.";
-        return;
-      }
-
-      const texto = "RefrifastGo TESTE%0ASeu sensor esta configurado corretamente."; // %0A é quebra de linha na URL
-
-      const url = "https://api.callmebot.com/whatsapp.php?phone="
-        + encodeURIComponent(tel)
-        + "&text=" + texto
-        + "&apikey=" + encodeURIComponent(apiKey);
-
-      msgEl.textContent = "Enviando mensagem de teste...";
-      msgEl.style.color = "black"; // Mensagem de envio em cor neutra
-
-      fetch(url)
-        .then(resp => {
-          if (!resp.ok) {
-            throw new Error("Erro HTTP: " + resp.status + " " + resp.statusText);
-          }
-          return resp.text();
-        })
-        .then(body => {
-          console.log("Resposta CallMeBot (teste):", body);
-          if (body.includes("OK")) {
-            msgEl.style.color = "green";
-            msgEl.textContent = "Mensagem de teste enviada. Verifique seu WhatsApp.";
-          } else {
-            msgEl.style.color = "red";
-            msgEl.textContent = "Erro do CallMeBot: " + body;
-          }
-        })
-        .catch(err => {
-          console.error("Erro no teste de WhatsApp:", err);
-          msgEl.style.color = "red";
-          msgEl.textContent = "Erro ao enviar teste: " + err.message + ". Verifique sua conexão e os dados.";
-        });
-    });
-  }
-});
-  // ============================================================
-// REGISTRO DE USUÁRIO
-// ============================================================
-document.addEventListener("DOMContentLoaded", () => {
-  const telaLogin    = document.getElementById("tela-login");
-  const telaRegistro = document.getElementById("tela-registro");
-  const linkIrParaRegistro = document.getElementById("linkIrParaRegistro");
-  const linkVoltarLoginReg = document.getElementById("linkVoltarLoginReg");
-  const btnRegistrar = document.getElementById("btnRegistrar");
-  const regEmail     = document.getElementById("regEmail");
-  const regSenha     = document.getElementById("regSenha");
-  const regSenhaConfirm = document.getElementById("regSenhaConfirm");
-  const regErro      = document.getElementById("regErro");
-
-  if (linkIrParaRegistro) {
-    linkIrParaRegistro.addEventListener("click", (e) => {
-      e.preventDefault();
-      telaLogin.style.display = "none";
-      telaRegistro.style.display = "flex";
-      regErro.style.display = "none"; // Limpa erros
-    });
-  }
-
-  if (linkVoltarLoginReg) {
-    linkVoltarLoginReg.addEventListener("click", (e) => {
-      e.preventDefault();
-      telaRegistro.style.display = "none";
-      telaLogin.style.display = "flex";
-      regErro.style.display = "none"; // Limpa erros
-    });
-  }
-
-  if (btnRegistrar) {
-    btnRegistrar.addEventListener("click", () => {
-      const email = regEmail.value.trim();
-      const senha = regSenha.value.trim();
-      const senhaConfirm = regSenhaConfirm.value.trim();
-
-      regErro.style.display = "none";
-      regErro.textContent = "";
-
-      if (!email || !senha || !senhaConfirm) {
-        regErro.textContent = "Por favor, preencha todos os campos.";
-        regErro.style.display = "block";
-        return;
-      }
-      if (senha.length < 6) {
-        regErro.textContent = "A senha deve ter no mínimo 6 caracteres.";
-        regErro.style.display = "block";
-        return;
-      }
-      if (senha !== senhaConfirm) {
-        regErro.textContent = "As senhas não coincidem.";
-        regErro.style.display = "block";
-        return;
-      }
-
-      auth.createUserWithEmailAndPassword(email, senha)
-        .then((userCredential) => {
-          // Usuário registrado com sucesso
-          const user = userCredential.user;
-          console.log("Usuário registrado:", user.email);
-          alert("Conta criada com sucesso! Você já pode fazer login.");
-          // Volta para a tela de login
-          telaRegistro.style.display = "none";
-          telaLogin.style.display = "flex";
-          regEmail.value = "";
-          regSenha.value = "";
-          regSenhaConfirm.value = "";
-        })
-        .catch((error) => {
-          let errorMessage = "Erro ao registrar. Tente novamente.";
-          if (error.code === 'auth/email-already-in-use') {
-            errorMessage = "Este e-mail já está em uso.";
-          } else if (error.code === 'auth/invalid-email') {
-            errorMessage = "E-mail inválido.";
-          }
-          regErro.textContent = errorMessage;
-          regErro.style.display = "block";
-          console.error("Erro de registro:", error);
-        });
-    });
-  }
-});
-  // ============================================================
-// RESET DE SENHA
-// ============================================================
-document.addEventListener("DOMContentLoaded", () => {
-  const linkEsqueceuSenha = document.getElementById("linkEsqueceuSenha");
-  const loginEmailInput   = document.getElementById("loginEmail"); // Assumindo que você tem um input com id="loginEmail"
-
-  if (linkEsqueceuSenha && loginEmailInput) {
-    linkEsqueceuSenha.addEventListener("click", (e) => {
-      e.preventDefault();
-      const email = loginEmailInput.value.trim();
-
-      if (!email) {
-        alert("Por favor, digite seu e-mail no campo acima para redefinir a senha.");
-        return;
-      }
-
-      auth.sendPasswordResetEmail(email)
-        .then(() => {
-          alert("Um e-mail para redefinir sua senha foi enviado para " + email + ". Verifique sua caixa de entrada (e spam).");
-        })
-        .catch((error) => {
-          let errorMessage = "Erro ao enviar e-mail de redefinição. Verifique o e-mail digitado.";
-          if (error.code === 'auth/invalid-email') {
-            errorMessage = "E-mail inválido.";
-          } else if (error.code === 'auth/user-not-found') {
-            errorMessage = "Não existe usuário com este e-mail.";
-          }
-          alert(errorMessage);
-          console.error("Erro de reset de senha:", error);
-        });
-    });
-  }
-});
 </script>
 
 </body>
