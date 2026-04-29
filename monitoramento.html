@@ -487,413 +487,415 @@
     .td-status.ok     { color: var(--green); }
     .td-status.alerta { color: #fcd34d; }
 
-    .loading { text-align: center; color: var(--text-muted); padding: 20px; }
+    .loading { text-align: center; color: var(--text-muted); padding: 24px; font-size: 0.88rem; }
 
     /* ===== CONFIGURAÇÕES ===== */
     .config-card {
       background: #020c1f;
       border: 1px solid rgba(56,189,248,0.12);
       border-radius: 20px;
-      padding: 20px;
+      padding: 22px 20px;
       margin-bottom: 20px;
     }
 
-    .config-card h3 {
-      font-size: 1.1rem;
+    .config-titulo {
+      font-size: 0.95rem;
       font-weight: 700;
       color: #e5f0ff;
-      margin-bottom: 15px;
-    }
-
-    .config-card .form-group {
-      margin-bottom: 15px;
-    }
-
-    .config-card .form-group label {
-      font-size: 0.85rem;
-      color: var(--text-softer);
-      margin-bottom: 5px;
-    }
-
-    .config-card .form-group input[type="text"],
-    .config-card .form-group input[type="number"] {
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(56,189,248,0.2);
-      border-radius: 8px;
-      padding: 10px 12px;
-      color: #e5f0ff;
-      font-size: 0.9rem;
-      outline: none;
-      width: 100%;
-      transition: border-color 0.2s;
-    }
-    .config-card .form-group input:focus { border-color: var(--blue-main); }
-
-    .btn-salvar {
-      padding: 10px 20px;
-      border-radius: 999px;
-      border: none;
-      background: linear-gradient(90deg, #2563eb, #0f9cf5);
-      color: #fff;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      letter-spacing: 0.03em;
-      transition: transform 0.1s, opacity 0.15s;
-      display: inline-flex;
+      margin-bottom: 16px;
+      display: flex;
       align-items: center;
       gap: 8px;
+    }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 14px;
+    }
+    @media (max-width: 640px) { .config-grid { grid-template-columns: 1fr; } }
+
+    .config-group { display: flex; flex-direction: column; gap: 5px; }
+    .config-group label { font-size: 0.78rem; color: var(--text-muted); }
+
+    .config-group input {
+      width: 100%;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(56,189,248,0.2);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: #e5f0ff;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .config-group input:focus { border-color: var(--blue-main); }
+
+    .config-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
+    .btn-salvar {
+      margin-top: 14px;
+      padding: 10px 24px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(90deg, #0f9cf5, #2563eb);
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 10px 28px rgba(15,23,42,0.9);
+      transition: transform 0.1s, opacity 0.15s;
     }
     .btn-salvar:hover { transform: translateY(-1px); opacity: 0.96; }
 
     .config-ok {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--green);
-      text-align: center;
-      background: rgba(34,197,94,0.1);
-      border: 1px solid rgba(34,197,94,0.3);
-      border-radius: 8px;
-      padding: 8px 12px;
-      margin-top: 15px;
       display: none;
+      margin-top: 8px;
     }
 
-    .config-hint {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 5px;
-    }
+    /* ===== PRINT ===== */
+    @media print {
+      header, .export-bar, .filtros-bar, .btn-filtro,
+      .btn-salvar, .config-card, .btn-voltar, .btn-logout { display: none !important; }
 
+      body { background: #fff !important; color: #000 !important; }
+
+      #tela-painel {
+        display: block !important;
+        padding: 10px !important;
+        max-width: 100% !important;
+      }
+
+      .resumo-card, .grafico-card, .tabela-card {
+        border: 1px solid #ccc !important;
+        background: #fff !important;
+        color: #000 !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+      }
+
+      .resumo-valor, .painel-titulo, .grafico-titulo,
+      .tabela-titulo { color: #000 !important; }
+
+      .resumo-label, .resumo-detalhe, .painel-sub,
+      .grafico-sub, thead th, tbody td { color: #333 !important; }
+
+      table { font-size: 0.75rem !important; }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="header-inner">
-      <div class="logo-wrap">
-        <img src="https://i.imgur.com/your_logo_here.png" alt="RefrifastGo Logo" class="logo-img" />
-        <div class="logo-text">
-          <span class="logo-main">RefrifastGo</span>
-          <span class="logo-sub">Monitoramento</span>
-        </div>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo-wrap">
+      <img src="logo-refrifast.png" alt="RefrifastGo" class="logo-img" />
+      <div class="logo-text">
+        <span class="logo-main">RefrifastGo</span>
+        <span class="logo-sub">MONITORAMENTO</span>
       </div>
-      <div class="header-right">
-        <span class="header-user" id="headerUser"></span>
-        <button class="btn-logout" id="btnLogout">Sair</button>
+    </a>
+
+    <div class="header-right">
+      <span class="header-user" id="headerUser"></span>
+      <button class="btn-voltar" onclick="window.location.href='index.html'">
+        ← Voltar ao site
+      </button>
+      <button class="btn-logout" id="btnLogout">
+        🚪 Sair
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== TELA DE LOGIN ===== -->
+<div id="tela-login">
+  <div class="login-card">
+    <div class="login-topo">
+      <div class="login-icon">🌡</div>
+      <div class="login-titulo">Painel de Monitoramento</div>
+      <div class="login-sub">
+        Acesse com seu e-mail e senha para visualizar os dados do seu sensor.
       </div>
     </div>
-  </header>
 
-  <!-- TELA DE LOGIN -->
-  <div id="tela-login">
-    <div class="login-card">
-      <div class="login-topo">
-        <div class="login-icon">❄️</div>
-        <h1 class="login-titulo">Acesso ao Painel</h1>
-        <p class="login-sub">Entre com suas credenciais para acessar o monitoramento de temperatura.</p>
-      </div>
+    <div class="form-group">
+      <label for="inputEmail">E-mail</label>
+      <input id="inputEmail" type="email" placeholder="seu@email.com" autocomplete="username" />
+    </div>
 
-      <div class="form-group">
-        <label for="loginEmail">E-mail</label>
-        <input type="email" id="loginEmail" placeholder="seuemail@exemplo.com" />
-      </div>
-      <div class="form-group">
-        <label for="loginPassword">Senha</label>
-        <input type="password" id="loginPassword" placeholder="••••••••" />
-      </div>
+    <div class="form-group">
+      <label for="inputSenha">Senha</label>
+      <input id="inputSenha" type="password" placeholder="••••••••" autocomplete="current-password" />
+    </div>
 
-      <button class="btn-login" id="btnLogin">Entrar</button>
+    <div class="login-erro" id="loginErro"></div>
 
-      <div class="login-erro" id="loginErro"></div>
+    <button class="btn-login" onclick="fazerLogin()">Entrar no painel</button>
+  </div>
+</div>
+
+<!-- ===== PAINEL ===== -->
+<div id="tela-painel">
+
+  <!-- Topo do painel -->
+  <div class="painel-topo">
+    <div>
+      <div class="painel-titulo" id="painelTitulo">Painel de Temperatura</div>
+      <div class="painel-sub" id="painelSub">Carregando...</div>
+    </div>
+
+    <!-- BOTÕES DE EXPORTAÇÃO -->
+    <div class="export-bar">
+      <button class="btn-export pdf"   onclick="exportarPDF()">
+        📄 Exportar PDF
+      </button>
+      <button class="btn-export excel" onclick="exportarExcel()">
+        📊 Exportar Excel
+      </button>
+      <button class="btn-export print" onclick="window.print()">
+        🖨️ Imprimir
+      </button>
     </div>
   </div>
 
-  <!-- TELA DO PAINEL -->
-  <div id="tela-painel">
-    <div class="painel-topo">
+  <!-- Filtros de período -->
+  <div class="filtros-bar">
+    <button class="btn-filtro ativo" onclick="mudarPeriodo(1, this)">Últimas 24h</button>
+    <button class="btn-filtro"       onclick="mudarPeriodo(7, this)">7 dias</button>
+    <button class="btn-filtro"       onclick="mudarPeriodo(30, this)">30 dias</button>
+  </div>
+
+  <!-- Resumo em cards -->
+  <div class="resumo-grid">
+    <div class="resumo-card">
+      <div class="resumo-label">Temperatura Atual</div>
+      <div class="resumo-valor" id="rAtual">--</div>
+      <div class="resumo-detalhe" id="rStatus">Aguardando...</div>
+    </div>
+    <div class="resumo-card">
+      <div class="resumo-label">Mínima do período</div>
+      <div class="resumo-valor" id="rMin">--</div>
+      <div class="resumo-detalhe" id="rMinHora"></div>
+    </div>
+    <div class="resumo-card">
+      <div class="resumo-label">Máxima do período</div>
+      <div class="resumo-valor" id="rMax">--</div>
+      <div class="resumo-detalhe" id="rMaxHora"></div>
+    </div>
+    <div class="resumo-card">
+      <div class="resumo-label">Média do período</div>
+      <div class="resumo-valor" id="rMedia">--</div>
+      <div class="resumo-detalhe" id="rLeituras"></div>
+    </div>
+  </div>
+
+  <!-- Gráfico -->
+  <div class="grafico-card">
+    <div class="grafico-topo">
       <div>
-        <h1 class="painel-titulo" id="painelTitulo">Painel de Temperatura</h1>
-        <p class="painel-sub" id="painelSub">Carregando...</p>
+        <div class="grafico-titulo">Histórico de Temperatura</div>
+        <div class="grafico-sub" id="graficoSub">Últimas 24 horas</div>
       </div>
-      <div class="export-bar">
-        <button class="btn-export pdf" onclick="exportarPDF()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
-          Exportar PDF
-        </button>
-        <button class="btn-export excel" onclick="exportarExcel()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-spreadsheet"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M8 21h8"/><path d="M8 17h8"/><path d="M8 13h8"/><path d="M8 9h8"/></svg>
-          Exportar Excel
-        </button>
-      </div>
+      <span class="badge-live">AO VIVO</span>
     </div>
 
-    <div class="filtros-bar">
-      <button class="btn-filtro ativo" onclick="mudarPeriodo(1, this)">Últimas 24h</button>
-      <button class="btn-filtro" onclick="mudarPeriodo(7, this)">Últimos 7 dias</button>
-      <button class="btn-filtro" onclick="mudarPeriodo(30, this)">Últimos 30 dias</button>
+    <div class="grafico-barras-wrap">
+      <div class="grafico-barras-wrap" id="grafBarras" style="padding-bottom:0; height:100%; width:100%; display:flex; align-items:flex-end; gap:3px;"></div>
     </div>
 
-    <div class="resumo-grid">
-      <div class="resumo-card">
-        <p class="resumo-label">Temperatura Atual</p>
-        <p class="resumo-valor" id="rAtual">-- °C</p>
-        <p class="resumo-detalhe" id="rStatus">Carregando...</p>
-      </div>
-      <div class="resumo-card">
-        <p class="resumo-label">Mínima do Período</p>
-        <p class="resumo-valor" id="rMin">-- °C</p>
-        <p class="resumo-detalhe" id="rMinHora"></p>
-      </div>
-      <div class="resumo-card">
-        <p class="resumo-label">Máxima do Período</p>
-        <p class="resumo-valor" id="rMax">-- °C</p>
-        <p class="resumo-detalhe" id="rMaxHora"></p>
-      </div>
-      <div class="resumo-card">
-        <p class="resumo-label">Média do Período</p>
-        <p class="resumo-valor" id="rMedia">-- °C</p>
-        <p class="resumo-detalhe" id="rLeituras">-- leituras</p>
-      </div>
-    </div>
-
-    <div class="grafico-card">
-      <div class="grafico-topo">
-        <div>
-          <h3 class="grafico-titulo">Gráfico de Temperaturas</h3>
-          <p class="grafico-sub" id="graficoSub">Últimas 24 horas</p>
-        </div>
-        <span class="badge-live">Ao vivo</span>
-      </div>
-      <div class="grafico-barras-wrap" id="grafBarras">
-        <div class="loading">Carregando gráfico...</div>
-      </div>
-      <div class="faixa-info" id="faixaInfo">
-        <span class="faixa-badge">Faixa segura: -- °C a -- °C</span>
-        <span class="faixa-badge alerta">Barras em laranja/vermelho = fora da faixa</span>
-      </div>
-    </div>
-
-    <div class="tabela-card">
-      <div class="tabela-topo">
-        <h3 class="tabela-titulo">Últimas Leituras</h3>
-      </div>
-      <div class="tabela-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th>Data / Hora</th>
-              <th>Temperatura</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="tabelaBody">
-            <tr><td colspan="3" class="loading">Carregando dados...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Configurações -->
-    <div class="config-card">
-      <h3>Configurações do Sensor</h3>
-      <div class="form-group">
-        <label for="cfgNome">Nome do Sensor</label>
-        <input type="text" id="cfgNome" placeholder="Ex: Câmara Fria 1" />
-      </div>
-      <div class="form-group">
-        <label for="cfgTel">Telefone WhatsApp (com DDI e DDD)</label>
-        <input type="text" id="cfgTel" placeholder="Ex: 5562999999999" />
-      </div>
-      <div class="form-group">
-        <label for="cfgApiKey">API Key CallMeBot</label>
-        <input type="text" id="cfgApiKey" placeholder="Informe a API Key" />
-      </div>
-      <div class="form-group">
-        <label for="cfgMin">Temperatura Mínima Segura (°C)</label>
-        <input type="number" id="cfgMin" placeholder="-5" />
-      </div>
-      <div class="form-group">
-        <label for="cfgMax">Temperatura Máxima Segura (°C)</label>
-        <input type="number" id="cfgMax" placeholder="2" />
-      </div>
-
-      <div style="display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;">
-        <button class="btn-salvar" onclick="salvarConfig()">💾 Salvar configurações</button>
-        <button id="btnTestarWhats" class="btn-salvar" style="background: #0f9cf5; border-color: #0f9cf5;">📞 Testar WhatsApp</button>
-      </div>
-      <div class="config-ok" id="configOk">✅ Configurações salvas com sucesso!</div>
-      <div id="whatsTestMsg" class="config-hint" style="margin-top: 8px;"></div>
-    </div>
-
+    <div class="faixa-info" id="faixaInfo"></div>
   </div>
+
+  <!-- Tabela -->
+  <div class="tabela-card">
+    <div class="tabela-topo">
+      <div class="tabela-titulo">📋 Leituras detalhadas</div>
+    </div>
+    <div class="tabela-scroll">
+      <table id="tabelaDados">
+        <thead>
+          <tr>
+            <th>Data / Hora</th>
+            <th>Temperatura</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaBody">
+          <tr><td colspan="3" class="loading">Carregando dados...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Configurações -->
+  <div class="config-card">
+    <div class="config-titulo">⚙️ Configurações do sensor</div>
+    <div class="config-grid">
+      <div class="config-group">
+        <label>Nome do sensor</label>
+        <input id="cfgNome" type="text" placeholder="Ex: Câmara Fria 01" />
+      </div>
+      <div class="config-group">
+        <label>Telefone para alertas (WhatsApp)</label>
+        <input id="cfgTel" type="tel" placeholder="62999999999" />
+        <div class="config-hint">Somente números, com DDD. Ex: 62994859256</div>
+      </div>
+      <div class="config-group">
+        <label>API Key CallMeBot</label>
+        <input id="cfgApiKey" type="text" placeholder="Cole sua API Key aqui" />
+        <div class="config-hint">Obtenha em callmebot.com/blog/free-whatsapp-api/</div>
+      </div>
+      <div class="config-group">
+        <label>Temperatura mínima segura (°C)</label>
+        <input id="cfgMin" type="number" step="0.1" placeholder="-5" />
+      </div>
+      <div class="config-group">
+        <label>Temperatura máxima segura (°C)</label>
+        <input id="cfgMax" type="number" step="0.1" placeholder="2" />
+      </div>
+    </div>
+    <button class="btn-salvar" onclick="salvarConfig()">💾 Salvar configurações</button>
+    <div class="config-ok" id="configOk">✅ Configurações salvas com sucesso!</div>
+  </div>
+
+</div>
 
 <script>
   // ============================================================
-  // CONFIGURAÇÃO DO FIREBASE
+  // FIREBASE CONFIG
   // ============================================================
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY", // Substitua pela sua API Key do Firebase
-    authDomain: "YOUR_AUTH_DOMAIN", // Substitua pelo seu Auth Domain
-    databaseURL: "https://refrifastgo-default-rtdb.firebaseio.com",
-    projectId: "YOUR_PROJECT_ID", // Substitua pelo seu Project ID
-    storageBucket: "YOUR_STORAGE_BUCKET", // Substitua pelo seu Storage Bucket
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // Substitua pelo seu Messaging Sender ID
-    appId: "YOUR_APP_ID" // Substitua pelo seu App ID
+    apiKey:            "AIzaSyDjwnOHvLDI1R-x28wnwMweiMNfl9celwY",
+    authDomain:        "refrifastgo.firebaseapp.com",
+    databaseURL:       "https://refrifastgo-default-rtdb.firebaseio.com",
+    projectId:         "refrifastgo",
+    storageBucket:     "refrifastgo.firebasestorage.app",
+    messagingSenderId: "694306247301",
+    appId:             "1:694306247301:web:e544dcdd0d568344338fec"
   };
 
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const db   = firebase.database();
 
-  const sensorPath = "leituras/sensor_01"; // Caminho para as leituras do sensor
-  let configAtual  = { min: -5, max: 2, nome: "Sensor de Temperatura", tel: "", apiKey: "" };
+  // ============================================================
+  // ✅ CORREÇÃO 1: DEVICE_ID definido aqui
+  // ============================================================
+  const DEVICE_ID = "sensor_01";
+
+  let usuarioAtual  = null;
+  let sensorPath    = "leituras/sensor_01";
+  let periodoAtual  = 1;
   let leiturasCache = [];
-  let periodoAtual = 1; // 1 dia, 7 dias, 30 dias
+
+  let configAtual = {
+    nome:   "",
+    tel:    "",
+    apiKey: "",
+    min:    -5,
+    max:    2
+  };
 
   // ============================================================
-  // AUTENTICAÇÃO
+  // AUTH
   // ============================================================
   auth.onAuthStateChanged(user => {
     if (user) {
-      document.getElementById("tela-login").style.display = "none";
-      document.getElementById("tela-painel").style.display = "block";
-      document.getElementById("headerUser").textContent = user.email;
-      document.getElementById("headerUser").style.display = "inline";
-      document.getElementById("btnLogout").style.display = "inline-flex";
-      carregarConfiguracoes();
-      iniciarLeituraAoVivo();
-      carregarPeriodo(periodoAtual);
+      usuarioAtual = user;
+      mostrarPainel(user);
     } else {
-      document.getElementById("tela-login").style.display = "flex";
-      document.getElementById("tela-painel").style.display = "none";
-      document.getElementById("headerUser").style.display = "none";
-      document.getElementById("btnLogout").style.display = "none";
+      mostrarLogin();
     }
   });
 
-  document.getElementById("btnLogin").addEventListener("click", () => {
-    const email    = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
-    const erroEl   = document.getElementById("loginErro");
-    erroEl.style.display = "none";
+  function fazerLogin() {
+    const email = document.getElementById("inputEmail").value.trim();
+    const senha = document.getElementById("inputSenha").value;
+    const erro  = document.getElementById("loginErro");
+    erro.style.display = "none";
+    auth.signInWithEmailAndPassword(email, senha).catch(() => {
+      erro.textContent = "E-mail ou senha incorretos. Tente novamente.";
+      erro.style.display = "block";
+    });
+  }
 
-    auth.signInWithEmailAndPassword(email, password)
-      .catch(error => {
-        erroEl.textContent = "Erro: " + error.message;
-        erroEl.style.display = "block";
-      });
-  });
+  document.getElementById("btnLogout").onclick = () => auth.signOut();
 
-  document.getElementById("btnLogout").addEventListener("click", () => {
-    auth.signOut();
+  document.getElementById("inputSenha").addEventListener("keydown", e => {
+    if (e.key === "Enter") fazerLogin();
   });
 
   // ============================================================
-  // CONFIGURAÇÕES DO SENSOR
+  // TELAS
   // ============================================================
-  function carregarConfiguracoes() {
-    db.ref("configuracoes/sensor_01").on("value", snap => {
-      const config = snap.val();
-      if (config) {
-        configAtual = {
-          nome: config.nome || "Sensor de Temperatura",
-          tel: config.tel || "",
-          apiKey: config.apiKey || "",
-          min: parseFloat(config.min) || parseFloat(config.tempMin) || -5, // Prioriza 'min', fallback para 'tempMin'
-          max: parseFloat(config.max) || parseFloat(config.tempMax) || 2  // Prioriza 'max', fallback para 'tempMax'
-        };
-      }
+  function mostrarLogin() {
+    document.getElementById("tela-login").style.display  = "flex";
+    document.getElementById("tela-painel").style.display = "none";
+    document.getElementById("btnLogout").style.display   = "none";
+    document.getElementById("headerUser").style.display  = "none";
+  }
 
-      document.getElementById("cfgNome").value = configAtual.nome;
-      document.getElementById("cfgTel").value = configAtual.tel;
-      document.getElementById("cfgApiKey").value = configAtual.apiKey;
-      document.getElementById("cfgMin").value = configAtual.min;
-      document.getElementById("cfgMax").value = configAtual.max;
+  function mostrarPainel(user) {
+    document.getElementById("tela-login").style.display  = "none";
+    document.getElementById("tela-painel").style.display = "block";
+    document.getElementById("btnLogout").style.display   = "inline-flex";
+    document.getElementById("headerUser").style.display  = "inline";
+    document.getElementById("headerUser").textContent    = user.email;
+    carregarConfig();
+    iniciarLeituraAoVivo();
+    carregarPeriodo(periodoAtual);
+  }
+
+  // ============================================================
+  // ✅ CORREÇÃO 2 e 3: CONFIG lendo e salvando em configuracoes/sensor_01
+  // ============================================================
+  // ============================================================
+// CONFIG
+// ============================================================
+function carregarConfig() {
+  // Lê as configurações do caminho usado pelo ESP32
+  db.ref("configuracoes/sensor_01").once("value", snap => {
+    if (snap.exists()) {
+      configAtual = { ...configAtual, ...snap.val() };
+
+      document.getElementById("cfgNome").value   = configAtual.nome   || "";
+      document.getElementById("cfgTel").value    = configAtual.tel    || "";
+      document.getElementById("cfgApiKey").value = configAtual.apiKey || "";
+      document.getElementById("cfgMin").value    = configAtual.min    ?? -5;
+      document.getElementById("cfgMax").value    = configAtual.max    ?? 2;
 
       document.getElementById("painelTitulo").textContent =
         configAtual.nome ? "Sensor: " + configAtual.nome : "Painel de Temperatura";
+    }
+  });
+}
 
-      document.getElementById("faixaInfo").innerHTML = `
-        <span class="faixa-badge">Faixa segura: ${configAtual.min} °C a ${configAtual.max} °C</span>
-        <span class="faixa-badge alerta">Barras em laranja/vermelho = fora da faixa</span>
-      `;
-      carregarPeriodo(periodoAtual); // Recarrega os dados com a nova faixa
-    });
-  }
+function salvarConfig() {
+  configAtual.nome   = document.getElementById("cfgNome").value.trim();
+  configAtual.tel    = document.getElementById("cfgTel").value.trim();
+  configAtual.apiKey = document.getElementById("cfgApiKey").value.trim();
+  configAtual.min    = parseFloat(document.getElementById("cfgMin").value) || -5;
+  configAtual.max    = parseFloat(document.getElementById("cfgMax").value) || 2;
 
-  function salvarConfig() {
-    configAtual.nome   = document.getElementById("cfgNome").value;
-    configAtual.tel    = document.getElementById("cfgTel").value;
-    configAtual.apiKey = document.getElementById("cfgApiKey").value;
-    configAtual.min    = parseFloat(document.getElementById("cfgMin").value) || -5;
-    configAtual.max    = parseFloat(document.getElementById("cfgMax").value) || 2;
+  // Salva exatamente onde o ESP32 vai ler
+  db.ref("configuracoes/sensor_01").set(configAtual).then(() => {
+    const ok = document.getElementById("configOk");
+    ok.style.display = "block";
+    setTimeout(() => ok.style.display = "none", 3000);
 
-    // Salva exatamente onde o ESP32 vai ler
-    db.ref("configuracoes/sensor_01").set(configAtual).then(() => {
-      const ok = document.getElementById("configOk");
-      ok.style.display = "block";
-      setTimeout(() => ok.style.display = "none", 3000);
+    document.getElementById("painelTitulo").textContent =
+      configAtual.nome ? "Sensor: " + configAtual.nome : "Painel de Temperatura";
 
-      document.getElementById("painelTitulo").textContent =
-        configAtual.nome ? "Sensor: " + configAtual.nome : "Painel de Temperatura";
-
-      carregarPeriodo(periodoAtual);
-    });
-  }
-
-// ============================================================
-// TESTE DE WHATSAPP (CallMeBot)
-// ============================================================
-document.getElementById("btnTestarWhats").addEventListener("click", () => {
-  const tel    = document.getElementById("cfgTel").value.trim();
-  const apiKey = document.getElementById("cfgApiKey").value.trim();
-  const msgEl  = document.getElementById("whatsTestMsg");
-
-  msgEl.textContent = ""; // Limpa mensagens anteriores
-  msgEl.style.color = "red"; // Cor padrão para erro
-
-  if (!tel || !apiKey) {
-    msgEl.textContent = "Preencha o telefone e a API Key antes de testar.";
-    return;
-  }
-
-  // Mensagem de teste
-  const texto = "RefrifastGo TESTE%0ASeu sensor esta configurado corretamente."; // %0A é quebra de linha na URL
-
-  const url = "https://api.callmebot.com/whatsapp.php?phone="
-    + encodeURIComponent(tel)
-    + "&text=" + texto
-    + "&apikey=" + encodeURIComponent(apiKey);
-
-  msgEl.textContent = "Enviando mensagem de teste...";
-  msgEl.style.color = "black"; // Mensagem de envio em cor neutra
-
-  fetch(url)
-    .then(resp => {
-      if (!resp.ok) {
-        // Se a resposta HTTP não for 2xx (sucesso), lança um erro
-        throw new Error("Erro HTTP: " + resp.status + " " + resp.statusText);
-      }
-      return resp.text(); // Lê o corpo da resposta como texto
-    })
-    .then(body => {
-      console.log("Resposta CallMeBot (teste):", body);
-      // O CallMeBot retorna "OK" ou uma mensagem de erro no corpo
-      if (body.includes("OK")) {
-        msgEl.style.color = "green";
-        msgEl.textContent = "Mensagem de teste enviada. Verifique seu WhatsApp.";
-      } else {
-        // Se não for "OK", assume que é uma mensagem de erro do CallMeBot
-        msgEl.style.color = "red";
-        msgEl.textContent = "Erro do CallMeBot: " + body;
-      }
-    })
-    .catch(err => {
-      console.error("Erro no teste de WhatsApp:", err);
-      msgEl.style.color = "red";
-      msgEl.textContent = "Erro ao enviar teste: " + err.message + ". Verifique sua conexão e os dados.";
-    });
-});
-
+    carregarPeriodo(periodoAtual);
+  });
+}
   // ============================================================
   // LEITURA AO VIVO
   // ============================================================
