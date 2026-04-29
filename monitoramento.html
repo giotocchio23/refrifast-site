@@ -268,14 +268,72 @@
     .btn-export.pdf {
       background: linear-gradient(90deg, #dc2626, #ef4444);
       color: #fff;
+      box-shadow: 0 8px 24px rgba(220,38,38,0.4);
     }
     .btn-export.excel {
       background: linear-gradient(90deg, #16a34a, #22c55e);
       color: #fff;
+      box-shadow: 0 8px 24px rgba(34,197,94,0.4);
+    }
+      .btn-export.print {
+      background: rgba(15,23,42,0.9);
+      color: var(--text-muted);
+      border: 1px solid var(--border-soft);
+      box-shadow: none;
+    }
+    .btn-export.print:hover { color: #e5f0ff; border-color: var(--blue-main); }
+
+
+    }
+/* ===== FILTROS ===== */
+    .filtros-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
     }
 
+    .btn-filtro {
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.25);
+      background: rgba(4,16,40,0.9);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .btn-filtro:hover  { border-color: var(--blue-main); color: #e5f0ff; }
+    .btn-filtro.ativo  {
+      background: linear-gradient(90deg, #0f9cf5, #2563eb);
+      border-color: transparent;
+      color: #fff;
+    }
+
+    /* ===== RESUMO ===== */
+    .resumo-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 800px) { .resumo-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 480px) { .resumo-grid { grid-template-columns: 1fr; } }
+
+    .resumo-card {
+      background: #020c1f;
+      border: 1px solid rgba(56,189,248,0.12);
+      border-radius: 16px;
+      padding: 16px 14px;
+    }
+
+    .resumo-label   { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .resumo-valor   { font-size: 1.6rem; font-weight: 900; color: var(--blue-light); }
+    .resumo-detalhe { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
     /* ===== CARDS DE DADOS ===== */
-    .cards-grid {
+    .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 18px;
@@ -512,14 +570,14 @@
 
   <!-- ===== HEADER ===== -->
   <header>
-    <div class="header-inner">
-      <a href="#" class="logo-wrap">
-        <img src="https://i.imgur.com/seu-logo-aqui.png" alt="RefrifastGo Logo" class="logo-img" /> <!-- SUBSTITUA PELA URL DA SUA LOGO -->
-        <div class="logo-text">
-          <span class="logo-main">RefrifastGo</span>
-          <span class="logo-sub">Monitoramento de Temperatura</span>
-        </div>
-      </a>
+  <div class="header-inner">
+    <a href="index.html" class="logo-wrap">
+      <img src="logo-refrifast.png" alt="RefrifastGo" class="logo-img" />
+      <div class="logo-text">
+        <span class="logo-main">RefrifastGo</span>
+        <span class="logo-sub">MONITORAMENTO</span>
+      </div>
+    </a>
       <div class="header-right">
         <span class="header-user" id="headerUser"></span>
         <button class="btn-voltar" id="btnVoltarPainel" style="display: none;">← Voltar</button>
@@ -529,13 +587,15 @@
   </header>
 
   <!-- ===== TELA DE LOGIN ===== -->
-  <section id="tela-login">
-    <div class="login-card">
-      <div class="login-topo">
-        <div class="login-icon">❄️</div>
-        <h1 class="login-titulo">Acesse sua conta</h1>
-        <p class="login-sub">Monitore suas temperaturas em tempo real.</p>
+ iv id="tela-login">
+  <div class="login-card">
+    <div class="login-topo">
+      <div class="login-icon">🌡</div>
+      <div class="login-titulo">Painel de Monitoramento</div>
+      <div class="login-sub">
+        Acesse com seu e-mail e senha para visualizar os dados do seu sensor.
       </div>
+    </div>
 
       <div class="form-group">
         <label for="loginEmail">E-mail</label>
