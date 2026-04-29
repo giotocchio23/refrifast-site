@@ -268,72 +268,14 @@
     .btn-export.pdf {
       background: linear-gradient(90deg, #dc2626, #ef4444);
       color: #fff;
-      box-shadow: 0 8px 24px rgba(220,38,38,0.4);
     }
     .btn-export.excel {
       background: linear-gradient(90deg, #16a34a, #22c55e);
       color: #fff;
-      box-shadow: 0 8px 24px rgba(34,197,94,0.4);
     }
-      .btn-export.print {
-      background: rgba(15,23,42,0.9);
-      color: var(--text-muted);
-      border: 1px solid var(--border-soft);
-      box-shadow: none;
-    }
-    .btn-export.print:hover { color: #e5f0ff; border-color: var(--blue-main); }
-
-
-    }
-/* ===== FILTROS ===== */
-    .filtros-bar {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-
-    .btn-filtro {
-      padding: 7px 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(56,189,248,0.25);
-      background: rgba(4,16,40,0.9);
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.18s;
-    }
-    .btn-filtro:hover  { border-color: var(--blue-main); color: #e5f0ff; }
-    .btn-filtro.ativo  {
-      background: linear-gradient(90deg, #0f9cf5, #2563eb);
-      border-color: transparent;
-      color: #fff;
-    }
-
-    /* ===== RESUMO ===== */
-    .resumo-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0,1fr));
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    @media (max-width: 800px) { .resumo-grid { grid-template-columns: repeat(2,1fr); } }
-    @media (max-width: 480px) { .resumo-grid { grid-template-columns: 1fr; } }
-
-    .resumo-card {
-      background: #020c1f;
-      border: 1px solid rgba(56,189,248,0.12);
-      border-radius: 16px;
-      padding: 16px 14px;
-    }
-
-    .resumo-label   { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
-    .resumo-valor   { font-size: 1.6rem; font-weight: 900; color: var(--blue-light); }
-    .resumo-detalhe { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
 
     /* ===== CARDS DE DADOS ===== */
-    .card-grid {
+    .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 18px;
@@ -396,61 +338,75 @@
       margin-bottom: 15px;
     }
 
-   /* ===== TABELA ===== */
-    .tabela-card {
-      background: #020c1f;
-      border: 1px solid rgba(56,189,248,0.12);
-      border-radius: 20px;
+    /* ===== TABELA ===== */
+    .table-card {
+      grid-column: 1 / -1; /* Ocupa toda a largura */
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: 18px;
       padding: 20px;
-      margin-bottom: 20px;
-      overflow: hidden;
+      margin-top: 18px;
     }
 
-    .tabela-topo {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-      gap: 8px;
+    .table-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 15px;
     }
 
-    .tabela-titulo { font-size: 0.95rem; font-weight: 700; color: #e5f0ff; }
+    .table-container {
+      max-height: 400px; /* Altura máxima para a tabela */
+      overflow-y: auto;  /* Adiciona scroll se o conteúdo for maior */
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+    }
 
-    .tabela-scroll { overflow-x: auto; }
-
-    table {
+    .data-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.85rem;
     }
 
-    thead th {
+    .data-table th, .data-table td {
+      padding: 12px 15px;
       text-align: left;
-      padding: 10px 12px;
-      font-size: 0.72rem;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .data-table th {
+      background: var(--bg-soft);
+      color: var(--blue-light);
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      border-bottom: 1px solid rgba(56,189,248,0.12);
+      letter-spacing: 0.05em;
+      position: sticky; /* Fixa o cabeçalho */
+      top: 0;
+      z-index: 1;
     }
 
-    tbody tr {
-      border-bottom: 1px solid rgba(56,189,248,0.06);
-      transition: background 0.15s;
-    }
-    tbody tr:hover { background: rgba(15,30,60,0.6); }
-
-    tbody td {
-      padding: 10px 12px;
-      color: var(--text-main);
+    .data-table tr:last-child td {
+      border-bottom: none;
     }
 
-    .td-status { display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; font-weight: 600; }
-    .td-status.ok     { color: var(--green); }
-    .td-status.alerta { color: #fcd34d; }
+    .data-table tbody tr:hover {
+      background: rgba(56,189,248,0.05);
+    }
 
-    .loading { text-align: center; color: var(--text-muted); padding: 24px; font-size: 0.88rem; }
+    .td-status {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+    .td-status.ok {
+      background: rgba(34,197,94,0.15);
+      color: var(--green);
+    }
+    .td-status.alerta {
+      background: rgba(239,68,68,0.15);
+      color: var(--red);
+    }
 
     /* ===== CONFIGURAÇÕES ===== */
     #tela-config {
@@ -556,14 +512,14 @@
 
   <!-- ===== HEADER ===== -->
   <header>
-  <div class="header-inner">
-    <a href="index.html" class="logo-wrap">
-      <img src="logo-refrifast.png" alt="RefrifastGo" class="logo-img" />
-      <div class="logo-text">
-        <span class="logo-main">RefrifastGo</span>
-        <span class="logo-sub">MONITORAMENTO</span>
-      </div>
-    </a>
+    <div class="header-inner">
+      <a href="#" class="logo-wrap">
+        <img src="https://i.imgur.com/seu-logo-aqui.png" alt="RefrifastGo Logo" class="logo-img" /> <!-- SUBSTITUA PELA URL DA SUA LOGO -->
+        <div class="logo-text">
+          <span class="logo-main">RefrifastGo</span>
+          <span class="logo-sub">Monitoramento de Temperatura</span>
+        </div>
+      </a>
       <div class="header-right">
         <span class="header-user" id="headerUser"></span>
         <button class="btn-voltar" id="btnVoltarPainel" style="display: none;">← Voltar</button>
@@ -573,15 +529,13 @@
   </header>
 
   <!-- ===== TELA DE LOGIN ===== -->
- iv id="tela-login">
-  <div class="login-card">
-    <div class="login-topo">
-      <div class="login-icon">🌡</div>
-      <div class="login-titulo">Painel de Monitoramento</div>
-      <div class="login-sub">
-        Acesse com seu e-mail e senha para visualizar os dados do seu sensor.
+  <section id="tela-login">
+    <div class="login-card">
+      <div class="login-topo">
+        <div class="login-icon">❄️</div>
+        <h1 class="login-titulo">Acesse sua conta</h1>
+        <p class="login-sub">Monitore suas temperaturas em tempo real.</p>
       </div>
-    </div>
 
       <div class="form-group">
         <label for="loginEmail">E-mail</label>
@@ -1016,122 +970,80 @@
   }
 
   // ============================================================
-  /* ===== GRÁFICO ===== */
-    .grafico-card {
-      background: #020c1f;
-      border: 1px solid rgba(37,99,235,0.5);
-      border-radius: 20px;
-      padding: 22px 20px;
-      margin-bottom: 20px;
+  // GRÁFICO
+  // ============================================================
+  function renderizarGrafico(leituras) {
+    const ctx = document.getElementById('tempChart').getContext('2d');
+    const labels = leituras.map(l => new Date(l.ts).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }));
+    const data = leituras.map(l => l.temp);
+
+    if (tempChart) {
+      tempChart.destroy();
     }
 
-    .grafico-topo {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+    tempChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Temperatura (°C)',
+          data: data,
+          borderColor: 'rgba(56, 189, 248, 1)',
+          backgroundColor: 'rgba(56, 189, 248, 0.2)',
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: true,
+          tension: 0.4
+        },
+        {
+          label: 'Mínima Configurada',
+          data: Array(labels.length).fill(configAtual.min),
+          borderColor: 'rgba(239, 68, 68, 0.7)',
+          borderDash: [5, 5],
+          pointRadius: 0,
+          borderWidth: 1
+        },
+        {
+          label: 'Máxima Configurada',
+          data: Array(labels.length).fill(configAtual.max),
+          borderColor: 'rgba(239, 68, 68, 0.7)',
+          borderDash: [5, 5],
+          pointRadius: 0,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            grid: {
+              color: 'rgba(56, 189, 248, 0.1)'
+            },
+            ticks: {
+              color: 'var(--text-muted)'
+            }
+          },
+          y: {
+            grid: {
+              color: 'rgba(56, 189, 248, 0.1)'
+            },
+            ticks: {
+              color: 'var(--text-muted)'
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: 'var(--text-main)'
+            }
+          }
+        }
+      }
+    });
+  }
 
-    .grafico-titulo { font-size: 0.95rem; font-weight: 700; color: #e5f0ff; }
-    .grafico-sub    { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
-
-    .badge-live {
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(34,197,94,0.15);
-      color: var(--green);
-      border: 1px solid rgba(34,197,94,0.4);
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .badge-live::before {
-      content: "";
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--green);
-      animation: pulse 1.4s infinite;
-    }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-    .grafico-barras-wrap {
-      position: relative;
-      height: 180px;
-      display: flex;
-      align-items: flex-end;
-      gap: 3px;
-      padding-bottom: 28px;
-    }
-
-    .g-barra-col {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-      height: 100%;
-      position: relative;
-    }
-
-    .g-barra {
-      width: 100%;
-      border-radius: 4px 4px 0 0;
-      background: linear-gradient(180deg, #38bdf8, #0b4fd8);
-      min-height: 4px;
-      cursor: pointer;
-      position: relative;
-    }
-    .g-barra.alerta { background: linear-gradient(180deg, #f59e0b, #dc2626); }
-
-    .g-barra:hover::after {
-      content: attr(data-tip);
-      position: absolute;
-      bottom: calc(100% + 6px);
-      left: 50%;
-      transform: translateX(-50%);
-      background: #041026;
-      border: 1px solid var(--border-soft);
-      border-radius: 8px;
-      padding: 4px 8px;
-      font-size: 0.7rem;
-      color: #e5f0ff;
-      white-space: nowrap;
-      z-index: 10;
-    }
-
-    .g-label {
-      position: absolute;
-      bottom: 0;
-      font-size: 0.6rem;
-      color: var(--text-muted);
-      white-space: nowrap;
-      transform: rotate(-40deg);
-      transform-origin: top left;
-    }
-
-    .faixa-info {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-
-    .faixa-badge {
-      font-size: 0.75rem;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(56,189,248,0.25);
-      color: var(--text-softer);
-      background: rgba(4,16,40,0.9);
-    }
-    .faixa-badge.alerta {
-      border-color: rgba(245,158,11,0.4);
-      color: #fcd34d;
-    }
   // ============================================================
   // TABELA
   // ============================================================
