@@ -396,75 +396,61 @@
       margin-bottom: 15px;
     }
 
-    /* ===== TABELA ===== */
-    .table-card {
-      grid-column: 1 / -1; /* Ocupa toda a largura */
-      background: var(--bg-card);
-      border: 1px solid var(--border-soft);
-      border-radius: 18px;
+   /* ===== TABELA ===== */
+    .tabela-card {
+      background: #020c1f;
+      border: 1px solid rgba(56,189,248,0.12);
+      border-radius: 20px;
       padding: 20px;
-      margin-top: 18px;
+      margin-bottom: 20px;
+      overflow: hidden;
     }
 
-    .table-title {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-main);
-      margin-bottom: 15px;
+    .tabela-topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
-    .table-container {
-      max-height: 400px; /* Altura máxima para a tabela */
-      overflow-y: auto;  /* Adiciona scroll se o conteúdo for maior */
-      border: 1px solid var(--border-soft);
-      border-radius: 8px;
-    }
+    .tabela-titulo { font-size: 0.95rem; font-weight: 700; color: #e5f0ff; }
 
-    .data-table {
+    .tabela-scroll { overflow-x: auto; }
+
+    table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.85rem;
     }
 
-    .data-table th, .data-table td {
-      padding: 12px 15px;
+    thead th {
       text-align: left;
-      border-bottom: 1px solid var(--border-soft);
-    }
-
-    .data-table th {
-      background: var(--bg-soft);
-      color: var(--blue-light);
-      font-weight: 600;
+      padding: 10px 12px;
+      font-size: 0.72rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      position: sticky; /* Fixa o cabeçalho */
-      top: 0;
-      z-index: 1;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      border-bottom: 1px solid rgba(56,189,248,0.12);
     }
 
-    .data-table tr:last-child td {
-      border-bottom: none;
+    tbody tr {
+      border-bottom: 1px solid rgba(56,189,248,0.06);
+      transition: background 0.15s;
+    }
+    tbody tr:hover { background: rgba(15,30,60,0.6); }
+
+    tbody td {
+      padding: 10px 12px;
+      color: var(--text-main);
     }
 
-    .data-table tbody tr:hover {
-      background: rgba(56,189,248,0.05);
-    }
+    .td-status { display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; font-weight: 600; }
+    .td-status.ok     { color: var(--green); }
+    .td-status.alerta { color: #fcd34d; }
 
-    .td-status {
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 0.75rem;
-    }
-    .td-status.ok {
-      background: rgba(34,197,94,0.15);
-      color: var(--green);
-    }
-    .td-status.alerta {
-      background: rgba(239,68,68,0.15);
-      color: var(--red);
-    }
+    .loading { text-align: center; color: var(--text-muted); padding: 24px; font-size: 0.88rem; }
 
     /* ===== CONFIGURAÇÕES ===== */
     #tela-config {
@@ -1030,80 +1016,122 @@
   }
 
   // ============================================================
-  // GRÁFICO
-  // ============================================================
-  function renderizarGrafico(leituras) {
-    const ctx = document.getElementById('tempChart').getContext('2d');
-    const labels = leituras.map(l => new Date(l.ts).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }));
-    const data = leituras.map(l => l.temp);
-
-    if (tempChart) {
-      tempChart.destroy();
+  /* ===== GRÁFICO ===== */
+    .grafico-card {
+      background: #020c1f;
+      border: 1px solid rgba(37,99,235,0.5);
+      border-radius: 20px;
+      padding: 22px 20px;
+      margin-bottom: 20px;
     }
 
-    tempChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Temperatura (°C)',
-          data: data,
-          borderColor: 'rgba(56, 189, 248, 1)',
-          backgroundColor: 'rgba(56, 189, 248, 0.2)',
-          borderWidth: 2,
-          pointRadius: 0,
-          fill: true,
-          tension: 0.4
-        },
-        {
-          label: 'Mínima Configurada',
-          data: Array(labels.length).fill(configAtual.min),
-          borderColor: 'rgba(239, 68, 68, 0.7)',
-          borderDash: [5, 5],
-          pointRadius: 0,
-          borderWidth: 1
-        },
-        {
-          label: 'Máxima Configurada',
-          data: Array(labels.length).fill(configAtual.max),
-          borderColor: 'rgba(239, 68, 68, 0.7)',
-          borderDash: [5, 5],
-          pointRadius: 0,
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          x: {
-            grid: {
-              color: 'rgba(56, 189, 248, 0.1)'
-            },
-            ticks: {
-              color: 'var(--text-muted)'
-            }
-          },
-          y: {
-            grid: {
-              color: 'rgba(56, 189, 248, 0.1)'
-            },
-            ticks: {
-              color: 'var(--text-muted)'
-            }
-          }
-        },
-        plugins: {
-          legend: {
-            labels: {
-              color: 'var(--text-main)'
-            }
-          }
-        }
-      }
-    });
-  }
+    .grafico-topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
 
+    .grafico-titulo { font-size: 0.95rem; font-weight: 700; color: #e5f0ff; }
+    .grafico-sub    { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+
+    .badge-live {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.15);
+      color: var(--green);
+      border: 1px solid rgba(34,197,94,0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .badge-live::before {
+      content: "";
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 1.4s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    .grafico-barras-wrap {
+      position: relative;
+      height: 180px;
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      padding-bottom: 28px;
+    }
+
+    .g-barra-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      height: 100%;
+      position: relative;
+    }
+
+    .g-barra {
+      width: 100%;
+      border-radius: 4px 4px 0 0;
+      background: linear-gradient(180deg, #38bdf8, #0b4fd8);
+      min-height: 4px;
+      cursor: pointer;
+      position: relative;
+    }
+    .g-barra.alerta { background: linear-gradient(180deg, #f59e0b, #dc2626); }
+
+    .g-barra:hover::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #041026;
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 0.7rem;
+      color: #e5f0ff;
+      white-space: nowrap;
+      z-index: 10;
+    }
+
+    .g-label {
+      position: absolute;
+      bottom: 0;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      transform: rotate(-40deg);
+      transform-origin: top left;
+    }
+
+    .faixa-info {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .faixa-badge {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.25);
+      color: var(--text-softer);
+      background: rgba(4,16,40,0.9);
+    }
+    .faixa-badge.alerta {
+      border-color: rgba(245,158,11,0.4);
+      color: #fcd34d;
+    }
   // ============================================================
   // TABELA
   // ============================================================
