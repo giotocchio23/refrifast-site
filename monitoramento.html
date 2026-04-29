@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -120,12 +119,16 @@
     .btn-logout:hover { background: rgba(239,68,68,0.18); border-color: rgba(239,68,68,0.7); }
 
     /* ===== LOGIN ===== */
-    #tela-login {
+    #tela-login, #tela-registro, #tela-reset-senha { /* Adicionado #tela-registro e #tela-reset-senha */
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 100px 18px 40px;
+    }
+
+    #tela-registro, #tela-reset-senha { /* Esconde as novas telas por padrão */
+        display: none;
     }
 
     .login-card {
@@ -205,6 +208,18 @@
       display: none;
     }
 
+    /* Estilos para links de navegação entre telas de login/registro/reset */
+    .link-alternativo {
+        font-size: 0.8rem;
+        color: var(--blue-light);
+        text-align: center;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    .link-alternativo:hover {
+        text-decoration: underline;
+    }
+
     /* ===== PAINEL ===== */
     #tela-painel {
       display: none;
@@ -253,802 +268,793 @@
     .btn-export.pdf {
       background: linear-gradient(90deg, #dc2626, #ef4444);
       color: #fff;
-      box-shadow: 0 8px 24px rgba(220,38,38,0.4);
     }
-
     .btn-export.excel {
       background: linear-gradient(90deg, #16a34a, #22c55e);
       color: #fff;
-      box-shadow: 0 8px 24px rgba(34,197,94,0.4);
     }
 
-    .btn-export.print {
-      background: rgba(15,23,42,0.9);
-      color: var(--text-muted);
-      border: 1px solid var(--border-soft);
-      box-shadow: none;
-    }
-    .btn-export.print:hover { color: #e5f0ff; border-color: var(--blue-main); }
-
-    /* ===== FILTROS ===== */
-    .filtros-bar {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-
-    .btn-filtro {
-      padding: 7px 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(56,189,248,0.25);
-      background: rgba(4,16,40,0.9);
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.18s;
-    }
-    .btn-filtro:hover  { border-color: var(--blue-main); color: #e5f0ff; }
-    .btn-filtro.ativo  {
-      background: linear-gradient(90deg, #0f9cf5, #2563eb);
-      border-color: transparent;
-      color: #fff;
-    }
-
-    /* ===== RESUMO ===== */
-    .resumo-grid {
+    /* ===== CARDS DE DADOS ===== */
+    .cards-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0,1fr));
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    @media (max-width: 800px) { .resumo-grid { grid-template-columns: repeat(2,1fr); } }
-    @media (max-width: 480px) { .resumo-grid { grid-template-columns: 1fr; } }
-
-    .resumo-card {
-      background: #020c1f;
-      border: 1px solid rgba(56,189,248,0.12);
-      border-radius: 16px;
-      padding: 16px 14px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 18px;
+      margin-top: 24px;
     }
 
-    .resumo-label   { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
-    .resumo-valor   { font-size: 1.6rem; font-weight: 900; color: var(--blue-light); }
-    .resumo-detalhe { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
-
-    /* ===== GRÁFICO ===== */
-    .grafico-card {
-      background: #020c1f;
-      border: 1px solid rgba(37,99,235,0.5);
-      border-radius: 20px;
-      padding: 22px 20px;
-      margin-bottom: 20px;
-    }
-
-    .grafico-topo {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .grafico-titulo { font-size: 0.95rem; font-weight: 700; color: #e5f0ff; }
-    .grafico-sub    { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
-
-    .badge-live {
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(34,197,94,0.15);
-      color: var(--green);
-      border: 1px solid rgba(34,197,94,0.4);
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .badge-live::before {
-      content: "";
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--green);
-      animation: pulse 1.4s infinite;
-    }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-    .grafico-barras-wrap {
-      position: relative;
-      height: 180px;
-      display: flex;
-      align-items: flex-end;
-      gap: 3px;
-      padding-bottom: 28px;
-    }
-
-    .g-barra-col {
-      flex: 1;
+    .data-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: 18px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-      height: 100%;
-      position: relative;
-    }
-
-    .g-barra {
-      width: 100%;
-      border-radius: 4px 4px 0 0;
-      background: linear-gradient(180deg, #38bdf8, #0b4fd8);
-      min-height: 4px;
-      cursor: pointer;
-      position: relative;
-    }
-    .g-barra.alerta { background: linear-gradient(180deg, #f59e0b, #dc2626); }
-
-    .g-barra:hover::after {
-      content: attr(data-tip);
-      position: absolute;
-      bottom: calc(100% + 6px);
-      left: 50%;
-      transform: translateX(-50%);
-      background: #041026;
-      border: 1px solid var(--border-soft);
-      border-radius: 8px;
-      padding: 4px 8px;
-      font-size: 0.7rem;
-      color: #e5f0ff;
-      white-space: nowrap;
-      z-index: 10;
-    }
-
-    .g-label {
-      position: absolute;
-      bottom: 0;
-      font-size: 0.6rem;
-      color: var(--text-muted);
-      white-space: nowrap;
-      transform: rotate(-40deg);
-      transform-origin: top left;
-    }
-
-    .faixa-info {
-      display: flex;
       gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 8px;
     }
 
-    .faixa-badge {
-      font-size: 0.75rem;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(56,189,248,0.25);
-      color: var(--text-softer);
-      background: rgba(4,16,40,0.9);
+    .card-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
-    .faixa-badge.alerta {
-      border-color: rgba(245,158,11,0.4);
-      color: #fcd34d;
+
+    .card-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1;
+    }
+
+    .card-hint {
+      font-size: 0.75rem;
+      color: var(--text-softer);
+      margin-top: 4px;
+    }
+
+    .card-temp .card-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--blue-light);
+    }
+
+    .card-temp.normal .card-value { color: var(--green); }
+    .card-temp.alerta .card-value { color: var(--red); }
+
+    /* ===== GRÁFICO ===== */
+    .chart-card {
+      grid-column: 1 / -1; /* Ocupa toda a largura */
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: 18px;
+      padding: 20px;
+      margin-top: 18px;
+    }
+
+    .chart-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 15px;
     }
 
     /* ===== TABELA ===== */
-    .tabela-card {
-      background: #020c1f;
-      border: 1px solid rgba(56,189,248,0.12);
-      border-radius: 20px;
+    .table-card {
+      grid-column: 1 / -1; /* Ocupa toda a largura */
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: 18px;
       padding: 20px;
-      margin-bottom: 20px;
-      overflow: hidden;
+      margin-top: 18px;
     }
 
-    .tabela-topo {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-      gap: 8px;
+    .table-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 15px;
     }
 
-    .tabela-titulo { font-size: 0.95rem; font-weight: 700; color: #e5f0ff; }
+    .table-container {
+      max-height: 400px; /* Altura máxima para a tabela */
+      overflow-y: auto;  /* Adiciona scroll se o conteúdo for maior */
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+    }
 
-    .tabela-scroll { overflow-x: auto; }
-
-    table {
+    .data-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.85rem;
     }
 
-    thead th {
+    .data-table th, .data-table td {
+      padding: 12px 15px;
       text-align: left;
-      padding: 10px 12px;
-      font-size: 0.72rem;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .data-table th {
+      background: var(--bg-soft);
+      color: var(--blue-light);
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      border-bottom: 1px solid rgba(56,189,248,0.12);
+      letter-spacing: 0.05em;
+      position: sticky; /* Fixa o cabeçalho */
+      top: 0;
+      z-index: 1;
     }
 
-    tbody tr {
-      border-bottom: 1px solid rgba(56,189,248,0.06);
-      transition: background 0.15s;
-    }
-    tbody tr:hover { background: rgba(15,30,60,0.6); }
-
-    tbody td {
-      padding: 10px 12px;
-      color: var(--text-main);
+    .data-table tr:last-child td {
+      border-bottom: none;
     }
 
-    .td-status { display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; font-weight: 600; }
-    .td-status.ok     { color: var(--green); }
-    .td-status.alerta { color: #fcd34d; }
+    .data-table tbody tr:hover {
+      background: rgba(56,189,248,0.05);
+    }
 
-    .loading { text-align: center; color: var(--text-muted); padding: 24px; font-size: 0.88rem; }
+    .td-status {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+    .td-status.ok {
+      background: rgba(34,197,94,0.15);
+      color: var(--green);
+    }
+    .td-status.alerta {
+      background: rgba(239,68,68,0.15);
+      color: var(--red);
+    }
 
     /* ===== CONFIGURAÇÕES ===== */
+    #tela-config {
+      display: none;
+      padding: 90px 18px 60px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
     .config-card {
-      background: #020c1f;
-      border: 1px solid rgba(56,189,248,0.12);
-      border-radius: 20px;
-      padding: 22px 20px;
-      margin-bottom: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 18px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
     }
 
     .config-titulo {
-      font-size: 0.95rem;
+      font-size: 1.2rem;
       font-weight: 700;
-      color: #e5f0ff;
-      margin-bottom: 16px;
+      color: var(--text-main);
+      margin-bottom: 10px;
+    }
+
+    .config-group {
       display: flex;
-      align-items: center;
+      flex-direction: column;
       gap: 8px;
     }
 
-    .config-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 14px;
+    .config-group label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
     }
-    @media (max-width: 640px) { .config-grid { grid-template-columns: 1fr; } }
-
-    .config-group { display: flex; flex-direction: column; gap: 5px; }
-    .config-group label { font-size: 0.78rem; color: var(--text-muted); }
 
     .config-group input {
       width: 100%;
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(56,189,248,0.2);
+      background: var(--bg-soft);
+      border: 1px solid var(--border-soft);
       border-radius: 10px;
-      padding: 10px 12px;
-      color: #e5f0ff;
-      font-size: 0.88rem;
+      padding: 10px 14px;
+      color: var(--text-main);
+      font-size: 0.9rem;
       outline: none;
       transition: border-color 0.2s;
     }
-    .config-group input:focus { border-color: var(--blue-main); }
+    .config-group input:focus {
+      border-color: var(--blue-main);
+    }
 
-    .config-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+    .config-hint {
+      font-size: 0.75rem;
+      color: var(--text-softer);
+      margin-top: 4px;
+    }
 
     .btn-salvar {
-      margin-top: 14px;
-      padding: 10px 24px;
+      padding: 10px 20px;
       border-radius: 999px;
       border: none;
       background: linear-gradient(90deg, #0f9cf5, #2563eb);
       color: #fff;
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       font-weight: 700;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 10px 28px rgba(15,23,42,0.9);
+      letter-spacing: 0.04em;
       transition: transform 0.1s, opacity 0.15s;
+      white-space: nowrap;
     }
-    .btn-salvar:hover { transform: translateY(-1px); opacity: 0.96; }
+    .btn-salvar:hover {
+      transform: translateY(-1px);
+      opacity: 0.96;
+    }
 
     .config-ok {
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       color: var(--green);
+      text-align: center;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-top: 15px;
       display: none;
-      margin-top: 8px;
     }
 
-    /* ===== PRINT ===== */
-    @media print {
-      header, .export-bar, .filtros-bar, .btn-filtro,
-      .btn-salvar, .config-card, .btn-voltar, .btn-logout { display: none !important; }
-
-      body { background: #fff !important; color: #000 !important; }
-
-      #tela-painel {
-        display: block !important;
-        padding: 10px !important;
-        max-width: 100% !important;
-      }
-
-      .resumo-card, .grafico-card, .tabela-card {
-        border: 1px solid #ccc !important;
-        background: #fff !important;
-        color: #000 !important;
-        box-shadow: none !important;
-        break-inside: avoid;
-      }
-
-      .resumo-valor, .painel-titulo, .grafico-titulo,
-      .tabela-titulo { color: #000 !important; }
-
-      .resumo-label, .resumo-detalhe, .painel-sub,
-      .grafico-sub, thead th, tbody td { color: #333 !important; }
-
-      table { font-size: 0.75rem !important; }
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .header-inner { padding: 0 12px; }
+      .logo-img { height: 32px; }
+      .logo-main { font-size: 0.95rem; }
+      .logo-sub { font-size: 0.65rem; }
+      .painel-topo { flex-direction: column; align-items: flex-start; }
+      .export-bar { width: 100%; justify-content: space-between; }
+      .btn-export { flex-grow: 1; text-align: center; justify-content: center; }
+      .cards-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<!-- ===== HEADER ===== -->
-<header>
-  <div class="header-inner">
-    <a href="index.html" class="logo-wrap">
-      <img src="logo-refrifast.png" alt="RefrifastGo" class="logo-img" />
-      <div class="logo-text">
-        <span class="logo-main">RefrifastGo</span>
-        <span class="logo-sub">MONITORAMENTO</span>
-      </div>
-    </a>
-
-    <div class="header-right">
-      <span class="header-user" id="headerUser"></span>
-      <button class="btn-voltar" onclick="window.location.href='index.html'">
-        ← Voltar ao site
-      </button>
-      <button class="btn-logout" id="btnLogout">
-        🚪 Sair
-      </button>
-    </div>
-  </div>
-</header>
-
-<!-- ===== TELA DE LOGIN ===== -->
-<div id="tela-login">
-  <div class="login-card">
-    <div class="login-topo">
-      <div class="login-icon">🌡</div>
-      <div class="login-titulo">Painel de Monitoramento</div>
-      <div class="login-sub">
-        Acesse com seu e-mail e senha para visualizar os dados do seu sensor.
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="header-inner">
+      <a href="#" class="logo-wrap">
+        <img src="https://i.imgur.com/seu-logo-aqui.png" alt="RefrifastGo Logo" class="logo-img" /> <!-- SUBSTITUA PELA URL DA SUA LOGO -->
+        <div class="logo-text">
+          <span class="logo-main">RefrifastGo</span>
+          <span class="logo-sub">Monitoramento de Temperatura</span>
+        </div>
+      </a>
+      <div class="header-right">
+        <span class="header-user" id="headerUser"></span>
+        <button class="btn-voltar" id="btnVoltarPainel" style="display: none;">← Voltar</button>
+        <button class="btn-logout" id="btnLogout" style="display: none;">Sair</button>
       </div>
     </div>
+  </header>
 
-    <div class="form-group">
-      <label for="inputEmail">E-mail</label>
-      <input id="inputEmail" type="email" placeholder="seu@email.com" autocomplete="username" />
+  <!-- ===== TELA DE LOGIN ===== -->
+  <section id="tela-login">
+    <div class="login-card">
+      <div class="login-topo">
+        <div class="login-icon">❄️</div>
+        <h1 class="login-titulo">Acesse sua conta</h1>
+        <p class="login-sub">Monitore suas temperaturas em tempo real.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="loginEmail">E-mail</label>
+        <input type="email" id="loginEmail" placeholder="seu@email.com" />
+      </div>
+      <div class="form-group">
+        <label for="loginSenha">Senha</label>
+        <input type="password" id="loginSenha" placeholder="********" />
+      </div>
+
+      <button class="btn-login" id="btnLogin">Entrar</button>
+
+      <div class="login-erro" id="loginErro"></div>
+
+      <p class="link-alternativo" id="linkEsqueceuSenha">Esqueceu sua senha?</p>
+      <p class="link-alternativo" id="linkIrParaRegistro">Não tem conta? Registre-se aqui.</p>
     </div>
+  </section>
 
-    <div class="form-group">
-      <label for="inputSenha">Senha</label>
-      <input id="inputSenha" type="password" placeholder="••••••••" autocomplete="current-password" />
+  <!-- ===== TELA DE REGISTRO (NOVA) ===== -->
+  <section id="tela-registro">
+    <div class="login-card">
+      <div class="login-topo">
+        <div class="login-icon">📝</div>
+        <h1 class="login-titulo">Criar nova conta</h1>
+        <p class="login-sub">Preencha os dados para começar a monitorar.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="regEmail">E-mail</label>
+        <input type="email" id="regEmail" placeholder="seu@email.com" />
+      </div>
+      <div class="form-group">
+        <label for="regSenha">Senha</label>
+        <input type="password" id="regSenha" placeholder="Mínimo 6 caracteres" />
+      </div>
+      <div class="form-group">
+        <label for="regSenhaConfirm">Confirmar Senha</label>
+        <input type="password" id="regSenhaConfirm" placeholder="Repita a senha" />
+      </div>
+
+      <button class="btn-login" id="btnRegistrar">Registrar</button>
+
+      <div class="login-erro" id="regErro"></div>
+
+      <p class="link-alternativo" id="linkVoltarLoginReg">Já tem conta? Voltar para o login.</p>
     </div>
+  </section>
 
-    <div class="login-erro" id="loginErro"></div>
+  <!-- ===== TELA DE RESET DE SENHA (NOVA) ===== -->
+  <section id="tela-reset-senha">
+    <div class="login-card">
+      <div class="login-topo">
+        <div class="login-icon">🔑</div>
+        <h1 class="login-titulo">Redefinir Senha</h1>
+        <p class="login-sub">Informe seu e-mail para receber um link de redefinição.</p>
+      </div>
 
-    <button class="btn-login" onclick="fazerLogin()">Entrar no painel</button>
-  </div>
-</div>
+      <div class="form-group">
+        <label for="resetEmail">E-mail</label>
+        <input type="email" id="resetEmail" placeholder="seu@email.com" />
+      </div>
 
-<!-- ===== PAINEL ===== -->
-<div id="tela-painel">
+      <button class="btn-login" id="btnResetSenha">Enviar link de redefinição</button>
 
-  <!-- Topo do painel -->
-  <div class="painel-topo">
-    <div>
-      <div class="painel-titulo" id="painelTitulo">Painel de Temperatura</div>
-      <div class="painel-sub" id="painelSub">Carregando...</div>
+      <div class="login-erro" id="resetErro"></div>
+
+      <p class="link-alternativo" id="linkVoltarLoginReset">Lembrou a senha? Voltar para o login.</p>
     </div>
+  </section>
 
-    <!-- BOTÕES DE EXPORTAÇÃO -->
-    <div class="export-bar">
-      <button class="btn-export pdf"   onclick="exportarPDF()">
-        📄 Exportar PDF
-      </button>
-      <button class="btn-export excel" onclick="exportarExcel()">
-        📊 Exportar Excel
-      </button>
-      <button class="btn-export print" onclick="window.print()">
-        🖨️ Imprimir
-      </button>
-    </div>
-  </div>
-
-  <!-- Filtros de período -->
-  <div class="filtros-bar">
-    <button class="btn-filtro ativo" onclick="mudarPeriodo(1, this)">Últimas 24h</button>
-    <button class="btn-filtro"       onclick="mudarPeriodo(7, this)">7 dias</button>
-    <button class="btn-filtro"       onclick="mudarPeriodo(30, this)">30 dias</button>
-  </div>
-
-  <!-- Resumo em cards -->
-  <div class="resumo-grid">
-    <div class="resumo-card">
-      <div class="resumo-label">Temperatura Atual</div>
-      <div class="resumo-valor" id="rAtual">--</div>
-      <div class="resumo-detalhe" id="rStatus">Aguardando...</div>
-    </div>
-    <div class="resumo-card">
-      <div class="resumo-label">Mínima do período</div>
-      <div class="resumo-valor" id="rMin">--</div>
-      <div class="resumo-detalhe" id="rMinHora"></div>
-    </div>
-    <div class="resumo-card">
-      <div class="resumo-label">Máxima do período</div>
-      <div class="resumo-valor" id="rMax">--</div>
-      <div class="resumo-detalhe" id="rMaxHora"></div>
-    </div>
-    <div class="resumo-card">
-      <div class="resumo-label">Média do período</div>
-      <div class="resumo-valor" id="rMedia">--</div>
-      <div class="resumo-detalhe" id="rLeituras"></div>
-    </div>
-  </div>
-
-  <!-- Gráfico -->
-  <div class="grafico-card">
-    <div class="grafico-topo">
+  <!-- ===== TELA DO PAINEL ===== -->
+  <section id="tela-painel">
+    <div class="painel-topo">
       <div>
-        <div class="grafico-titulo">Histórico de Temperatura</div>
-        <div class="grafico-sub" id="graficoSub">Últimas 24 horas</div>
+        <h1 class="painel-titulo" id="painelTitulo">Carregando...</h1>
+        <p class="painel-sub" id="painelSub">Última atualização: --/--/---- --:--:--</p>
       </div>
-      <span class="badge-live">AO VIVO</span>
-    </div>
-
-    <div class="grafico-barras-wrap">
-      <div class="grafico-barras-wrap" id="grafBarras" style="padding-bottom:0; height:100%; width:100%; display:flex; align-items:flex-end; gap:3px;"></div>
-    </div>
-
-    <div class="faixa-info" id="faixaInfo"></div>
-  </div>
-
-  <!-- Tabela -->
-  <div class="tabela-card">
-    <div class="tabela-topo">
-      <div class="tabela-titulo">📋 Leituras detalhadas</div>
-    </div>
-    <div class="tabela-scroll">
-      <table id="tabelaDados">
-        <thead>
-          <tr>
-            <th>Data / Hora</th>
-            <th>Temperatura</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="tabelaBody">
-          <tr><td colspan="3" class="loading">Carregando dados...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Configurações -->
-  <div class="config-card">
-    <div class="config-titulo">⚙️ Configurações do sensor</div>
-    <div class="config-grid">
-      <div class="config-group">
-        <label>Nome do sensor</label>
-        <input id="cfgNome" type="text" placeholder="Ex: Câmara Fria 01" />
-      </div>
-      <div class="config-group">
-        <label>Telefone para alertas (WhatsApp)</label>
-        <input id="cfgTel" type="tel" placeholder="62999999999" />
-        <div class="config-hint">Somente números, com DDD. Ex: 62994859256</div>
-      </div>
-      <div class="config-group">
-        <label>API Key CallMeBot</label>
-        <input id="cfgApiKey" type="text" placeholder="Cole sua API Key aqui" />
-        <div class="config-hint">Obtenha em callmebot.com/blog/free-whatsapp-api/</div>
-      </div>
-      <div class="config-group">
-        <label>Temperatura mínima segura (°C)</label>
-        <input id="cfgMin" type="number" step="0.1" placeholder="-5" />
-      </div>
-      <div class="config-group">
-        <label>Temperatura máxima segura (°C)</label>
-        <input id="cfgMax" type="number" step="0.1" placeholder="2" />
+      <div class="export-bar">
+        <select id="periodoSelect" class="btn-export" style="background: var(--bg-soft); color: var(--text-main); border: 1px solid var(--border-soft);">
+          <option value="1">Últimas 24h</option>
+          <option value="7">Últimos 7 dias</option>
+          <option value="30">Últimos 30 dias</option>
+        </select>
+        <button class="btn-export pdf" onclick="exportarPDF()">PDF</button>
+        <button class="btn-export excel" onclick="exportarExcel()">Excel</button>
       </div>
     </div>
-    <button class="btn-salvar" onclick="salvarConfig()">💾 Salvar configurações</button>
-    <div class="config-ok" id="configOk">✅ Configurações salvas com sucesso!</div>
-  </div>
 
-</div>
+    <div class="cards-grid">
+      <div class="data-card card-temp" id="cardTemperatura">
+        <span class="card-label">Temperatura Atual</span>
+        <span class="card-value" id="tempAtual">--.-- °C</span>
+        <span class="card-hint" id="tempStatus"></span>
+      </div>
+      <div class="data-card">
+        <span class="card-label">Mínima (Período)</span>
+        <span class="card-value" id="tempMinPeriodo">--.-- °C</span>
+        <span class="card-hint"></span>
+      </div>
+      <div class="data-card">
+        <span class="card-label">Máxima (Período)</span>
+        <span class="card-value" id="tempMaxPeriodo">--.-- °C</span>
+        <span class="card-hint"></span>
+      </div>
+      <div class="data-card">
+        <span class="card-label">Média (Período)</span>
+        <span class="card-value" id="tempMediaPeriodo">--.-- °C</span>
+        <span class="card-hint"></span>
+      </div>
+    </div>
 
-<script>
+    <div class="chart-card">
+      <h2 class="chart-title">Histórico de Temperatura</h2>
+      <canvas id="tempChart"></canvas>
+    </div>
+
+    <div class="table-card">
+      <h2 class="table-title">Últimas Leituras</h2>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data / Hora</th>
+              <th>Temperatura</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaBody">
+            <!-- Dados da tabela serão inseridos aqui pelo JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TELA DE CONFIGURAÇÕES ===== -->
+  <section id="tela-config">
+    <div class="config-card">
+      <h2 class="config-titulo">Configurações do Sensor</h2>
+
+      <div class="config-group">
+        <label for="cfgNome">Nome do Sensor</label>
+        <input type="text" id="cfgNome" placeholder="Ex: Câmara Fria 1" />
+        <span class="config-hint">Nome para identificar seu sensor no painel e alertas.</span>
+      </div>
+
+      <div class="config-group">
+        <label for="cfgMin">Temperatura Mínima (°C)</label>
+        <input type="number" id="cfgMin" step="0.1" placeholder="-5.0" />
+        <span class="config-hint">Temperatura mínima permitida antes de um alerta.</span>
+      </div>
+
+      <div class="config-group">
+        <label for="cfgMax">Temperatura Máxima (°C)</label>
+        <input type="number" id="cfgMax" step="0.1" placeholder="2.0" />
+        <span class="config-hint">Temperatura máxima permitida antes de um alerta.</span>
+      </div>
+
+      <div class="config-group">
+        <label for="cfgTel">Telefone para Alertas WhatsApp (com DDD)</label>
+        <input type="tel" id="cfgTel" placeholder="Ex: 5562999998888" />
+        <span class="config-hint">Número para receber alertas. Ex: 5562999998888 (Brasil + DDD + Número).</span>
+      </div>
+
+      <div class="config-group">
+        <label for="cfgApiKey">API Key CallMeBot</label>
+        <input type="text" id="cfgApiKey" placeholder="Sua API Key do CallMeBot" />
+        <span class="config-hint">Obtenha sua API Key em <a href="https://www.callmebot.com/blog/free-whatsapp-api/" target="_blank" style="color: var(--blue-light);">callmebot.com</a>.</span>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;">
+        <button class="btn-salvar" onclick="salvarConfig()">💾 Salvar configurações</button>
+        <button id="btnTestarWhats" class="btn-salvar" style="background: #0f9cf5; border-color: #0f9cf5;">📞 Testar WhatsApp</button>
+      </div>
+      <div class="config-ok" id="configOk">✅ Configurações salvas com sucesso!</div>
+      <div id="whatsTestMsg" class="config-hint" style="margin-top: 8px;"></div>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
   // ============================================================
-  // FIREBASE CONFIG
+  // CONFIGURAÇÃO DO FIREBASE
   // ============================================================
+  // ATENÇÃO: Substitua pelos seus dados do Firebase!
   const firebaseConfig = {
-    apiKey:            "AIzaSyDjwnOHvLDI1R-x28wnwMweiMNfl9celwY",
-    authDomain:        "refrifastgo.firebaseapp.com",
-    databaseURL:       "https://refrifastgo-default-rtdb.firebaseio.com",
-    projectId:         "refrifastgo",
-    storageBucket:     "refrifastgo.firebasestorage.app",
-    messagingSenderId: "694306247301",
-    appId:             "1:694306247301:web:e544dcdd0d568344338fec"
+    apiKey: "SUA_API_KEY", // <--- COLOQUE SUA API KEY AQUI
+    authDomain: "SEU_AUTH_DOMAIN", // <--- COLOQUE SEU AUTH DOMAIN AQUI
+    projectId: "SEU_PROJECT_ID", // <--- COLOQUE SEU PROJECT ID AQUI
+    storageBucket: "SEU_STORAGE_BUCKET",
+    messagingSenderId: "SEU_MESSAGING_SENDER_ID",
+    appId: "SEU_APP_ID"
   };
 
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
-  const db   = firebase.database();
+  const database = firebase.database();
 
   // ============================================================
-  // ✅ CORREÇÃO 1: DEVICE_ID definido aqui
+  // VARIÁVEIS GLOBAIS
   // ============================================================
-  const DEVICE_ID = "sensor_01";
-
-  let usuarioAtual  = null;
-  let sensorPath    = "leituras/sensor_01";
-  let periodoAtual  = 1;
+  let currentUserId = null;
+  let currentSensorId = "sensor_01"; // ID padrão do sensor
+  let configAtual = {};
   let leiturasCache = [];
-
-  let configAtual = {
-    nome:   "",
-    tel:    "",
-    apiKey: "",
-    min:    -5,
-    max:    2
-  };
+  let tempChart;
+  let periodoAtual = 1; // Padrão: últimas 24h
 
   // ============================================================
-  // AUTH
+  // GERENCIAMENTO DE TELAS
+  // ============================================================
+  function mostrarTela(idTela) {
+    document.getElementById("tela-login").style.display = "none";
+    document.getElementById("tela-registro").style.display = "none";
+    document.getElementById("tela-reset-senha").style.display = "none";
+    document.getElementById("tela-painel").style.display = "none";
+    document.getElementById("tela-config").style.display = "none";
+
+    document.getElementById(idTela).style.display = "flex"; // Usa flex para centralizar
+    if (idTela === "tela-painel" || idTela === "tela-config") {
+        document.getElementById(idTela).style.display = "block"; // Painel e Config usam block
+    }
+
+    // Gerencia botões do header
+    if (idTela === "tela-painel" || idTela === "tela-config") {
+      document.getElementById("btnLogout").style.display = "flex";
+      document.getElementById("headerUser").style.display = "block";
+    } else {
+      document.getElementById("btnLogout").style.display = "none";
+      document.getElementById("headerUser").style.display = "none";
+    }
+
+    if (idTela === "tela-config") {
+      document.getElementById("btnVoltarPainel").style.display = "flex";
+    } else {
+      document.getElementById("btnVoltarPainel").style.display = "none";
+    }
+  }
+
+  // ============================================================
+  // AUTENTICAÇÃO
   // ============================================================
   auth.onAuthStateChanged(user => {
     if (user) {
-      usuarioAtual = user;
-      mostrarPainel(user);
+      currentUserId = user.uid;
+      document.getElementById("headerUser").textContent = user.email;
+      mostrarTela("tela-painel");
+      carregarConfiguracoes();
+      carregarLeituras();
     } else {
-      mostrarLogin();
+      currentUserId = null;
+      mostrarTela("tela-login");
     }
   });
 
-  function fazerLogin() {
-    const email = document.getElementById("inputEmail").value.trim();
-    const senha = document.getElementById("inputSenha").value;
-    const erro  = document.getElementById("loginErro");
-    erro.style.display = "none";
-    auth.signInWithEmailAndPassword(email, senha).catch(() => {
-      erro.textContent = "E-mail ou senha incorretos. Tente novamente.";
-      erro.style.display = "block";
+  document.getElementById("btnLogin").addEventListener("click", () => {
+    const email = document.getElementById("loginEmail").value;
+    const senha = document.getElementById("loginSenha").value;
+    const loginErro = document.getElementById("loginErro");
+
+    loginErro.style.display = "none";
+
+    auth.signInWithEmailAndPassword(email, senha)
+      .catch(error => {
+        let errorMessage = "Erro ao fazer login. Verifique e-mail e senha.";
+        if (error.code === 'auth/invalid-email') {
+          errorMessage = "E-mail inválido.";
+        } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+          errorMessage = "E-mail ou senha incorretos.";
+        }
+        loginErro.textContent = errorMessage;
+        loginErro.style.display = "block";
+        console.error("Erro de login:", error);
+      });
+  });
+
+  document.getElementById("btnLogout").addEventListener("click", () => {
+    auth.signOut();
+  });
+
+  // ============================================================
+  // NAVEGAÇÃO DO PAINEL
+  // ============================================================
+  document.getElementById("painelTitulo").addEventListener("click", () => {
+    mostrarTela("tela-config");
+  });
+
+  document.getElementById("btnVoltarPainel").addEventListener("click", () => {
+    mostrarTela("tela-painel");
+  });
+
+  document.getElementById("periodoSelect").addEventListener("change", (e) => {
+    periodoAtual = parseInt(e.target.value);
+    carregarLeituras();
+  });
+
+  // ============================================================
+  // CARREGAR E SALVAR CONFIGURAÇÕES
+  // ============================================================
+  function carregarConfiguracoes() {
+    database.ref(`users/${currentUserId}/sensors/${currentSensorId}/config`).on('value', (snapshot) => {
+      const config = snapshot.val();
+      if (config) {
+        configAtual = config;
+        document.getElementById("cfgNome").value = config.nome || "";
+        document.getElementById("cfgMin").value = config.min !== undefined ? config.min : "";
+        document.getElementById("cfgMax").value = config.max !== undefined ? config.max : "";
+        document.getElementById("cfgTel").value = config.tel || "";
+        document.getElementById("cfgApiKey").value = config.apiKey || "";
+
+        document.getElementById("painelTitulo").textContent = config.nome || "Sensor de Temperatura";
+      } else {
+        // Configurações padrão se não houver nada no Firebase
+        configAtual = {
+          nome: "Sensor de Temperatura",
+          min: -5.0,
+          max: 2.0,
+          tel: "",
+          apiKey: ""
+        };
+        document.getElementById("painelTitulo").textContent = configAtual.nome;
+      }
     });
   }
 
-  document.getElementById("btnLogout").onclick = () => auth.signOut();
+  function salvarConfig() {
+    const nome = document.getElementById("cfgNome").value;
+    const min = parseFloat(document.getElementById("cfgMin").value);
+    const max = parseFloat(document.getElementById("cfgMax").value);
+    const tel = document.getElementById("cfgTel").value;
+    const apiKey = document.getElementById("cfgApiKey").value;
 
-  document.getElementById("inputSenha").addEventListener("keydown", e => {
-    if (e.key === "Enter") fazerLogin();
-  });
+    const configData = {
+      nome: nome,
+      min: isNaN(min) ? -5.0 : min,
+      max: isNaN(max) ? 2.0 : max,
+      tel: tel,
+      apiKey: apiKey
+    };
 
-  // ============================================================
-  // TELAS
-  // ============================================================
-  function mostrarLogin() {
-    document.getElementById("tela-login").style.display  = "flex";
-    document.getElementById("tela-painel").style.display = "none";
-    document.getElementById("btnLogout").style.display   = "none";
-    document.getElementById("headerUser").style.display  = "none";
+    database.ref(`users/${currentUserId}/sensors/${currentSensorId}/config`).set(configData)
+      .then(() => {
+        const configOk = document.getElementById("configOk");
+        configOk.style.display = "block";
+        setTimeout(() => { configOk.style.display = "none"; }, 3000);
+      })
+      .catch(error => {
+        alert("Erro ao salvar configurações: " + error.message);
+        console.error("Erro ao salvar configurações:", error);
+      });
   }
 
-  function mostrarPainel(user) {
-    document.getElementById("tela-login").style.display  = "none";
-    document.getElementById("tela-painel").style.display = "block";
-    document.getElementById("btnLogout").style.display   = "inline-flex";
-    document.getElementById("headerUser").style.display  = "inline";
-    document.getElementById("headerUser").textContent    = user.email;
-    carregarConfig();
-    iniciarLeituraAoVivo();
-    carregarPeriodo(periodoAtual);
-  }
-
   // ============================================================
-  // ✅ CORREÇÃO 2 e 3: CONFIG lendo e salvando em configuracoes/sensor_01
+  // CARREGAR LEITURAS
   // ============================================================
-  // ============================================================
-// CONFIG
-// ============================================================
-function carregarConfig() {
-  // Lê as configurações do caminho usado pelo ESP32
-  db.ref("configuracoes/sensor_01").once("value", snap => {
-    if (snap.exists()) {
-      configAtual = { ...configAtual, ...snap.val() };
+  function carregarLeituras() {
+    if (!currentUserId) return;
 
-      document.getElementById("cfgNome").value   = configAtual.nome   || "";
-      document.getElementById("cfgTel").value    = configAtual.tel    || "";
-      document.getElementById("cfgApiKey").value = configAtual.apiKey || "";
-      document.getElementById("cfgMin").value    = configAtual.min    ?? -5;
-      document.getElementById("cfgMax").value    = configAtual.max    ?? 2;
+    const agora = Date.now();
+    let limiteTempo = 0;
 
-      document.getElementById("painelTitulo").textContent =
-        configAtual.nome ? "Sensor: " + configAtual.nome : "Painel de Temperatura";
+    if (periodoAtual === 1) { // Últimas 24h
+      limiteTempo = agora - (24 * 60 * 60 * 1000);
+    } else if (periodoAtual === 7) { // Últimos 7 dias
+      limiteTempo = agora - (7 * 24 * 60 * 60 * 1000);
+    } else if (periodoAtual === 30) { // Últimos 30 dias
+      limiteTempo = agora - (30 * 24 * 60 * 60 * 1000);
     }
-  });
-}
 
-function salvarConfig() {
-  configAtual.nome   = document.getElementById("cfgNome").value.trim();
-  configAtual.tel    = document.getElementById("cfgTel").value.trim();
-  configAtual.apiKey = document.getElementById("cfgApiKey").value.trim();
-  configAtual.min    = parseFloat(document.getElementById("cfgMin").value) || -5;
-  configAtual.max    = parseFloat(document.getElementById("cfgMax").value) || 2;
-
-  // Salva exatamente onde o ESP32 vai ler
-  db.ref("configuracoes/sensor_01").set(configAtual).then(() => {
-    const ok = document.getElementById("configOk");
-    ok.style.display = "block";
-    setTimeout(() => ok.style.display = "none", 3000);
-
-    document.getElementById("painelTitulo").textContent =
-      configAtual.nome ? "Sensor: " + configAtual.nome : "Painel de Temperatura";
-
-    carregarPeriodo(periodoAtual);
-  });
-}
-  // ============================================================
-  // LEITURA AO VIVO
-  // ============================================================
-  function iniciarLeituraAoVivo() {
-    db.ref(sensorPath).orderByChild("timestamp").limitToLast(1)
-      .on("child_added", snap => {
-        const d = snap.val();
-        if (!d) return;
-        const temp   = parseFloat(d.temperature);
-        const dentro = temp >= configAtual.min && temp <= configAtual.max;
-        document.getElementById("rAtual").textContent =
-          temp.toFixed(1) + " °C";
-        document.getElementById("rStatus").textContent =
-          dentro ? "✅ Dentro da faixa segura" : "⚠️ Fora da faixa!";
-        document.getElementById("rStatus").style.color =
-          dentro ? "#22c55e" : "#fca5a5";
-        const ts = new Date(d.timestamp);
-        document.getElementById("painelSub").textContent =
-          "Última leitura: " + ts.toLocaleString("pt-BR");
-      });
-  }
-
-  // ============================================================
-  // PERÍODO
-  // ============================================================
-  function mudarPeriodo(dias, btn) {
-    document.querySelectorAll(".btn-filtro").forEach(b => b.classList.remove("ativo"));
-    btn.classList.add("ativo");
-    periodoAtual = dias;
-    carregarPeriodo(dias);
-  }
-
-  function carregarPeriodo(dias) {
-    const labels = { 1: "Últimas 24 horas", 7: "Últimos 7 dias", 30: "Últimos 30 dias" };
-    document.getElementById("graficoSub").textContent = labels[dias] || "";
-    const agora  = Date.now();
-    const inicio = agora - dias * 24 * 60 * 60 * 1000;
-
-    db.ref(sensorPath)
-      .orderByChild("timestamp")
-      .startAt(inicio)
-      .once("value", snap => {
-        const leituras = [];
-        snap.forEach(c => {
-          const v = c.val();
-          if (v && v.temperature !== undefined && v.timestamp) {
-            leituras.push({ temp: parseFloat(v.temperature), ts: v.timestamp });
+    database.ref(`users/${currentUserId}/sensors/${currentSensorId}/readings`)
+      .orderByChild('ts')
+      .startAt(limiteTempo)
+      .on('value', (snapshot) => {
+        const leiturasObj = snapshot.val();
+        leiturasCache = [];
+        if (leiturasObj) {
+          for (let key in leiturasObj) {
+            leiturasCache.push(leiturasObj[key]);
           }
-        });
-
-        leiturasCache = leituras;
-
-        if (leituras.length === 0) {
-          document.getElementById("grafBarras").innerHTML =
-            '<div class="loading">Sem leituras neste período.</div>';
-          document.getElementById("tabelaBody").innerHTML =
-            '<tr><td colspan="3" class="loading">Sem dados.</td></tr>';
-          return;
         }
-
-        renderizarResumo(leituras);
-        renderizarGrafico(leituras, dias);
-        renderizarTabela(leituras);
+        atualizarPainel();
       });
   }
 
   // ============================================================
-  // RESUMO
+  // ATUALIZAR PAINEL
   // ============================================================
-  function renderizarResumo(leituras) {
-    const temps = leituras.map(l => l.temp);
-    const min   = Math.min(...temps);
-    const max   = Math.max(...temps);
-    const media = temps.reduce((a,b) => a+b, 0) / temps.length;
-    const iMin  = leituras.find(l => l.temp === min);
-    const iMax  = leituras.find(l => l.temp === max);
+  function atualizarPainel() {
+    if (leiturasCache.length === 0) {
+      document.getElementById("tempAtual").textContent = "--.-- °C";
+      document.getElementById("tempStatus").textContent = "Nenhuma leitura disponível.";
+      document.getElementById("cardTemperatura").className = "data-card card-temp";
+      document.getElementById("tempMinPeriodo").textContent = "--.-- °C";
+      document.getElementById("tempMaxPeriodo").textContent = "--.-- °C";
+      document.getElementById("tempMediaPeriodo").textContent = "--.-- °C";
+      document.getElementById("painelSub").textContent = "Última atualização: --/--/---- --:--:--";
+      renderizarGrafico([]);
+      renderizarTabela([]);
+      return;
+    }
 
-    document.getElementById("rMin").textContent      = min.toFixed(1) + " °C";
-    document.getElementById("rMax").textContent      = max.toFixed(1) + " °C";
-    document.getElementById("rMedia").textContent    = media.toFixed(1) + " °C";
-    document.getElementById("rLeituras").textContent = leituras.length + " leituras";
-    document.getElementById("rMinHora").textContent  =
-      iMin ? new Date(iMin.ts).toLocaleString("pt-BR") : "";
-    document.getElementById("rMaxHora").textContent  =
-      iMax ? new Date(iMax.ts).toLocaleString("pt-BR") : "";
+    const ultimaLeitura = leiturasCache[leiturasCache.length - 1];
+    const temp = ultimaLeitura.temp;
+    const ts = ultimaLeitura.ts;
+
+    document.getElementById("tempAtual").textContent = temp.toFixed(1) + " °C";
+    document.getElementById("painelSub").textContent = "Última atualização: " + new Date(ts).toLocaleString("pt-BR");
+
+    const cardTemp = document.getElementById("cardTemperatura");
+    cardTemp.className = "data-card card-temp"; // Reseta classes
+
+    if (temp >= configAtual.min && temp <= configAtual.max) {
+      document.getElementById("tempStatus").textContent = "Temperatura Normal";
+      cardTemp.classList.add("normal");
+    } else {
+      document.getElementById("tempStatus").textContent = "⚠ Temperatura Fora da Faixa!";
+      cardTemp.classList.add("alerta");
+    }
+
+    const temps = leiturasCache.map(l => l.temp);
+    const min = Math.min(...temps);
+    const max = Math.max(...temps);
+    const media = temps.reduce((a, b) => a + b, 0) / temps.length;
+
+    document.getElementById("tempMinPeriodo").textContent = min.toFixed(1) + " °C";
+    document.getElementById("tempMaxPeriodo").textContent = max.toFixed(1) + " °C";
+    document.getElementById("tempMediaPeriodo").textContent = media.toFixed(1) + " °C";
+
+    renderizarGrafico(leiturasCache);
+    renderizarTabela(leiturasCache);
   }
 
   // ============================================================
   // GRÁFICO
   // ============================================================
-  function renderizarGrafico(leituras, dias) {
-    const wrap = document.getElementById("grafBarras");
-    wrap.innerHTML = "";
-    const grupos = agrupar(leituras, Math.min(leituras.length, 30));
-    const temps  = grupos.map(g => g.media);
-    const minT   = Math.min(...temps);
-    const maxT   = Math.max(...temps);
-    const range  = maxT - minT || 1;
+  function renderizarGrafico(leituras) {
+    const ctx = document.getElementById('tempChart').getContext('2d');
+    const labels = leituras.map(l => new Date(l.ts).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }));
+    const data = leituras.map(l => l.temp);
 
-    grupos.forEach(g => {
-      const pct    = ((g.media - minT) / range) * 80 + 10;
-      const dentro = g.media >= configAtual.min && g.media <= configAtual.max;
-      const label  = new Date(g.ts).toLocaleString("pt-BR",
-        dias === 1
-          ? { hour: "2-digit", minute: "2-digit" }
-          : { day: "2-digit", month: "2-digit" });
-
-      const col  = document.createElement("div");
-      col.className = "g-barra-col";
-
-      const bar  = document.createElement("div");
-      bar.className    = "g-barra" + (dentro ? "" : " alerta");
-      bar.style.height = pct + "%";
-      bar.dataset.tip  = g.media.toFixed(1) + " °C • " + label;
-
-      const lbl  = document.createElement("div");
-      lbl.className   = "g-label";
-      lbl.textContent = label;
-
-      col.appendChild(bar);
-      col.appendChild(lbl);
-      wrap.appendChild(col);
-    });
-
-    document.getElementById("faixaInfo").innerHTML = `
-      <span class="faixa-badge">Faixa segura: ${configAtual.min} °C a ${configAtual.max} °C</span>
-      <span class="faixa-badge alerta">Barras em laranja/vermelho = fora da faixa</span>
-    `;
-  }
-
-  function agrupar(leituras, n) {
-    const tam    = Math.ceil(leituras.length / n);
-    const grupos = [];
-    for (let i = 0; i < leituras.length; i += tam) {
-      const grupo = leituras.slice(i, i + tam);
-      const media = grupo.reduce((a,b) => a + b.temp, 0) / grupo.length;
-      grupos.push({ media, ts: grupo[Math.floor(grupo.length / 2)].ts });
+    if (tempChart) {
+      tempChart.destroy();
     }
-    return grupos;
+
+    tempChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Temperatura (°C)',
+          data: data,
+          borderColor: 'rgba(56, 189, 248, 1)',
+          backgroundColor: 'rgba(56, 189, 248, 0.2)',
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: true,
+          tension: 0.4
+        },
+        {
+          label: 'Mínima Configurada',
+          data: Array(labels.length).fill(configAtual.min),
+          borderColor: 'rgba(239, 68, 68, 0.7)',
+          borderDash: [5, 5],
+          pointRadius: 0,
+          borderWidth: 1
+        },
+        {
+          label: 'Máxima Configurada',
+          data: Array(labels.length).fill(configAtual.max),
+          borderColor: 'rgba(239, 68, 68, 0.7)',
+          borderDash: [5, 5],
+          pointRadius: 0,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            grid: {
+              color: 'rgba(56, 189, 248, 0.1)'
+            },
+            ticks: {
+              color: 'var(--text-muted)'
+            }
+          },
+          y: {
+            grid: {
+              color: 'rgba(56, 189, 248, 0.1)'
+            },
+            ticks: {
+              color: 'var(--text-muted)'
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: 'var(--text-main)'
+            }
+          }
+        }
+      }
+    });
   }
 
   // ============================================================
   // TABELA
   // ============================================================
   function renderizarTabela(leituras) {
-    const tbody    = document.getElementById("tabelaBody");
+    const tbody = document.getElementById("tabelaBody");
     const recentes = [...leituras].reverse().slice(0, 100);
     tbody.innerHTML = recentes.map(l => {
       const dentro = l.temp >= configAtual.min && l.temp <= configAtual.max;
       const status = dentro
         ? '<span class="td-status ok">✅ Normal</span>'
-        : '<span class="td-status alerta">⚠️ Alerta</span>';
+        : '<span class="td-status alerta">⚠ Alerta</span>';
       return `
         <tr>
           <td>${new Date(l.ts).toLocaleString("pt-BR")}</td>
@@ -1105,9 +1111,9 @@ function salvarConfig() {
     doc.text("Faixa segura: " + configAtual.min + " °C a " + configAtual.max + " °C", 100, 56);
 
     const temps = leiturasCache.map(l => l.temp);
-    const min   = Math.min(...temps);
-    const max   = Math.max(...temps);
-    const media = temps.reduce((a,b) => a+b, 0) / temps.length;
+    const min = Math.min(...temps);
+    const max = Math.max(...temps);
+    const media = temps.reduce((a, b) => a + b, 0) / temps.length;
 
     doc.setFillColor(15, 156, 245);
     doc.rect(15, 68, 42, 22, "F");
@@ -1202,32 +1208,32 @@ function salvarConfig() {
 
     const nomeRelatorio = configAtual.nome || "Sensor de Temperatura";
     const periodo = { 1: "Últimas 24 horas", 7: "Últimos 7 dias", 30: "Últimos 30 dias" };
-    const agora   = new Date().toLocaleString("pt-BR");
+    const agora = new Date().toLocaleString("pt-BR");
 
     const temps = leiturasCache.map(l => l.temp);
-    const min   = Math.min(...temps);
-    const max   = Math.max(...temps);
-    const media = temps.reduce((a,b) => a+b, 0) / temps.length;
+    const min = Math.min(...temps);
+    const max = Math.max(...temps);
+    const media = temps.reduce((a, b) => a + b, 0) / temps.length;
 
     const wsResumo = XLSX.utils.aoa_to_sheet([
       ["RefrifastGo — Relatório de Temperatura"],
       [],
-      ["Sensor:",        nomeRelatorio],
-      ["Período:",       periodo[periodoAtual] || ""],
-      ["Gerado em:",     agora],
-      ["Faixa segura:",  configAtual.min + " °C a " + configAtual.max + " °C"],
+      ["Sensor:", nomeRelatorio],
+      ["Período:", periodo[periodoAtual] || ""],
+      ["Gerado em:", agora],
+      ["Faixa segura:", configAtual.min + " °C a " + configAtual.max + " °C"],
       [],
       ["RESUMO ESTATÍSTICO"],
-      ["Mínima",  min.toFixed(1) + " °C"],
-      ["Máxima",  max.toFixed(1) + " °C"],
-      ["Média",   media.toFixed(1) + " °C"],
+      ["Mínima", min.toFixed(1) + " °C"],
+      ["Máxima", max.toFixed(1) + " °C"],
+      ["Média", media.toFixed(1) + " °C"],
       ["Total de leituras", leiturasCache.length],
       [],
       ["Contato: (62) 99485-9256 | refrifastgo.com"]
     ]);
 
     const cabecalho = [["Data / Hora", "Temperatura (°C)", "Status"]];
-    const linhas    = [...leiturasCache].reverse().map(l => {
+    const linhas = [...leiturasCache].reverse().map(l => {
       const dentro = l.temp >= configAtual.min && l.temp <= configAtual.max;
       return [
         new Date(l.ts).toLocaleString("pt-BR"),
@@ -1239,7 +1245,7 @@ function salvarConfig() {
     const wsLeituras = XLSX.utils.aoa_to_sheet([...cabecalho, ...linhas]);
 
     wsLeituras["!cols"] = [{ wch: 22 }, { wch: 18 }, { wch: 12 }];
-    wsResumo["!cols"]   = [{ wch: 22 }, { wch: 30 }];
+    wsResumo["!cols"] = [{ wch: 22 }, { wch: 30 }];
 
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, wsResumo, "Resumo");
@@ -1250,7 +1256,215 @@ function salvarConfig() {
 
     XLSX.writeFile(wb, nomeArquivo);
   }
-</script>
+
+  // ============================================================
+  // TESTE DE WHATSAPP (CallMeBot)
+  // ============================================================
+  document.addEventListener("DOMContentLoaded", () => {
+    const btnTestarWhats = document.getElementById("btnTestarWhats");
+    if (btnTestarWhats) {
+      btnTestarWhats.addEventListener("click", () => {
+        const tel = document.getElementById("cfgTel").value.trim();
+        const apiKey = document.getElementById("cfgApiKey").value.trim();
+        const msgEl = document.getElementById("whatsTestMsg");
+
+        msgEl.textContent = ""; // Limpa mensagens anteriores
+        msgEl.style.color = "red"; // Cor padrão para erro
+
+        if (!tel || !apiKey) {
+          msgEl.textContent = "Preencha o telefone e a API Key antes de testar.";
+          return;
+        }
+
+        // Mensagem de teste
+        const texto = "RefrifastGo TESTE%0ASeu sensor esta configurado corretamente."; // %0A é quebra de linha na URL
+
+        const url = "https://api.callmebot.com/whatsapp.php?phone="
+          + encodeURIComponent(tel)
+          + "&text=" + texto
+          + "&apikey=" + encodeURIComponent(apiKey);
+
+        msgEl.textContent = "Enviando mensagem de teste...";
+        msgEl.style.color = "black"; // Mensagem de envio em cor neutra
+
+        fetch(url)
+          .then(resp => {
+            if (!resp.ok) {
+              throw new Error("Erro HTTP: " + resp.status + " " + resp.statusText);
+            }
+            return resp.text();
+          })
+          .then(body => {
+            console.log("Resposta CallMeBot (teste):", body);
+            if (body.includes("OK")) {
+              msgEl.style.color = "green";
+              msgEl.textContent = "Mensagem de teste enviada. Verifique seu WhatsApp.";
+            } else {
+              msgEl.style.color = "red";
+              msgEl.textContent = "Erro do CallMeBot: " + body;
+            }
+          })
+          .catch(err => {
+            console.error("Erro no teste de WhatsApp:", err);
+            msgEl.style.color = "red";
+            msgEl.textContent = "Erro ao enviar teste: " + err.message + ". Verifique sua conexão e os dados.";
+          });
+      });
+    }
+  });
+
+  // ============================================================
+  // REGISTRO DE USUÁRIO
+  // ============================================================
+  document.addEventListener("DOMContentLoaded", () => {
+    const telaLogin = document.getElementById("tela-login");
+    const telaRegistro = document.getElementById("tela-registro");
+    const linkIrParaRegistro = document.getElementById("linkIrParaRegistro");
+    const linkVoltarLoginReg = document.getElementById("linkVoltarLoginReg");
+    const btnRegistrar = document.getElementById("btnRegistrar");
+    const regEmail = document.getElementById("regEmail");
+    const regSenha = document.getElementById("regSenha");
+    const regSenhaConfirm = document.getElementById("regSenhaConfirm");
+    const regErro = document.getElementById("regErro");
+
+    if (linkIrParaRegistro) {
+      linkIrParaRegistro.addEventListener("click", (e) => {
+        e.preventDefault();
+        telaLogin.style.display = "none";
+        telaRegistro.style.display = "flex"; // Usa flex para centralizar
+        regErro.style.display = "none"; // Limpa erros
+      });
+    }
+
+    if (linkVoltarLoginReg) {
+      linkVoltarLoginReg.addEventListener("click", (e) => {
+        e.preventDefault();
+        telaRegistro.style.display = "none";
+        telaLogin.style.display = "flex"; // Usa flex para centralizar
+        regErro.style.display = "none"; // Limpa erros
+      });
+    }
+
+    if (btnRegistrar) {
+      btnRegistrar.addEventListener("click", () => {
+        const email = regEmail.value.trim();
+        const senha = regSenha.value.trim();
+        const senhaConfirm = regSenhaConfirm.value.trim();
+
+        regErro.style.display = "none";
+        regErro.textContent = "";
+
+        if (!email || !senha || !senhaConfirm) {
+          regErro.textContent = "Por favor, preencha todos os campos.";
+          regErro.style.display = "block";
+          return;
+        }
+        if (senha.length < 6) {
+          regErro.textContent = "A senha deve ter no mínimo 6 caracteres.";
+          regErro.style.display = "block";
+          return;
+        }
+        if (senha !== senhaConfirm) {
+          regErro.textContent = "As senhas não coincidem.";
+          regErro.style.display = "block";
+          return;
+        }
+
+        auth.createUserWithEmailAndPassword(email, senha)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            console.log("Usuário registrado:", user.email);
+            alert("Conta criada com sucesso! Você já pode fazer login.");
+            telaRegistro.style.display = "none";
+            telaLogin.style.display = "flex";
+            regEmail.value = "";
+            regSenha.value = "";
+            regSenhaConfirm.value = "";
+          })
+          .catch((error) => {
+            let errorMessage = "Erro ao registrar. Tente novamente.";
+            if (error.code === 'auth/email-already-in-use') {
+              errorMessage = "Este e-mail já está em uso.";
+            } else if (error.code === 'auth/invalid-email') {
+              errorMessage = "E-mail inválido.";
+            }
+            regErro.textContent = errorMessage;
+            regErro.style.display = "block";
+            console.error("Erro de registro:", error);
+          });
+      });
+    }
+  });
+
+  // ============================================================
+  // RESET DE SENHA
+  // ============================================================
+  document.addEventListener("DOMContentLoaded", () => {
+    const telaLogin = document.getElementById("tela-login");
+    const telaResetSenha = document.getElementById("tela-reset-senha");
+    const linkEsqueceuSenha = document.getElementById("linkEsqueceuSenha");
+    const linkVoltarLoginReset = document.getElementById("linkVoltarLoginReset");
+    const btnResetSenha = document.getElementById("btnResetSenha");
+    const resetEmailInput = document.getElementById("resetEmail");
+    const resetErro = document.getElementById("resetErro");
+
+    if (linkEsqueceuSenha) {
+      linkEsqueceuSenha.addEventListener("click", (e) => {
+        e.preventDefault();
+        telaLogin.style.display = "none";
+        telaResetSenha.style.display = "flex"; // Usa flex para centralizar
+        resetErro.style.display = "none"; // Limpa erros
+        // Preenche o email do login se houver
+        const loginEmail = document.getElementById("loginEmail").value.trim();
+        if (loginEmail) {
+            resetEmailInput.value = loginEmail;
+        }
+      });
+    }
+
+    if (linkVoltarLoginReset) {
+      linkVoltarLoginReset.addEventListener("click", (e) => {
+        e.preventDefault();
+        telaResetSenha.style.display = "none";
+        telaLogin.style.display = "flex"; // Usa flex para centralizar
+        resetErro.style.display = "none"; // Limpa erros
+      });
+    }
+
+    if (btnResetSenha) {
+      btnResetSenha.addEventListener("click", () => {
+        const email = resetEmailInput.value.trim();
+        resetErro.style.display = "none";
+        resetErro.textContent = "";
+
+        if (!email) {
+          resetErro.textContent = "Por favor, digite seu e-mail.";
+          resetErro.style.display = "block";
+          return;
+        }
+
+        auth.sendPasswordResetEmail(email)
+          .then(() => {
+            alert("Um e-mail para redefinir sua senha foi enviado para " + email + ". Verifique sua caixa de entrada (e spam).");
+            telaResetSenha.style.display = "none";
+            telaLogin.style.display = "flex";
+            resetEmailInput.value = "";
+          })
+          .catch((error) => {
+            let errorMessage = "Erro ao enviar e-mail de redefinição. Verifique o e-mail digitado.";
+            if (error.code === 'auth/invalid-email') {
+              errorMessage = "E-mail inválido.";
+            } else if (error.code === 'auth/user-not-found') {
+              errorMessage = "Não existe usuário com este e-mail.";
+            }
+            resetErro.textContent = errorMessage;
+            resetErro.style.display = "block";
+            console.error("Erro de reset de senha:", error);
+          });
+      });
+    }
+  });
+  </script>
 
 </body>
 </html>
